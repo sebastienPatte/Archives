@@ -1,6 +1,6 @@
 // Questions :
 /*
-
+//test2
 Q1 : dessiner joli segment rond pour serpent
 Q2 : dessiner visage serpent (yeux, langue, etc.)
 Q3 : materialiser bordure de scroll (carre)
