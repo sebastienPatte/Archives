@@ -6,7 +6,12 @@ int compte2 = 2000;
 int compte3 = 1500;
 int compte4 = 3000;
 
-
+/** Effectue un virement de "somme", de "&compte_orig" vers "&compte_dest" 
+ *  @param "&compte_orig" un entier 
+ *  @param &compte_dest un entier
+ *  @param somme un entier
+ *  @param &virement_ok un booléen
+ **/
 void virement(int &compte_orig, int &compte_dest, int somme, bool &virement_ok){
 	if(compte_orig >= somme){
 		compte_orig -= somme;
@@ -14,7 +19,7 @@ void virement(int &compte_orig, int &compte_dest, int somme, bool &virement_ok){
 		virement_ok = true;
 	}virement_ok = false;
 }
-
+//affiche l'etat des variables globales compte1, compte2, compte3, compte4
 void etat_comptes() {
   cout << "Etat des comptes : " << endl;
   cout << "Compte n 1 : " << compte1 << endl;

@@ -4,18 +4,24 @@ using namespace std;
 
 
 
-
-void permuter(int &c, int &d) {
+/** permute deux entiers
+ *  @param '&d' un entier
+ *  @param '&e' un entier
+ **/
+void permuter(int &d, int &e) {
 int temp;
 temp=c; c=d; d=temp;
 }
 
+/** classe trois entiers dans l'ordre croissant
+ *  @param '&a' un entier
+ *  @param '&b' un entier
+ *  @param '&c' un entier
+ **/
 void ordonner(int &a, int &b, int &c){
 	if(a>b)permuter(a,b);
 	if(b>c)permuter(b,c);
 	if(a>b)permuter(a,b);
-	
-	
 	
 }
 
