@@ -115,14 +115,48 @@ void polynomeCoeffEgaux(Polynome &p, int degree, float coeff){
 	modifierCoeffPoly(p, i, coeff);
 }
 
-void produitPolyXn(Polynome p, int n, Polynome &res);
-void produitPoly(Polynome p, Polynome q, Polynome &res);
-void puissancePoly(Polynome p, int n, Polynome &res);
+void ProduitPolyXn(Polynome p, int n, Polynome &res) {
+  int d, i;
+  d = degrePoly(p);
+  PolynomeNul(res);
+  for (i=0; i<=d; i++) {
+    modifierCoeffPoly(res, i+n, coeffPoly(p, i));
+  }
+}
+void AjoutePoly(Polynome &p, Polynome q) {
+  int d, i;
+  d = degrePoly(q);
+  for (i=0; i<=d; i++) {
+    modifierCoeffPoly(p, i, coeffPoly(p, i)+coeffPoly(q, i));
+  }
+}
 
+void ProduitPoly(Polynome p, Polynome q, Polynome &res) {
+  int d, i;
+  Polynome tmp;
+  d = degrePoly(q);
+  PolynomeNul(res);
+  for (i=0; i<=d; i++) {
+    ProduitPolyXn(p, i, tmp);
+    multPolyConst(tmp, coeffPoly(q, i));
+    AjoutePoly(res, tmp);
+  }
+}
+
+void PuissancePoly(Polynome p, int n, Polynome &res) {
+  Polynome tmp;
+  int i;
+  PolynomeNul(res);
+  modifierCoeffPoly(res, 0, 1.);
+  for (i=0; i<n; i++) {
+    tmp = res;
+    ProduitPoly(tmp, p, res);
+  }
+}
 
 int main() {
-  Polynome p, q;
-
+  Polynome p, q, r;
+  int i;
   //TESTS
   PolynomeNul(p);
   modifierCoeffPoly(p, 5,  4.);
@@ -178,6 +212,7 @@ int main() {
 	cout<<"polynome de degré mille dont tout les coeffs sont egaux a 1.0001"<<endl;
 	cout<<"pour X=1.0001, p="<<evalPoly(p, 1.0001)<<endl;
 	cout<<endl;	
+	
 	//Q 3.2.c
 	cout<<"question 3.2.c"<<endl;
 	PolynomeNul(p);
@@ -188,5 +223,47 @@ int main() {
 	cout<<"(methode classique), p="<<evalPoly(p,100)<<endl;
 	cout<<"(methode Horner), p="<<evalHornerPoly(p,100)<<endl;
 	cout<<endl;
+	
+	//Q 3.4
+	cout<<"question 3.4"<<endl;
+	PolynomeNul(p);
+	PolynomeNul(q);
+	modifierCoeffPoly(p, 5, 4);
+	modifierCoeffPoly(p, 2, -5);
+	modifierCoeffPoly(p, 1, 4);
+	modifierCoeffPoly(p, 0, -1);
+	affichePoly(p);
+	ProduitPolyXn(p,2,q);
+	cout<<"p*X^2 = ";
+	affichePoly(q);
+	cout<<endl;
+	
+	//Q 3.5
+	cout<<"question 3.5"<<endl;
+	PolynomeNul(q);
+	PolynomeNul(r);
+	modifierCoeffPoly(q, 3, 1);
+	modifierCoeffPoly(q, 1, 2);
+	modifierCoeffPoly(q, 0, -1);
+	affichePoly(p);
+	cout<<" * ";
+	affichePoly(q);
+	ProduitPoly(p,q,r);	
+	cout<<" = ";
+	affichePoly(r);
+	cout<<endl;	
+	
+	//Q 3.6
+	cout<<"question 3.6"<<endl;
+	PolynomeNul(p);
+	PolynomeNul(r);
+	modifierCoeffPoly(p,1,1);
+	modifierCoeffPoly(p,0,1);
+	for (i=0; i<10; i++) {
+		PuissancePoly(p, i, r);
+		affichePoly(r);
+  	}
+	
+	
   return 0;
 }
