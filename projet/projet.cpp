@@ -116,7 +116,48 @@ void afficheGrille(vector<Fourmi> tabFourmis, Grille T){
 	cout<<endl;
 }
 
+void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi> &tabFourmis){
+	coord coord_p1=f.coordonnees;
+	
+	f.coordonnees=coord_p2;
+	
+	tabFourmis[p1.indiceFourmi]=f;
+	
+	p2.indiceFourmi=p1.indiceFourmi;
+	p1.indiceFourmi=-1;
+	cout<<p1.indiceFourmi<<endl;
 
+}
+
+coord choisiCoordAleatoirement(vector<coord> tabCoord){
+	coord res = tabCoord[randint(0,tabCoord.size())];
+	return res;
+	
+}
+
+bool placeVide(place p){
+	return ((p.indiceFourmi==-1)&&(!p.sucre)&&(!p.nid));
+}
+
+/*  Doit renvoyer un tableau contenant les coordonnées de chaque voisin vide
+vector<coord> voisinsVides(Fourmi f,Grille T){
+	int tailleRes;
+	
+	if(placeVide(T[f.coordonnees.X+1][f.coordonnees.Y])) tailleRes++;
+	if(placeVide(T[f.coordonnees.X][f.coordonnees.Y+1])) tailleRes++;
+	if(placeVide(T[f.coordonnees.X-1][f.coordonnees.Y])) tailleRes++;
+	if(placeVide(T[f.coordonnees.X][f.coordonnees.Y-1])) tailleRes++;
+	vector<coord> res(tailleRes);			
+	int i=0;
+	if(placeVide(T[f.coordonnees.X+1][f.coordonnees.Y])) res[i]=T[f.coordonnees.X+1][f.coordonnees.Y]; i++;
+	if(placeVide(T[f.coordonnees.X][f.coordonnees.Y+1])) res[i]=T[f.coordonnees.X][f.coordonnees.Y+1]; i++;
+	if(placeVide(T[f.coordonnees.X-1][f.coordonnees.Y])) res[i]=T[f.coordonnees.X-1][f.coordonnees.Y]; i++;
+	if(placeVide(T[f.coordonnees.X][f.coordonnees.Y-1])) res[i]=T[f.coordonnees.X][f.coordonnees.Y-1]; i++;
+	
+	return res;
+		    
+}
+*/
 
 int main(){
 	int nbFourmis=12;
@@ -128,6 +169,14 @@ int main(){
 	Grille T(tailleCarte);
 	initPlateau(nbSucres,tabFourmis,T);
 	afficheGrille(tabFourmis,T);
+
+/*
+	//tests deplacement de fourmi
+	coord coord_p2={5,3};
+	deplaceFourmi(tabFourmis[0], T[(T.size()/2)-2][(T.size()/2)-2], T[5][3], coord_p2, tabFourmis);
+	cout<<T[T.size()/2-2][T.size()/2-2].indiceFourmi<<endl;
+	cout<<tabFourmis[0].coordonnees.X<<" "<<tabFourmis[0].coordonnees.Y<<endl;
+	afficheGrille(tabFourmis,T);
 	
-	
+*/	
 }
