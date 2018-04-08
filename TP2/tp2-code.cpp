@@ -6,11 +6,11 @@
 
 using namespace std;
 
-char MUR     = '#';
-char VIDE    = ' ';
-char ENCOURS = '?';
-char IMPASSE = '@';
-char CHEMIN  = 'O';
+const char MUR     = '#';
+const char VIDE    = ' ';
+const char ENCOURS = '?';
+const char IMPASSE = '@';
+const char CHEMIN  = 'O';
 
 typedef vector<vector<char> > Labyrinthe;
 Labyrinthe laby;
@@ -133,58 +133,86 @@ bool chercheChemin0() {
 }
 
 bool cheminExiste(int x, int y){
-    
+    bool res;
     if (x==laby[0].size()-2 && y ==laby[0].size()-2)
         return true ;
-    
-    if(laby[y][x] == VIDE){
-        
-        bool res=false;
-        laby[y][x] = ENCOURS;
+    if(laby[x][y] == VIDE){
+        cout<< x << " " << y <<endl;
+        res=false;
+        laby[x][y] = ENCOURS;
 
-    	if(x>1 && cheminExiste(x-1,y))
-       		laby[x+1][y]=CHEMIN;
-       		res= true ;
-    	if(y>1 && cheminExiste(x,y-1))
-        	laby[x][y+1]=CHEMIN;
-        	res= true ;
     	if(x<laby[0].size()-2 && cheminExiste(x+1,y))
-        	laby[x-1][y]=CHEMIN;
-        	return true ;
+        	if (!(laby[x+1][y] == ENCOURS)){
+        		res =true;
+    		}
     	if(y<laby[0].size()-2 && cheminExiste(x,y+1))
-        	laby[x][y-1]=CHEMIN;
-        	return true ;
+        	if (!(laby[x][y+1] == ENCOURS)){
+        		res =true;
+    		}
+    	if(x>1 && cheminExiste(x-1,y))
+       		if (!(laby[x-1][y] == ENCOURS)){
+        		res =true;
+    		}
+    	if(y>1 && cheminExiste(x,y-1))
+        	if (!(laby[x][y-1] == ENCOURS)){
+        		res =true;
+    		}
 
-    	
+
     	if(res)
-    		laby[y][x] = CHEMIN;
+    		laby[x][y] = CHEMIN;
     	else
-    		laby[y][x] = IMPASSE;
+    		laby[x][y] = IMPASSE;
 
     	return res;
 	}
+	cout<< "FALSE"<<endl;
 	return false;
 }
 
+
+void effacerImpasses(){
+	for(int i =0; i<laby.size()-1; i++){
+		for(int j=0; j<laby.size()-1; j++){
+			if(laby[i][j]==IMPASSE)laby[i][j]=VIDE;
+		}
+	}
+}
+
 void bouche(){
-	for(int y=1; y<laby.size()-1;y++)
-		for(int x=1; x<laby.size()-1;x++)
+	for(int y=1; y<laby.size()-2;y++)
+		for(int x=1; x<laby.size()-2;x++)
 			if(laby[x][y]==CHEMIN){
-				if(laby[y][x-1]==VIDE)
-					laby[y][x-1]==MUR;
-			if(laby[y][x+1]==VIDE)
-				
+				if(laby[x+1][y]==VIDE)
+					laby[x][y]=MUR;
+					if(!cheminExiste(1,1))laby[x][y]=VIDE;
+				if(laby[x][y+1]==VIDE)
+					laby[x][y]=MUR;
+					if(!cheminExiste(1,1))laby[x][y]=VIDE;
+				if(laby[x-1][y]==VIDE)
+					laby[x][y]=MUR;
+					if(!cheminExiste(1,1))laby[x][y]=VIDE;
+				if(laby[x][y-1]==VIDE)
+					laby[x][y]=MUR;
+					if(!cheminExiste(1,1))laby[x][y]=VIDE;
+					
 			}
 }
+
+
 
 int main(){
 	srand(time(NULL));
 	initLayrinthe1(14, 14);
 	dispLayrinthe();
-	if (cheminExiste(13,13))
+	cout<<laby[0].size()-2<<endl;
+	if (cheminExiste(1,1))
 		cout << endl << "TROUVE !" << endl << endl;
 	else
 		cout << endl << "PAS TROUVE !" << endl << endl;
+	effacerImpasses();
+	dispLayrinthe();
+	bouche();
 	dispLayrinthe();
 	return 0;
 	

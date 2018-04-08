@@ -5,6 +5,8 @@
 
 using namespace std;
 
+
+int compteurPermute=0;
 struct Ville {
 	string nom;
 	string code;
@@ -18,6 +20,7 @@ void permute(int i, int j) {
 	Ville temp = liste[i];
 	liste[i] = liste[j];
 	liste[j] = temp;
+	compteurPermute++;
 }
 
 void triselection (int n) {
@@ -72,38 +75,62 @@ void moyenne (int n){
 }
 
 void triInsertion(int n){
+	cout<<"triInsertion"<<endl;
 	int j=0;
+	int c=0;
 	for(int i=1;i<n;i++){
 		j=i;	
 		while((j>0)&&(!(liste[j-1].population<liste[j].population))){
 			permute(j,j-1);
 			j--;
 		}
+		c++;
+		cout<<c<<" "<<n<<endl;
 	}
 }
 
 void triAbulles (int n){
+	cout<<"triAbulles"<<endl;
 	bool stop;
+	int c=0;
+	cout<<n<<endl;
 	do{
+		c++;
 		stop=true;
 		for(int i=1;i<n;i++){
-			if(!(liste[i-1].population<liste[i].population)){
+			if(liste[i-1].population > liste[i].population){
 				permute(i,i-1);
 				stop=false;
+
 			}
 		}
-	}while(!stop);
+		cout<<c<<" "<<n<<endl;
+		n--;
+	}while(!stop );
 }
 
 int main(int, char*[]) {
-	lire_fichier("tp1-data.csv");
-
+//	lire_fichier("tp1-data.csv");
 //	triselection(liste.size());
-//	triInsertion(liste.size());
+//	cout<<compteurPermute<<endl;
+//	compteurPermute=0;
+	
+	liste={};
+	lire_fichier("tp1-data.csv");
+	triInsertion(liste.size());
+	cout<<compteurPermute<<endl;
+	compteurPermute=0;
+
+	liste={};
+	lire_fichier("tp1-data.csv");
 	triAbulles(liste.size());
+	cout<<compteurPermute<<endl;
+	compteurPermute=0;
+
 	for (size_t i = 0; i < liste.size(); i++)
 		cout << i << " " << liste[i].nom << " " << liste[i].population << endl;
 	moyenne(liste.size());
 	cout<<"mediane des populations : "<<liste[(liste.size()-1)/2].population<<endl;
+	
 	return 0;
 }
