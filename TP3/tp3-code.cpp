@@ -2,11 +2,10 @@
 #include <fstream>
 #include <vector>
 #include <stdlib.h>
-
+#include <cmath>
 using namespace std;
-//-----------------------------------
-vector<int> liste_int = {145, 51, 455, 6, 9, 78 ,54, 62, 45, 75, 54, 74, 1875, 555, 1012, 55, 61};
-//---------------------------------------
+
+int compteur=0;
 struct Ville {
 	string nom;
 	string code;
@@ -21,11 +20,7 @@ void permute(int i, int j) {
 	liste[i] = liste[j];
 	liste[j] = temp;
 }
-void permute_int(int i, int j) {
-	int temp = liste_int[i];
-	liste_int[i] = liste_int[j];
-	liste_int[j] = temp;
-}
+
 
 void triselection (int n) {
 	for (int k = 0; k < n - 1; k++) {
@@ -98,55 +93,58 @@ void tri_rapide(int deb, int fin) {
         return;
     //cout<<"triRapide "<< deb <<" "<< fin <<endl;
     int mid = partitionner(deb, fin);
+    compteur++;
     cout<<mid<<endl;
     tri_rapide(deb, mid - 1);
     tri_rapide(mid, fin);
 }
 
-//------------------------------------------------------------
-int partitionner_int(int deb, int fin){
-	int pivot = liste_int[deb];
-	int i =deb+1;
-	int j=fin;
-	while (true){
-		while(i < j && liste_int[i] <= pivot){
-			i++;
-			//cout<<"i "<<i<<endl;
-		}  
-		while(i < j && liste_int[j]>  pivot){
-			j--;
-			//cout<<"j "<<j<<endl;	
-		} 
-
-		if(i >= j){
-			permute_int(deb, i-1);
-			return i;
+int rechercheDicho(string val,int deb, int fin){	
+	cout<<endl;
+	cout<<"Recherche Dichotomique"<<endl;
+	bool stop=false;
+	int mid=0;
+	int c=0;
+	while(!stop && (fin-deb>1)){
+		mid=(deb+fin)/2;
+		c++;
+		if(val.compare(liste[mid].nom) <0){
+			fin=mid;
+		}else{
+			if(val.compare(liste[mid].nom) > 0){
+				deb=mid;
+			}else{
+				cout<<"nb essais : "<<c<<endl;
+				if( val.compare(liste[mid].nom) == 0)return mid;		
+			}
 		}
-		permute_int(i,j);
-		i++;
-		j--;
 	}
 }
 
-void tri_rapide_int(int deb, int fin) {
-    if (deb >= fin)
-        return;
-    //cout<<"triRapide "<< deb <<" "<< fin <<endl;
-    int mid = partitionner_int(deb, fin);
-    cout<<mid<<endl;
-    tri_rapide_int(deb, mid - 1);
-    tri_rapide_int(mid, fin);
-}
-int main(int, char*[]) {
-//	lire_fichier("tp1-data.csv");
+int distanceParis(int indice_ville){
+	int indice_paris = rechercheDicho("Paris",0,36551);
+	int distance = sqrt(pow((liste[indice_paris].longitude - liste[indice_ville].longitude) * cos((liste[indice_paris].latitude + liste[indice_ville].latitude)/2),2) + pow(liste[indice_ville].latitude - liste[indice_paris].latitude, 2));
+	return distance;
 
-//	tri_rapide(0,liste.size()-1);
-	tri_rapide_int(0,liste_int.size()-1);
-	/*
+}
+
+
+int main(int, char*[]) {
+	lire_fichier("tp1-data.csv");
+
+	tri_rapide(0,liste.size());
+
 	for (size_t i = 0; i < liste.size(); i++)
 		cout << i << " " << liste[i].nom << " " << liste[i].code << endl;
-	*/	
-	cout<<"LISTE"<<endl;
-	for(int i=0; i<liste_int.size();i++)cout<< liste_int[i]<<endl; 
+	
+	cout<<"tri Rapide : "<<compteur<<endl;
+	cout<<"Paris : "<<rechercheDicho("Paris",0,36000)<<endl;
+	cout<<distanceParis(rechercheDicho("Marseille",0,36000))<<endl;
 	return 0;
 }
+
+
+
+
+
+
