@@ -36,10 +36,15 @@ int randint( int min, int max ) {
 	    on ajoute le minimum pour être sur d'avoir au moins 'min' . */
 }
 
-int max(int nb1,int  nb2){
+float max(float nb1,float  nb2){
 	if(nb1>nb2)return nb1;
 	else return nb2;
 }
+
+bool chercheSucre(Fourmi f){ return f.porteSucre;}
+bool rentreNid(Fourmi f){ return !f.porteSucre;}
+bool estVide(place p){ return (p.indiceFourmi==-1 && !p.sucre && !p.nid);}
+bool plusProcheNid(place p1,place p2){ return (p1.pheromoneNid > p2.pheromoneNid);}
 
 void creerFourmi(int indiceFourmi, coord positionFourmi, vector<Fourmi> &tabFourmis, Grille &T){
 	Fourmi f;
@@ -73,14 +78,14 @@ bool dansGrille(coord res, Grille T){
 	
 }
 
-int maxPheromoneNidVoisins(int i, int j, Grille T){
+float maxPheromoneNidVoisins(int i, int j, Grille T){
 	coord coordonnees={i,j};
 	vector<coord> coord_voisins= voisins(coordonnees,T);
-	int res=0;
+	float res=0;
 
-	for (int i=0; i<coord_voisins.size(); i++){
-		if(dansGrille(coord_voisins[i], T)){
-			res=max(res,T[coord_voisins[i].X][coord_voisins[i].Y].pheromoneNid);
+	for (int k=0; k<coord_voisins.size(); k++){
+		if(dansGrille(coord_voisins[k], T)){
+			res=float(max(res,T[coord_voisins[k].X][coord_voisins[k].Y].pheromoneNid));
 		}
 	}
 	return res;
@@ -88,17 +93,18 @@ int maxPheromoneNidVoisins(int i, int j, Grille T){
 }
 void initPheromonesNid(Grille &T){
 	// INIT PHEROMONES NID
-		T[T.size()/2][T.size()/2].pheromoneNid= 1;
-		T[(T.size()/2)-1][T.size()/2].pheromoneNid= 1;
-		T[T.size()/2][(T.size()/2)-1].pheromoneNid= 1;
-		T[(T.size()/2)-1][(T.size()/2)-1].pheromoneNid= 1;
+		T[T.size()/2][T.size()/2].pheromoneNid= 1.0;
+		T[(T.size()/2)-1][T.size()/2].pheromoneNid= 1.0;
+		T[T.size()/2][(T.size()/2)-1].pheromoneNid= 1.0;
+		T[(T.size()/2)-1][(T.size()/2)-1].pheromoneNid= 1.0;
 
-		for(int i=0; i<T.size(); i++){
-			for(int j=0; j<T.size(); j++){
-
-				if(T[i][j].pheromoneNid <1){
-					T[i][j].pheromoneNid = max(maxPheromoneNidVoisins(i,j,T)-1/T.size(),0);
-					
+		float tailleInv=1/(1.0*T.size());
+		for(int k=0; k<T.size(); k++){
+			for(int i=0; i<T.size(); i++){
+				for(int j=0; j<T.size(); j++){
+					if(T[i][j].pheromoneNid <1)
+						T[i][j].pheromoneNid = max(maxPheromoneNidVoisins(i,j,T)-tailleInv,0);
+						cout<<float(max(maxPheromoneNidVoisins(i,j,T)-tailleInv,0))<<endl;
 				}
 			}
 		}
@@ -189,14 +195,19 @@ void afficheGrille(vector<Fourmi> &tabFourmis, Grille T){
 
 void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi> &tabFourmis){
 	coord coord_p1=f.coordonnees;
-	
 	f.coordonnees=coord_p2;
-	
 	tabFourmis[p1.indiceFourmi]=f;
-	
 	p2.indiceFourmi=p1.indiceFourmi;
 	p1.indiceFourmi=-1;
 
+}
+
+
+
+void deplacementFourmi(Fourmi f, Grille &T, vector<Fourmi> &tabFourmis){
+	coord voisins = voisins({f.coordonnees.X, f.coordonnees.Y},T);
+	if(rentreNid(f)) deplaceFourmi(f, T[f.coordonnees.X][f.coordonnees.Y], maxPheromoneNidVoisins(f.coordonnees.X, f.coordonnees.Y, T), {f.coordonnees.X,f.coordonnees.Y}, tabFourmis);
+	
 }
 
 bool placeVide(place p){
