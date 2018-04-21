@@ -1,6 +1,8 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 using namespace std;
+
 #define SHOW_EMPTY_PLACES true
 #define SHOW_PRINTS false
 
@@ -39,6 +41,12 @@ int randint( int min, int max ) {
 float max(float nb1,float  nb2){
 	if(nb1>nb2)return nb1;
 	else return nb2;
+}
+
+float tronqueFloat(float nb){
+	nb*=100;
+	nb= ((int) nb)/((float)100); 
+	return nb;
 }
 
 bool chercheSucre(Fourmi f){ return f.porteSucre;}
@@ -155,7 +163,15 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 	initPheromonesNid(T);	
 }
 
+void EspaceSiFloatTropCourt(float nb){
 
+
+	stringstream ss (stringstream::in | stringstream::out);
+  	ss << nb;
+	string chaine = ss.str();
+
+	if(chaine.size() <=3)cout<<" ";
+}
 
 
 void afficheGrille(vector<Fourmi> &tabFourmis, Grille T){
@@ -168,19 +184,28 @@ void afficheGrille(vector<Fourmi> &tabFourmis, Grille T){
 			
 			if(T[i][j].indiceFourmi!=-1){
 				if(tabFourmis[T[i][j].indiceFourmi].porteSucre){
+/**/				if(SHOW_EMPTY_PLACES)cout<<"  ";
 					cout<<"F";
+					if(SHOW_EMPTY_PLACES)cout<<"  ";
 				}else{
-					cout<<"f";
+					if(SHOW_EMPTY_PLACES)cout<<"  ";
+/**/					cout<<"f";
+					if(SHOW_EMPTY_PLACES)cout<<"  ";
 				}
 			}else{
 				if(T[i][j].sucre){
+/**/				if(SHOW_EMPTY_PLACES)cout<<"  ";
 					cout<<"S";
+					if(SHOW_EMPTY_PLACES)cout<<"  ";
 				}else{
 					if(T[i][j].nid){
+/**/						if(SHOW_EMPTY_PLACES)cout<<"  ";
 						cout<<"N";
+						if(SHOW_EMPTY_PLACES)cout<<"  ";
 					}else{
 						if (SHOW_EMPTY_PLACES) {
-							cout<<T[i][j].pheromoneNid;
+							cout<<" "<<tronqueFloat(T[i][j].pheromoneNid);
+							EspaceSiFloatTropCourt(tronqueFloat(T[i][j].pheromoneNid));
 						} else {
 							cout<<" ";
 						}
@@ -203,12 +228,14 @@ void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi
 }
 
 
-
+/*
 void deplacementFourmi(Fourmi f, Grille &T, vector<Fourmi> &tabFourmis){
+
 	coord voisins = voisins({f.coordonnees.X, f.coordonnees.Y},T);
 	if(rentreNid(f)) deplaceFourmi(f, T[f.coordonnees.X][f.coordonnees.Y], maxPheromoneNidVoisins(f.coordonnees.X, f.coordonnees.Y, T), {f.coordonnees.X,f.coordonnees.Y}, tabFourmis);
 	
 }
+*/
 
 bool placeVide(place p){
 	return ((p.indiceFourmi==-1)&&(!p.sucre)&&(!p.nid));
