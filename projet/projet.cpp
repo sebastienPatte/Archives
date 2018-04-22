@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-#define SHOW_EMPTY_PLACES true
+#define SHOW_EMPTY_PLACES false
 #define SHOW_PRINTS false
 
 
@@ -25,6 +25,7 @@ struct place{
 	bool sucre;
 	bool nid;
 	float pheromoneNid;
+	int pheromonesSucre;
 };
 
 typedef vector< vector<place> > Grille;
@@ -49,10 +50,16 @@ float tronqueFloat(float nb){
 	return nb;
 }
 
-bool chercheSucre(Fourmi f){ return f.porteSucre;}
-bool rentreNid(Fourmi f){ return !f.porteSucre;}
+// predicats---------------------------------------------------------------------------------------
+bool chercheSucre(Fourmi f){ return !f.porteSucre;}
+bool rentreNid(Fourmi f){ return f.porteSucre;}
 bool estVide(place p){ return (p.indiceFourmi==-1 && !p.sucre && !p.nid);}
+bool contientNid(place p){ return p.nid;}
 bool plusProcheNid(place p1,place p2){ return (p1.pheromoneNid > p2.pheromoneNid);}
+bool contientSucre(place p){ return p.sucre;}
+bool surUnePiste(place p){ return (p.pheromonesSucre!=0);}
+//-------------------------------------------------------------------------------------------------
+
 
 void creerFourmi(int indiceFourmi, coord positionFourmi, vector<Fourmi> &tabFourmis, Grille &T){
 	Fourmi f;
@@ -218,24 +225,19 @@ void afficheGrille(vector<Fourmi> &tabFourmis, Grille T){
 	cout<<endl;
 }
 
-void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi> &tabFourmis){
+void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi> &tabFourmis, Grille &T){
 	coord coord_p1=f.coordonnees;
 	f.coordonnees=coord_p2;
 	tabFourmis[p1.indiceFourmi]=f;
 	p2.indiceFourmi=p1.indiceFourmi;
 	p1.indiceFourmi=-1;
-
-}
-
-
-/*
-void deplacementFourmi(Fourmi f, Grille &T, vector<Fourmi> &tabFourmis){
-
-	coord voisins = voisins({f.coordonnees.X, f.coordonnees.Y},T);
-	if(rentreNid(f)) deplaceFourmi(f, T[f.coordonnees.X][f.coordonnees.Y], maxPheromoneNidVoisins(f.coordonnees.X, f.coordonnees.Y, T), {f.coordonnees.X,f.coordonnees.Y}, tabFourmis);
 	
+	T[coord_p2.X][coord_p2.Y]=p2;
+	T[coord_p1.X][coord_p1.Y]=p1;
+
 }
-*/
+
+
 
 bool placeVide(place p){
 	return ((p.indiceFourmi==-1)&&(!p.sucre)&&(!p.nid));
@@ -243,46 +245,131 @@ bool placeVide(place p){
 
 
 
-coord choisiCoordAleatoirement(vector<coord> tabCoord, Grille T){
-	coord res;
-	do{
-		res = tabCoord[randint(0,tabCoord.size())];
-	}while(!(dansGrille(res,T)) or !placeVide(T[res.X][res.Y]) );
-	return res;
-	
-}
 
 
+bool regle1(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+	place p1,p2;
+	p1=T[f.coordonnees.X][f.coordonnees.Y];
 
-bool scanneVoisin(Fourmi &f, vector<Fourmi> tabFourmis, Grille &T){
-	
-	vector<coord> coord_voisins= voisins(f.coordonnees,T);
-	
-	for(int i=0;i<coord_voisins.size();i++){
-		if(dansGrille(coord_voisins[i],T)){
-			if( T[coord_voisins[i].X][coord_voisins[i].Y].sucre  && f.porteSucre==false){
-				T[coord_voisins[i].X][coord_voisins[i].Y].sucre=false;
-				f.porteSucre=true;
-				tabFourmis[T[f.coordonnees.X][f.coordonnees.Y].indiceFourmi]=f;
-				return true;
-			}
-			if( T[coord_voisins[i].X][coord_voisins[i].Y].nid && f.porteSucre==true){
-				f.porteSucre=false;
-				tabFourmis[T[f.coordonnees.X][f.coordonnees.Y].indiceFourmi]=f;
-				return true;
-			}
+	for(int i=0; i<coord_voisins.size();i++){
+		p2=T[coord_voisins[i].X][coord_voisins[i].Y];
+		if(chercheSucre(f)&&(contientSucre(p2))){
+					f.porteSucre=true;
+					p2.sucre=false;
+					p1.pheromonesSucre=255;
+
+
+					//on remet les valeurs dans tabFourmis et la Grille
+					T[coord_voisins[i].X][coord_voisins[i].Y]=p2;
+					T[f.coordonnees.X][f.coordonnees.Y]=p1;
+					tabFourmis[p1.indiceFourmi]=f;
+
+					return true;
+
 		}
 	}return false;
 }
 
 
+bool regle2(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+	place p1,p2;
+	p1=T[f.coordonnees.X][f.coordonnees.Y];
+	
+	for(int i=0; i<coord_voisins.size();i++){
+		p2=T[coord_voisins[i].X][coord_voisins[i].Y];
+		if(rentreNid(f)&&(contientNid(p2))){
+					f.porteSucre=false;
+
+					//on remet la fourmi f dans tabFourmi
+					tabFourmis[p1.indiceFourmi]=f;
+
+					return true;
+		}
+	}return false;
+}
+
+bool regle3(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+	place p1,p2;
+	p1=T[f.coordonnees.X][f.coordonnees.Y];
+	
+	for(int i=0; i<coord_voisins.size();i++){
+		p2=T[coord_voisins[i].X][coord_voisins[i].Y];
+		if(rentreNid(f) && estVide(p2) && plusProcheNid(p2,p1)){
+			
+			deplaceFourmi(f, p1, p2, coord_voisins[i], tabFourmis, T);
+			p2.pheromonesSucre=255;
+
+			//on remet p2 dans la grille
+			T[coord_voisins[i].X][coord_voisins[i].Y]=p2;
+			return true;
+		}
+	}return false;
+}
+
+bool regle4(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+	place p1,p2;
+	p1=T[f.coordonnees.X][f.coordonnees.Y];
+	
+	for(int i=0; i<coord_voisins.size();i++){
+		p2=T[coord_voisins[i].X][coord_voisins[i].Y];
+		if(chercheSucre(f) && surUnePiste(p2) && estVide(p2)){
+			deplaceFourmi(f, p1, p2, coord_voisins[i], tabFourmis, T);
+			
+			return true;
+		}
+	}return false;
+}
+
+bool regle5(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+	place p1,p2;
+	p1=T[f.coordonnees.X][f.coordonnees.Y];
+	
+	for(int i=0; i<coord_voisins.size();i++){
+		p2=T[coord_voisins[i].X][coord_voisins[i].Y];
+		if(chercheSucre(f) && surUnePiste(p2) && estVide(p2)){
+			deplaceFourmi(f, p1, p2, coord_voisins[i], tabFourmis, T);
+
+			return true;
+		}
+	}return false;
+}
+
+bool regle6(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+	place p1,p2;
+	p1=T[f.coordonnees.X][f.coordonnees.Y];
+	
+	for(int i=0; i<coord_voisins.size();i++){
+		p2=T[coord_voisins[i].X][coord_voisins[i].Y];
+		if(chercheSucre(f) && estVide(p2)){
+			cout<<"deplace"<<endl;
+			deplaceFourmi(f, p1, p2, {coord_voisins[i].X, coord_voisins[i].Y}, tabFourmis, T);
+			
+			return true;
+		}	
+	}return false;
+}
+
 void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 	coord newCoord;
+	place p1,p2;
+	Fourmi f;
 	for(int i=0;i<tabFourmis.size();i++){
-		if(!scanneVoisin(tabFourmis[i], tabFourmis, T)){
-			newCoord=choisiCoordAleatoirement(voisins(tabFourmis[i].coordonnees,T),T);
-			if(SHOW_PRINTS)printf("MOVE ANT TO COORDS : %d, %d\n", newCoord.X, newCoord.Y);
-			deplaceFourmi(tabFourmis[i], T[tabFourmis[i].coordonnees.X][tabFourmis[i].coordonnees.Y], T[newCoord.X][newCoord.Y], newCoord, tabFourmis );
+		cout<<i<<endl;
+	
+		f= tabFourmis[i];
+		p1=T[f.coordonnees.X][f.coordonnees.Y];
+		vector<coord> coord_voisins=voisins(tabFourmis[i].coordonnees,T);
+		
+		if(!regle1(f, coord_voisins, tabFourmis, T)){
+			if(!regle2(f, coord_voisins, tabFourmis, T)){
+				if(!regle3(f, coord_voisins, tabFourmis, T)){
+					if(!regle4(f, coord_voisins, tabFourmis, T)){
+						if(!regle5(f, coord_voisins, tabFourmis, T)){
+							regle6(f, coord_voisins, tabFourmis, T);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -300,12 +387,14 @@ int main(){
 	initPlateau(nbSucres,tabFourmis,T);
 	afficheGrille(tabFourmis,T);
 	
+
 	int test=0;
 	do{
 		unTour(tabFourmis,T);
 		afficheGrille(tabFourmis,T);
 		cin>>test;
 	}while(test==0);
+	
 	if(SHOW_PRINTS)cout<<"SHOWING ANTS"<<endl;
 	for(int i=0; i<tabFourmis.size();i++) {
 		if(SHOW_PRINTS)cout<<tabFourmis[i].coordonnees.X<<", "<<tabFourmis[i].coordonnees.Y<<endl;
@@ -318,6 +407,6 @@ int main(){
 	cout<<T[T.size()/2-2][T.size()/2-2].indiceFourmi<<endl;
 	cout<<tabFourmis[0].coordonnees.X<<" "<<tabFourmis[0].coordonnees.Y<<endl;
 	afficheGrille(tabFourmis,T);
-	
 */	
+	
 }
