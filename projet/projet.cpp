@@ -22,7 +22,7 @@ struct Fourmi{
 
 struct place{
 	int indiceFourmi;
-	bool sucre;
+	int sucre;
 	bool nid;
 	float pheromoneNid;
 	int pheromonesSucre;
@@ -57,7 +57,7 @@ bool estVide(place p){ return (p.indiceFourmi==-1 && !p.sucre && !p.nid);}
 bool contientNid(place p){ return p.nid;}
 bool plusProcheNid(place p1,place p2){ return (p1.pheromoneNid > p2.pheromoneNid);}
 bool plusLoinNid(place p1, place p2){ return (p1.pheromoneNid < p2.pheromoneNid);}
-bool contientSucre(place p){ return p.sucre;}
+bool contientSucre(place p){ return p.sucre!=0;}
 bool surUnePiste(place p){ return (p.pheromonesSucre!=0);}
 //bool plusProcheSucre(place p1,p2){ return (p1.pheromonesSucre < p2.pheromonesSucre);}
 //-------------------------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 		posSucreX=randint(0,5);
 		posSucreY=randint(0,5);
 		if(T[posSucreX+zoneSucres][posSucreY+zoneSucres].sucre!=true ){
-			T[posSucreX+zoneSucres][posSucreY+zoneSucres].sucre=true;
+			T[posSucreX+zoneSucres][posSucreY+zoneSucres].sucre=5;
 			k++;
 		}
 	}while(k<nbSucres);
@@ -205,9 +205,9 @@ void afficheGrille(vector<Fourmi> &tabFourmis, Grille T){
 					if(SHOW_EMPTY_PLACES)cout<<"  ";
 				}
 			}else{
-				if(T[i][j].sucre){
+				if(T[i][j].sucre!=0){
 /**/				if(SHOW_EMPTY_PLACES)cout<<"  ";
-					cout<<"S";
+					cout<<T[i][j].sucre;
 					if(SHOW_EMPTY_PLACES)cout<<"  ";
 				}else{
 					if(T[i][j].nid){
@@ -261,7 +261,7 @@ bool regle1(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 			p2=T[coord_voisins[i].X][coord_voisins[i].Y];
 			if(chercheSucre(f)&&(contientSucre(p2))){
 						f.porteSucre=true;
-						p2.sucre=false;
+						p2.sucre--;
 						p1.pheromonesSucre=255;
 
 
@@ -367,6 +367,14 @@ bool regle6(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 		return true;
 	}
 	return false;
+}
+
+void baissePheromonesSucre(Grille &T){
+	for (int i=0 ; i<T.size();i++){
+		for(int j=0; j<T[i].size();j++){
+			if(T[i][j].pheromonesSucre!=0) T[i][j].pheromonesSucre--;
+		}
+	}
 }
 
 void unTour(vector<Fourmi> &tabFourmis , Grille &T){
