@@ -56,8 +56,10 @@ bool rentreNid(Fourmi f){ return f.porteSucre;}
 bool estVide(place p){ return (p.indiceFourmi==-1 && !p.sucre && !p.nid);}
 bool contientNid(place p){ return p.nid;}
 bool plusProcheNid(place p1,place p2){ return (p1.pheromoneNid > p2.pheromoneNid);}
+bool plusLoinNid(place p1, place p2){ return (p1.pheromoneNid < p2.pheromoneNid);}
 bool contientSucre(place p){ return p.sucre;}
 bool surUnePiste(place p){ return (p.pheromonesSucre!=0);}
+//bool plusProcheSucre(place p1,p2){ return (p1.pheromonesSucre < p2.pheromonesSucre);}
 //-------------------------------------------------------------------------------------------------
 
 
@@ -249,7 +251,7 @@ bool placeVide(place p){
 
 
 
-
+//regle 1: ramassage du sucre
 bool regle1(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
@@ -275,7 +277,7 @@ bool regle1(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}return false;
 }
 
-
+//regle 2: depose sucre
 bool regle2(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
@@ -295,6 +297,7 @@ bool regle2(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}return false;
 }
 
+//regle 3: rentre le plus rapidement possible au nid
 bool regle3(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
@@ -315,6 +318,7 @@ bool regle3(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}return false;
 }
 
+//regle 4: cherche sucre
 bool regle4(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
@@ -322,7 +326,7 @@ bool regle4(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	for(int i=0; i<coord_voisins.size();i++){
 		if(dansGrille(coord_voisins[i],T)){	
 			p2=T[coord_voisins[i].X][coord_voisins[i].Y];
-			if(chercheSucre(f) && surUnePiste(p2) && estVide(p2)){
+			if(chercheSucre(f) && surUnePiste(p1) && estVide(p2) && plusLoinNid(p2,p1) && surUnePiste(p2)){
 				deplaceFourmi(f, p1, p2, coord_voisins[i], tabFourmis, T);
 			
 				return true;
@@ -369,9 +373,9 @@ void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 	coord newCoord;
 	place p1,p2;
 	Fourmi f;
+
 	for(int i=0;i<tabFourmis.size();i++){
 		cout<<i<<endl;
-	
 		f= tabFourmis[i];
 		p1=T[f.coordonnees.X][f.coordonnees.Y];
 		vector<coord> coord_voisins=voisins(tabFourmis[i].coordonnees,T);
