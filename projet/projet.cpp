@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-#define SHOW_EMPTY_PLACES false
+#define SHOW_EMPTY_PLACES true
 #define SHOW_PRINTS false
 
 
@@ -124,12 +124,18 @@ void initPheromonesNid(Grille &T){
 				for(int j=0; j<T.size(); j++){
 					if(T[i][j].pheromoneNid <1)
 						T[i][j].pheromoneNid = max(maxPheromoneNidVoisins(i,j,T)-tailleInv,0);
-						cout<<float(max(maxPheromoneNidVoisins(i,j,T)-tailleInv,0))<<endl;
 				}
 			}
 		}
 }
 	
+bool sucreTropProcheNid(int posSucreX, int posSucreY, Grille T){
+	if( (posSucreX<(T.size()/2)-(T.size()/4)) || (posSucreX > (T.size()/2)+(T.size()/4) ) ){
+		if( (posSucreY<(T.size()/2)-(T.size()/4)) || (posSucreY > (T.size()/2)+(T.size()/4) ) ){
+			return false;
+		}
+	}
+}
 
 void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 	int zoneSucres,posSucreX,posSucreY;
@@ -142,16 +148,14 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 	}
 
 	// INIT SUCRE
-	zoneSucres=randint(0,10);
-	int k=0;
-	do{
-		posSucreX=randint(0,5);
-		posSucreY=randint(0,5);
-		if(T[posSucreX+zoneSucres][posSucreY+zoneSucres].sucre!=true ){
-			T[posSucreX+zoneSucres][posSucreY+zoneSucres].sucre=5;
-			k++;
-		}
-	}while(k<nbSucres);
+	for(int k=0; k<nbSucres;k++){
+		do{
+			posSucreX=randint(0,T.size()-1);
+			posSucreY=randint(0,T.size()-1);
+		}while(sucreTropProcheNid(posSucreX,posSucreY,T));
+		T[posSucreX][posSucreY].sucre=5;
+	}
+	
 	// INIT NID
 	T[T.size()/2][T.size()/2].nid= true;
 	T[T.size()/2-1][T.size()/2].nid= true;
@@ -372,7 +376,7 @@ bool regle6(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 void baissePheromonesSucre(Grille &T){
 	for (int i=0 ; i<T.size();i++){
 		for(int j=0; j<T[i].size();j++){
-			if(T[i][j].pheromonesSucre!=0) T[i][j].pheromonesSucre--;
+			if(T[i][j].pheromonesSucre!=0) T[i][j].pheromonesSucre-=1;
 		}
 	}
 }
@@ -383,7 +387,7 @@ void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 	Fourmi f;
 
 	for(int i=0;i<tabFourmis.size();i++){
-		cout<<i<<endl;
+		
 		f= tabFourmis[i];
 		p1=T[f.coordonnees.X][f.coordonnees.Y];
 		vector<coord> coord_voisins=voisins(tabFourmis[i].coordonnees,T);
