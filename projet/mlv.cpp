@@ -16,6 +16,17 @@ void exit_function( void* data ){
         int* arret = (int*)  data;
         *arret = 1;
 }
+void poseSucre(Grille &T, int largeur_case, int hauteur_case){
+	int x=0, y=0;
+	if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT)==MLV_PRESSED){
+		MLV_get_mouse_position(&x,&y);
+		x/= largeur_case;
+		y/= hauteur_case;
+		T[x][y].sucre=5;
+
+	}
+}
+
 void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, int hauteur_case, vector<Fourmi> tabFourmis,  Grille T ){
         //
         // On nettoie l'écran
@@ -116,7 +127,7 @@ int main(){
 
                 
                 unTour(tabFourmis,T);
-
+                poseSucre(T,largeur_case, hauteur_case);
                 affichage( width, height, nb_case_largeur, largeur_case, hauteur_case, tabFourmis, T );
 
         }
