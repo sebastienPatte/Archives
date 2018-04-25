@@ -37,13 +37,28 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
                           }
                       }else{
                           if(T[i][j].sucre!=0){
+                          	  //colorie la case en orange
                               MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_ORANGE);
+                              
+                              //dessinne les carrés de sucres dans les cases oranges
+                              MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case/2)-(largeur_case/8), (j*hauteur_case)+(hauteur_case/2)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
+                              if(T[i][j].sucre>=2){
+                              		MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case/6)-(largeur_case/8), (j*hauteur_case)+(hauteur_case/6)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
+                              		if(T[i][j].sucre>=3){
+                              			MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case*5/6)-(largeur_case/8), (j*hauteur_case)+(hauteur_case*5/6)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
+                              			if(T[i][j].sucre>=4){
+                              				MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case/6)-(largeur_case/8), (j*hauteur_case)+(hauteur_case*5/6)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
+                              				if(T[i][j].sucre==5) MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case*5/6)-(largeur_case/8), (j*hauteur_case)+(hauteur_case/6)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
+                              		
+                              			}
+                              		}		
+                              }
                           }else{
                               if(T[i][j].nid){
                                   MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_BLUE);
                               }else{
               						if(T[i][j].pheromonesSucre!=0){
-              							MLV_Color couleurPheromoneSucre= MLV_rgba  (   100 +((T[i][j].pheromonesSucre*155)/255) , 0 , 0 , 255);
+              							MLV_Color couleurPheromoneSucre= MLV_rgba  (   100 +((T[i][j].pheromonesSucre*155)/255) 	, 0 , 0 , 255);
               							MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, couleurPheromoneSucre);	
               						
               						}else{
@@ -58,13 +73,13 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
 
               // Pour colorer en RGB (pour les phéromones) :
               //"MLV_Color MLV_rgba  (   Uint8   red,Uint8   green,Uint8   blue,Uint8   alpha )"
-        MLV_wait_milliseconds(100);  
+        MLV_wait_milliseconds(200);  
         MLV_actualise_window();
 }
 
 int main(){
         int arret = 0;
-        int width = 500, height = 500;
+        int width = 650, height = 650;
 
         int nbFourmis=12;
         int tailleCarte=30;
