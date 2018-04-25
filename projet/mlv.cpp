@@ -17,7 +17,6 @@ void exit_function( void* data ){
         *arret = 1;
 }
 void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, int hauteur_case, vector<Fourmi> tabFourmis,  Grille T ){
-        
         //
         // On nettoie l'écran
         //
@@ -43,7 +42,14 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
                               if(T[i][j].nid){
                                   MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_BLUE);
                               }else{
-                                  MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_GREEN);
+              						if(T[i][j].pheromonesSucre!=0){
+              							MLV_Color couleurPheromoneSucre= MLV_rgba  (   100 +((T[i][j].pheromonesSucre*155)/255) , 0 , 0 , 255);
+              							MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, couleurPheromoneSucre);	
+              						
+              						}else{
+              							MLV_Color couleurPheromoneNid= MLV_rgba  (   0, T[i][j].pheromoneNid*255, 0 , 255);
+              							MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, couleurPheromoneNid);
+                              		}
                               }
                           }
                       }
