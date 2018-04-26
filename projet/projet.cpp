@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <string>
+
 using namespace std;
 
 #define SHOW_EMPTY_PLACES true
@@ -18,6 +20,7 @@ struct coord{
 struct Fourmi{
 	coord coordonnees;
 	bool porteSucre;
+	int orientation; // de 0 à 3 {HAUT, DROITE, BAS, GAUCHE}
 };
 
 struct place{
@@ -70,6 +73,7 @@ void creerFourmi(int indiceFourmi, coord positionFourmi, vector<Fourmi> &tabFour
 	f.coordonnees=positionFourmi;
 	if(SHOW_PRINTS)cout<<"CREATED ANT NUMBER ["<<indiceFourmi<<"] AT "<<f.coordonnees.X<<", "<<f.coordonnees.Y<<endl;
 	f.porteSucre=false;
+	f.orientation=0;
 	tabFourmis[indiceFourmi]= f;
 
 	tabFourmis[indiceFourmi].coordonnees=positionFourmi;
@@ -149,6 +153,12 @@ bool sucreTropProcheNid(int posSucreX, int posSucreY, Grille T){
 	}
 }
 
+// retourne true si la case est vide, false sinon
+bool placeVide(place p){
+	return ((p.indiceFourmi==-1)&&(!p.sucre)&&(!p.nid));
+}
+
+
 // initialise toute la grille T
 void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 	int zoneSucres,posSucreX,posSucreY;
@@ -160,14 +170,7 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 		}
 	}
 
-	// INIT SUCRE
-	for(int k=0; k<nbSucres;k++){
-		do{
-			posSucreX=randint(0,T.size()-1);
-			posSucreY=randint(0,T.size()-1);
-		}while(sucreTropProcheNid(posSucreX,posSucreY,T));
-		T[posSucreX][posSucreY].sucre=5;
-	}
+
 	
 	// INIT NID
 	T[T.size()/2][T.size()/2].nid= true;
@@ -189,7 +192,34 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 			}
 		}
 	}
+	
+	// INIT SUCRE
+	for(int k=0; k<nbSucres;k++){
+		do{
+			posSucreX=randint(0,T.size()-1);
+			posSucreY=randint(0,T.size()-1);
+		}while(sucreTropProcheNid(posSucreX,posSucreY,T)|| !placeVide(T[posSucreX][posSucreY]));
+		T[posSucreX][posSucreY].sucre=5;
+	}	
+
+	// INIT PHEROMONES NID
 	initPheromonesNid(T);	
+}
+
+void majOrientation(Fourmi &f, coord coord_p1, coord coord_p2){
+	if(coord_p1.X < coord_p2.X){
+		f.orientation=1;
+	}else{
+		if(coord_p1.Y < coord_p2.Y){
+			f.orientation=0;
+		}else{
+			if(coord_p1.X > coord_p2.X){
+				f.orientation=3;
+			}else{
+				f.orientation=2;
+			}
+		}
+	}
 }
 
 
@@ -197,19 +227,13 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi> &tabFourmis, Grille &T){
 	coord coord_p1=f.coordonnees;
 	f.coordonnees=coord_p2;
+	majOrientation(f,coord_p1,coord_p2);
 	tabFourmis[p1.indiceFourmi]=f;
 	p2.indiceFourmi=p1.indiceFourmi;
 	p1.indiceFourmi=-1;
-	
 	T[coord_p2.X][coord_p2.Y]=p2;
 	T[coord_p1.X][coord_p1.Y]=p1;
 
-}
-
-
-// retourne true si la case est vide, false sinon
-bool placeVide(place p){
-	return ((p.indiceFourmi==-1)&&(!p.sucre)&&(!p.nid));
 }
 
 
@@ -344,6 +368,10 @@ void baissePheromonesSucre(Grille &T){
 	}
 }
 
+
+
+
+
 // effectue une itération
 void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 	coord newCoord;
@@ -355,18 +383,18 @@ void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 		f= tabFourmis[i];
 		p1=T[f.coordonnees.X][f.coordonnees.Y];
 		vector<coord> coord_voisins=voisins(tabFourmis[i].coordonnees,T);
-		
-		if(!regle1(f, coord_voisins, tabFourmis, T)){
-			if(!regle2(f, coord_voisins, tabFourmis, T)){
-				if(!regle3(f, coord_voisins, tabFourmis, T)){
-					if(!regle4(f, coord_voisins, tabFourmis, T)){
-						if(!regle5(f, coord_voisins, tabFourmis, T)){
-							regle6(f, coord_voisins, tabFourmis, T);
+			
+			if(!regle1(f, coord_voisins, tabFourmis, T)){
+				if(!regle2(f, coord_voisins, tabFourmis, T)){
+					if(!regle3(f, coord_voisins, tabFourmis, T)){
+						if(!regle4(f, coord_voisins, tabFourmis, T)){
+							if(!regle5(f, coord_voisins, tabFourmis, T)){
+								regle6(f, coord_voisins, tabFourmis, T);
+							}
 						}
 					}
 				}
 			}
-		}
 	}baissePheromonesSucre(T);
 
 }
