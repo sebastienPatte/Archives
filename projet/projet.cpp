@@ -39,11 +39,13 @@ int randint( int min, int max ) {
 	    on ajoute le minimum pour être sur d'avoir au moins 'min' . */
 }
 
+// renvoie le maximum entre deux float
 float max(float nb1,float  nb2){
 	if(nb1>nb2)return nb1;
 	else return nb2;
 }
 
+// revoie un float tronqué au centième
 float tronqueFloat(float nb){
 	nb*=100;
 	nb= ((int) nb)/((float)100); 
@@ -62,7 +64,7 @@ bool surUnePiste(place p){ return (p.pheromonesSucre!=0);}
 //bool plusProcheSucre(place p1,p2){ return (p1.pheromonesSucre < p2.pheromonesSucre);}
 //-------------------------------------------------------------------------------------------------
 
-
+// créé une fourmi a la position 'positionFourmi'
 void creerFourmi(int indiceFourmi, coord positionFourmi, vector<Fourmi> &tabFourmis, Grille &T){
 	Fourmi f;
 	f.coordonnees=positionFourmi;
@@ -75,7 +77,7 @@ void creerFourmi(int indiceFourmi, coord positionFourmi, vector<Fourmi> &tabFour
 }
 
 
-
+// vérifie si une case de coordonnée 'res' est dans la grille
 bool dansGrille(coord res, Grille T){
 
 	if((res.X>=T.size()) or (res.Y>=T.size()))return false;
@@ -84,6 +86,8 @@ bool dansGrille(coord res, Grille T){
 	
 }
 
+// @ param: coord 
+// renvoie un tableau contenant les coordonnées de toutes les cases voisines de la case de coordonnées 'coord' entrée en paramètre
 vector<coord> voisins(coord coordonnees,Grille T){
 
 	vector<coord> res(4);			
@@ -91,13 +95,18 @@ vector<coord> voisins(coord coordonnees,Grille T){
 	res[1]= {coordonnees.X,coordonnees.Y+1};
 	res[2]= {coordonnees.X-1,coordonnees.Y};
 	res[3]= {coordonnees.X,coordonnees.Y-1};
+	//res[4]= {coordonnees.X+1,coordonnees.Y+1};
+	//res[5]= {coordonnees.X-1,coordonnees.Y+1};
+	//res[6]= {coordonnees.X-1,coordonnees.Y-1};
+	//res[7]= {coordonnees.X+1,coordonnees.Y-1};
+
 
 
 	return res;
 		    
 }
 
-
+// renvoie la case voisine de la case {i,j} ayant la plus grande concentration de pheromonesNid
 float maxPheromoneNidVoisins(int i, int j, Grille T){
 	coord coordonnees={i,j};
 	vector<coord> coord_voisins= voisins(coordonnees,T);
@@ -111,6 +120,8 @@ float maxPheromoneNidVoisins(int i, int j, Grille T){
 	return res;
 
 }
+
+// initialise les pheromonesNid dans la grille T
 void initPheromonesNid(Grille &T){
 	// INIT PHEROMONES NID
 		T[T.size()/2][T.size()/2].pheromoneNid= 1.0;
@@ -128,7 +139,8 @@ void initPheromonesNid(Grille &T){
 			}
 		}
 }
-	
+
+//pour verifier que les tas de sucres générés au lancement du programme ne sont pas trop proches du nid	
 bool sucreTropProcheNid(int posSucreX, int posSucreY, Grille T){
 	if( (posSucreX<(T.size()/2)-(T.size()/4)) || (posSucreX > (T.size()/2)+(T.size()/4) ) ){
 		if( (posSucreY<(T.size()/2)-(T.size()/4)) || (posSucreY > (T.size()/2)+(T.size()/4) ) ){
@@ -137,6 +149,7 @@ bool sucreTropProcheNid(int posSucreX, int posSucreY, Grille T){
 	}
 }
 
+// initialise toute la grille T
 void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 	int zoneSucres,posSucreX,posSucreY;
 	// INIT GRILLE
@@ -179,61 +192,8 @@ void initPlateau(int nbSucres,vector<Fourmi> &tabFourmis,Grille &T){
 	initPheromonesNid(T);	
 }
 
-void EspaceSiFloatTropCourt(float nb){
 
-
-	stringstream ss (stringstream::in | stringstream::out);
-  	ss << nb;
-	string chaine = ss.str();
-
-	if(chaine.size() <=3)cout<<" ";
-}
-
-
-void afficheGrille(vector<Fourmi> &tabFourmis, Grille T){
-	for(int c=0;c<T.size()*2+2;c++)cout<<"#";
-	cout<<endl;
-	for (int i=0; i<T.size(); i++){
-		cout<<"#";
-		for (int j=0; j<T[i].size(); j++){
-			cout<<" ";
-			
-			if(T[i][j].indiceFourmi!=-1){
-				if(tabFourmis[T[i][j].indiceFourmi].porteSucre){
-/**/				if(SHOW_EMPTY_PLACES)cout<<"  ";
-					cout<<"F";
-					if(SHOW_EMPTY_PLACES)cout<<"  ";
-				}else{
-					if(SHOW_EMPTY_PLACES)cout<<"  ";
-/**/					cout<<"f";
-					if(SHOW_EMPTY_PLACES)cout<<"  ";
-				}
-			}else{
-				if(T[i][j].sucre!=0){
-/**/				if(SHOW_EMPTY_PLACES)cout<<"  ";
-					cout<<T[i][j].sucre;
-					if(SHOW_EMPTY_PLACES)cout<<"  ";
-				}else{
-					if(T[i][j].nid){
-/**/						if(SHOW_EMPTY_PLACES)cout<<"  ";
-						cout<<"N";
-						if(SHOW_EMPTY_PLACES)cout<<"  ";
-					}else{
-						if (SHOW_EMPTY_PLACES) {
-							cout<<" "<<tronqueFloat(T[i][j].pheromoneNid);
-							EspaceSiFloatTropCourt(tronqueFloat(T[i][j].pheromoneNid));
-						} else {
-							cout<<" ";
-						}
-					}
-				}
-			}
-		}cout<<"#"<<endl;
-	}
-	for(int c=0;c<T.size()*2+2;c++)cout<<"#";
-	cout<<endl;
-}
-
+// deplace une fourmi d'une case p1 à une case p2
 void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi> &tabFourmis, Grille &T){
 	coord coord_p1=f.coordonnees;
 	f.coordonnees=coord_p2;
@@ -247,7 +207,7 @@ void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi
 }
 
 
-
+// retourne true si la case est vide, false sinon
 bool placeVide(place p){
 	return ((p.indiceFourmi==-1)&&(!p.sucre)&&(!p.nid));
 }
@@ -322,7 +282,7 @@ bool regle3(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}return false;
 }
 
-//regle 4: cherche sucre
+//regle 4: suis une piste
 bool regle4(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
@@ -339,6 +299,7 @@ bool regle4(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}return false;
 }
 
+//regle 5: trouve une piste
 bool regle5(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
@@ -355,6 +316,7 @@ bool regle5(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}return false;
 }
 
+//regle 6: se deplace aleatoirement sur une case voisine vide
 bool regle6(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	int i;
@@ -364,7 +326,7 @@ bool regle6(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	}while(!dansGrille(coord_voisins[i],T));
 
 	p2=T[coord_voisins[i].X][coord_voisins[i].Y];
-	if(chercheSucre(f) && estVide(p2)){
+	if(estVide(p2)){
 		deplaceFourmi(f, p1, p2, {coord_voisins[i].X, coord_voisins[i].Y}, tabFourmis, T);
 				
 		return true;
@@ -372,6 +334,7 @@ bool regle6(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 	return false;
 }
 
+//diminue chaque pheromone de sucre présent sur la grille (est lancé à chaque itération unTour) 
 void baissePheromonesSucre(Grille &T){
 	for (int i=0 ; i<T.size();i++){
 		for(int j=0; j<T.size();j++){
@@ -381,6 +344,7 @@ void baissePheromonesSucre(Grille &T){
 	}
 }
 
+// effectue une itération
 void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 	coord newCoord;
 	place p1,p2;

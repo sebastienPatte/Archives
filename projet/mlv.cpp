@@ -4,7 +4,6 @@
 using namespace std;
         
 
-vector<MLV_Color> couleur {MLV_COLOR_RED,MLV_COLOR_GREEN,MLV_COLOR_BLUE};
 
 //
 // exit_function est la fonction de call back qui sera appelée par la librairie
@@ -16,6 +15,8 @@ void exit_function( void* data ){
         int* arret = (int*)  data;
         *arret = 1;
 }
+
+// pose un sucre sur la case contenant la position de la souris si l'utilisateur clique sur le clique gauche
 void poseSucre(Grille &T, int largeur_case, int hauteur_case){
 	int x=0, y=0;
 	if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT)==MLV_PRESSED){
@@ -27,6 +28,7 @@ void poseSucre(Grille &T, int largeur_case, int hauteur_case){
 	}
 }
 
+// affiche tout les éléments de la grille dans la fenetre MLV
 void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, int hauteur_case, vector<Fourmi> tabFourmis,  Grille T ){
         //
         // On nettoie l'écran
@@ -84,7 +86,6 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
 
               // Pour colorer en RGB (pour les phéromones) :
               //"MLV_Color MLV_rgba  (   Uint8   red,Uint8   green,Uint8   blue,Uint8   alpha )"
-        MLV_wait_milliseconds(200);  
         MLV_actualise_window();
 }
 
@@ -127,6 +128,8 @@ int main(){
 
                 
                 unTour(tabFourmis,T);
+                MLV_wait_milliseconds(200);  
+
                 poseSucre(T,largeur_case, hauteur_case);
                 affichage( width, height, nb_case_largeur, largeur_case, hauteur_case, tabFourmis, T );
 
