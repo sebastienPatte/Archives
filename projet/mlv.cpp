@@ -23,13 +23,13 @@ void poseSucre(Grille &T, int largeur_case, int hauteur_case){
 		MLV_get_mouse_position(&x,&y);
 		x/= largeur_case;
 		y/= hauteur_case;
-		T[x][y].sucre=5;
+		if(placeVide(T[x][y])) T[x][y].sucre=5;
 
 	}
 }
 
 // affiche tout les éléments de la grille dans la fenetre MLV
-void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, int hauteur_case, MLV_Image *fourmiHaut, MLV_Image *fourmiDroite, MLV_Image *fourmiBas, MLV_Image *fourmiGauche, vector<Fourmi> tabFourmis,  Grille T ){
+void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, int hauteur_case, int dureePheromonesSucre, MLV_Image *fourmiHaut, MLV_Image *fourmiDroite, MLV_Image *fourmiBas, MLV_Image *fourmiGauche, vector<Fourmi> tabFourmis,  Grille T ){
     //
     // On nettoie l'écran
     //
@@ -64,7 +64,7 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
                         MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_BLUE);
                     }else{
               			if(T[i][j].pheromonesSucre!=0){
-              				MLV_Color couleurPheromoneSucre= MLV_rgba  (   100 +((T[i][j].pheromonesSucre*155)/255) 	, 0 , 0 , 255);
+              				MLV_Color couleurPheromoneSucre= MLV_rgba  (   100 +((T[i][j].pheromonesSucre*155)/dureePheromonesSucre) 	, 0 , 0 , 255);
               				MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, couleurPheromoneSucre);	
               						
               			}else{
@@ -99,24 +99,44 @@ int main(){
 		MLV_Image *fourmiHaut, *fourmiDroite, *fourmiBas, *fourmiGauche;
         int arret = 0;
         int width = 650, height = 650;
-
+        int reglages;
         int nbFourmis=12;
         int tailleCarte=30;
-        int nbSucres;
+        int nbSucres=5;
+        int vitesseAnimation=7;
+        int dureePheromonesSucre=50;
 
-        
-        
+        // REGLAGES
         do{
-        	cout<<"tailleCarte=? (nombre pair entre 6 et 60)"<<endl;
-        	cin>>tailleCarte;
-        }while(!(tailleCarte >=6 && tailleCarte <=60 && tailleCarte%2 == 0));
-        vector<Fourmi> tabFourmis(nbFourmis);
+        	cout<<"Utiliser les réglages par défaut ? (1/0)"<<endl;
+        	cin>>reglages;
+        	if(reglages==0){
+       			do{
+        			cout<<"tailleCarte=? (nombre pair entre 6 et 60)"<<endl;
+        			cin>>tailleCarte;
+        		}while(!(tailleCarte >=6 && tailleCarte <=60 && tailleCarte%2 == 0));
+        
     
-        do{
-        	cout << "nbSucres=? (<=" << tailleCarte << ")" << endl;
-        	cin>>nbSucres;
-        }while(nbSucres > tailleCarte); 
+        		do{
+        			cout << "nbSucres=? (<=" << tailleCarte << ")" << endl;
+        			cin>>nbSucres;
+        		}while(nbSucres > tailleCarte); 
+        		
+        		do{
+        			cout << "vitesseAnimation=? (entre 1 et 10)"<< endl;
+        			cin>>vitesseAnimation;
+        		}while(!(vitesseAnimation >=1 && vitesseAnimation <=10));
 
+        		do{
+        			cout << "duree de vie des Pheromones de Sucre =? (entre 1 et 255)"<< endl;
+        			cin>>dureePheromonesSucre;
+        		}while(!(dureePheromonesSucre >=1 && dureePheromonesSucre <=255));
+
+        	}
+        }while(reglages!=0 && reglages!=1);
+        
+        // INITIALISATION
+        vector<Fourmi> tabFourmis(nbFourmis);
         Grille T(tailleCarte);
         initPlateau(nbSucres,tabFourmis,T);
 
@@ -159,11 +179,11 @@ int main(){
         while( ! arret ){
 
                 
-                unTour(tabFourmis,T);
-                MLV_wait_milliseconds(200);  
+                unTour(dureePheromonesSucre,tabFourmis,T);
+                MLV_wait_milliseconds((11-vitesseAnimation)*50);  
 
                 poseSucre(T,largeur_case, hauteur_case);
-                affichage( width, height, nb_case_largeur, largeur_case, hauteur_case, fourmiHaut,fourmiDroite,fourmiBas,fourmiGauche, tabFourmis, T );
+                affichage( width, height, nb_case_largeur, largeur_case, hauteur_case, dureePheromonesSucre, fourmiHaut,fourmiDroite,fourmiBas,fourmiGauche, tabFourmis, T );
 
         }
         

@@ -240,7 +240,7 @@ void deplaceFourmi(Fourmi f, place &p1, place &p2, coord coord_p2, vector<Fourmi
 
 
 //regle 1: ramassage du sucre
-bool regle1(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+bool regle1(Fourmi &f, vector<coord> coord_voisins, int dureePheromonesSucre, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
 
@@ -250,7 +250,7 @@ bool regle1(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 			if(chercheSucre(f)&&(contientSucre(p2))){
 						f.porteSucre=true;
 						p2.sucre--;
-						p1.pheromonesSucre=255;
+						p1.pheromonesSucre=dureePheromonesSucre;
 
 
 						//on remet les valeurs dans tabFourmis et la Grille
@@ -286,7 +286,7 @@ bool regle2(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 }
 
 //regle 3: rentre le plus rapidement possible au nid
-bool regle3(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, Grille &T){
+bool regle3(Fourmi &f, vector<coord> coord_voisins,int dureePheromonesSucre, vector<Fourmi> &tabFourmis, Grille &T){
 	place p1,p2;
 	p1=T[f.coordonnees.X][f.coordonnees.Y];
 	
@@ -296,7 +296,7 @@ bool regle3(Fourmi &f, vector<coord> coord_voisins, vector<Fourmi> &tabFourmis, 
 			if(rentreNid(f) && estVide(p2) && plusProcheNid(p2,p1)){
 			
 				deplaceFourmi(f, p1, p2, coord_voisins[i], tabFourmis, T);
-				p2.pheromonesSucre=255;
+				p2.pheromonesSucre=dureePheromonesSucre;
 
 				//on remet p2 dans la grille
 				T[coord_voisins[i].X][coord_voisins[i].Y]=p2;
@@ -363,7 +363,7 @@ void baissePheromonesSucre(Grille &T){
 	for (int i=0 ; i<T.size();i++){
 		for(int j=0; j<T.size();j++){
 			if(T[i][j].pheromonesSucre<=0) T[i][j].pheromonesSucre=0;
-			if(T[i][j].pheromonesSucre!=0) T[i][j].pheromonesSucre-=5;
+			if(T[i][j].pheromonesSucre!=0) T[i][j].pheromonesSucre-=1;
 		}
 	}
 }
@@ -373,7 +373,7 @@ void baissePheromonesSucre(Grille &T){
 
 
 // effectue une itération
-void unTour(vector<Fourmi> &tabFourmis , Grille &T){
+void unTour(int dureePheromonesSucre ,vector<Fourmi> &tabFourmis , Grille &T){
 	coord newCoord;
 	place p1,p2;
 	Fourmi f;
@@ -384,9 +384,9 @@ void unTour(vector<Fourmi> &tabFourmis , Grille &T){
 		p1=T[f.coordonnees.X][f.coordonnees.Y];
 		vector<coord> coord_voisins=voisins(tabFourmis[i].coordonnees,T);
 			
-			if(!regle1(f, coord_voisins, tabFourmis, T)){
+			if(!regle1(f, coord_voisins, dureePheromonesSucre, tabFourmis, T)){
 				if(!regle2(f, coord_voisins, tabFourmis, T)){
-					if(!regle3(f, coord_voisins, tabFourmis, T)){
+					if(!regle3(f, coord_voisins, dureePheromonesSucre, tabFourmis, T)){
 						if(!regle4(f, coord_voisins, tabFourmis, T)){
 							if(!regle5(f, coord_voisins, tabFourmis, T)){
 								regle6(f, coord_voisins, tabFourmis, T);
