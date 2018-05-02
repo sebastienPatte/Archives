@@ -34,11 +34,8 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
     // On nettoie l'écran
     //
     MLV_clear_window( MLV_COLOR_WHITE );
-    /*
-    ce qu'il y a a afficher
-    */
+ 
                  
-        // INSERER ICI LES CONDITIONS D AFFICHAGE DE LA COULEUR DU TABLEAU COULEUR (COMME DANS LA FONCTION AFFICHE GRILLE)
         for (int i=0; i<nb_case_largeur; i++){
             for (int j=0; j<nb_case_largeur; j++){
                       
@@ -46,7 +43,7 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
                 	//colorie la case en orange
                     MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_ORANGE);
                               
-                    //dessinne les carrés de sucres dans les cases oranges
+                    //dessine les carrés de sucres dans les cases oranges
                     MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case/2)-(largeur_case/8), (j*hauteur_case)+(hauteur_case/2)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
                         if(T[i][j].sucre>=2){
                       		MLV_draw_filled_rectangle( (i*largeur_case)+(largeur_case/6)-(largeur_case/8), (j*hauteur_case)+(hauteur_case/6)-(hauteur_case/8), largeur_case/4, hauteur_case/4, MLV_COLOR_WHITE);
@@ -74,8 +71,7 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
                     }
                 }
                 if(T[i][j].indiceFourmi!=-1){
-                    // MLV_draw_filled_rectangle(i*largeur_case, j*hauteur_case, largeur_case, hauteur_case, MLV_COLOR_WHITE);
-                    // On teste l'orientation de la fourmi et on rotate son image selon celle-ci
+                    // On teste l'orientation de la fourmi et on affiche l'image de fourmi qui lui correspond
                     if(tabFourmis[T[i][j].indiceFourmi].orientation == 2) MLV_draw_image(fourmiHaut, i*largeur_case, j*hauteur_case);
                     if(tabFourmis[T[i][j].indiceFourmi].orientation == 1) MLV_draw_image(fourmiDroite, i*largeur_case, j*hauteur_case);
                     if(tabFourmis[T[i][j].indiceFourmi].orientation == 0) MLV_draw_image(fourmiBas, i*largeur_case, j*hauteur_case);
@@ -90,8 +86,7 @@ void affichage( int &width, int &height, int nb_case_largeur, int largeur_case, 
             }
         }
 
-              // Pour colorer en RGB (pour les phéromones) :
-              //"MLV_Color MLV_rgba  (   Uint8   red,Uint8   green,Uint8   blue,Uint8   alpha )"
+    // on actualise la fenetre pour enregistrer les modifications qu'on vient d'apporter         
     MLV_actualise_window();
 }
 
