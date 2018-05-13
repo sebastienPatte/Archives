@@ -22,11 +22,13 @@ struct Departement {
 	struct Departement *next;
 	struct Departement *prev;
 };
-Departement *first = NULL;
-Departement *last = NULL;
 
+struct dlist{
+	Departement *first = NULL;
+	Departement *last = NULL;
+};
 
-void lire_fichier(string s){
+dlist *lire_fichier(string s,dlist *p_dlist){
 	ifstream file(s.c_str());
 	string line;
 	getline(file, line);
@@ -55,7 +57,7 @@ void lire_fichier(string s){
 
 		v->departement = atoi(v->code->substr(0, 2).c_str());
 
-		struct Departement *ptr = first;
+		struct Departement *ptr = p_dlist->first;
 		while (ptr != NULL && ptr->numero != v->departement)
 			ptr = ptr->next;
 
@@ -67,18 +69,18 @@ void lire_fichier(string s){
 				ptr->population = 0;
 				ptr->numero     = v->departement;
 				ptr->next=NULL;
-				if(first==NULL){
+				if(p_dlist->first==NULL){
 					ptr->prev = NULL;
-					first=ptr;
-					last=ptr;	
+					p_dlist->first=ptr;
+					p_dlist->last=ptr;	
 
 				}else{
-					last->next=ptr;
-					ptr->prev= last;
+					p_dlist->last->next=ptr;
+					ptr->prev= p_dlist->last;
 					
-					cout<<last->next<<endl;
+					cout<<p_dlist->last->next<<endl;
 					
-					last=ptr;
+					p_dlist->last=ptr;
 				}
 			}		
 			
@@ -91,10 +93,11 @@ void lire_fichier(string s){
 	}
 	cout<<"0"<<endl;
 	file.close();
+	return p_dlist;
 }
 
-void insertion_en_tete (int population, int numero){
-	struct Departement *ptr = first;
+dlist *insertion_en_tete (int population, int numero,dlist *p_dlist){
+	struct Departement *ptr = p_dlist->first;
 	ptr = (Departement *)malloc(sizeof(Departement));
 	
 
@@ -102,66 +105,125 @@ void insertion_en_tete (int population, int numero){
 				ptr->population = population;
 				ptr->numero     = numero;
 				ptr->next=NULL;
-				if(last==NULL){
+				if(p_dlist->last==NULL){
 					ptr->prev = NULL;
-					first=ptr;
-					last=ptr;	
+					p_dlist->first=ptr;
+					p_dlist->last=ptr;	
 
 				}else{
-					first->prev=ptr;
-					ptr->next= first;
-					first=ptr;
+					p_dlist->first->prev=ptr;
+					ptr->next= p_dlist->first;
+					p_dlist->first=ptr;
 				}
-	}
+	}return p_dlist;
 }
 
-void insertion_numero(int population, int numero){
-	cout<<"eeeeee";
-	struct Departement *ptr_temp = first;
+dlist *insertion_fin(int population, int numero, dlist *p_dlist){
+	struct Departement *ptr= p_dlist->first;
+	ptr= (Departement *)malloc(sizeof(Departement));
+
+	if(ptr!=NULL){
+		ptr->population=population;
+		ptr->numero=numero;
+		ptr->next=NULL;
+
 		
+		if(p_dlist->last==NULL){
+			cout<<"p_dlist->last=NULL"<<endl;
+			ptr->prev = NULL;
+			p_dlist->first=ptr;
+			p_dlist->last=ptr;	
+		}else{
+
+			p_dlist->last->next=ptr;
+			ptr->prev = p_dlist->last;
+			p_dlist->last=ptr;
+		}
+	}
+	return p_dlist;
+}
+
+dlist *insertion_numero(int population, int numero,dlist *p_dlist){
 	
-	ptr_temp = (Departement *)malloc(sizeof(Departement));
+	
+	Departement *ptr = (Departement *)malloc(sizeof(Departement));
+	ptr=p_dlist->first;
 	int i=0;
 
-	while (ptr_temp->next != NULL && ptr_temp->numero <= numero){
-		ptr_temp = ptr_temp->next;
-		cout<<"ptr_temp   !!! "<<ptr_temp<<endl;
-	}
-			
-		struct Departement *ptr = (Departement *)malloc(sizeof(Departement));
+	while (ptr->next != NULL && ptr->numero <= numero){
 		
-		ptr->population=population;
+		ptr = ptr->next;
+		//cout<<"place_numero !!! "<<ptr->numero<<endl;
 
-//		ptr_temp->next->prev=ptr;
-		/*
-		ptr_temp->next->prev=ptr;
-		ptr->prev=ptr_temp->prev;
-		ptr_temp->prev=ptr;
-		ptr->next=ptr_temp;
-		*/
+	}
+
+
+		if(ptr->prev==NULL){
+			p_dlist=insertion_en_tete(population,numero,p_dlist);
+			cout<<"Insertion tete"<<endl;
+		}else{
+			if(ptr->next==NULL && ptr->numero < numero){
+				cout<<"insertion_fin"<<endl;
+				p_dlist=insertion_fin(population,numero,p_dlist);
+			}else{	
+				struct Departement *ptr_temp = (Departement *)malloc(sizeof(Departement));
+				cout<<"Insertion"<<endl;
+				ptr_temp->population=population;
+				ptr_temp->numero=numero;
+
+				ptr->prev->next=ptr_temp;
+				ptr_temp->prev=ptr->prev;
+				ptr_temp->next=ptr;
+				ptr->prev=ptr_temp;
+				
+
+
+				
+			}
+		}
+
+		
+		
+		return p_dlist;
 }
 			
 	
 
-	
+dlist *insere_valeur_croissant(dlist *p_dlist, dlist *p_new_dlist){
+	Departement *ptr = (Departement *)malloc(sizeof(Departement));
+	ptr=p_dlist->first;
+	while(ptr != NULL){
+		p_new_dlist=insertion_numero(ptr->population,ptr->numero,p_new_dlist);
+		cout<<ptr->numero<<endl;
+		ptr=ptr->next;
+	}
+	return p_new_dlist;
+}
+
 
 	
 
 int main(int, char*[]) {
-	lire_fichier("tp1-data.csv");
+	dlist *p_dlist=(dlist *)malloc(sizeof(dlist));
+	p_dlist=lire_fichier("tp1-data.csv",p_dlist);
+
+	dlist *p_new_dlist=(dlist *)malloc(sizeof(dlist));
+	p_new_dlist->first=NULL;
+	p_new_dlist->last=NULL;
+	p_new_dlist=insertion_en_tete(0,1,p_new_dlist);
+	p_new_dlist=insertion_en_tete(0,0,p_new_dlist);
 /*
 	for (size_t i = 0; i < liste.size(); i++)
 		cout << i << " " << *liste[i]->nom
 		          << " " << *liste[i]->code << endl;
 */
-//	insertion_numero(0,2);
-//	insertion_en_tete(0,3);
-//	insertion_en_tete(0,5);
-//	insertion_en_tete(0,7);
-//	insertion_en_tete(0,4);
 
-	insertion_numero(0,6);
-	struct Departement *ptr = first;
+
+	p_new_dlist=insere_valeur_croissant(p_dlist,p_new_dlist);
+	
+	struct Departement *ptr = p_new_dlist->first;
+	
+
 	while (ptr != NULL){
 		cout << " le departement No " << ptr->numero
 		     << " a une population de " << ptr->population
