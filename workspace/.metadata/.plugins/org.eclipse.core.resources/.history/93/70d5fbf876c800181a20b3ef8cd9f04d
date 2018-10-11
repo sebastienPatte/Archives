@@ -1,0 +1,15 @@
+package TP3;
+
+import java.util.HashMap;
+
+public class TP3 {
+	
+	public static HashMap<Character, Character> createKey(int n, String alphabet){
+		HashMap<Character, Character> H = new HashMap<Character, Character>();
+		String[] newAlphabet = alphabet.split("");
+		for (int i=0; i < alphabet.length(); i++){
+			System.out.println(newAlphabet[i]);
+			//H.put(newAlphabet[i], newAlphabet[i+n]);
+		}
+	}
+}
