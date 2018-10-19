@@ -1,0 +1,11 @@
+package vector;
+
+public class vector {
+	int x,y,z;
+	vector(int x, int y, int z){
+		this.x=x;
+		this.y=y;
+		this.z=z;
+	}
+}
+}
