@@ -13,23 +13,39 @@ public class LoadImage {
     	}return result;
     }
 	
-	public static int epoque(float[][] data, int[] refs, float[] w){
+	public static int epoque(float[][] data, float[] w, int label, int DIM){
 		int nbErr = 0;
-		for (int i = 0; i < data.length; i++) {
-			float prediction = scalaire(w,data[i]);
-			if(prediction*refs[i] <=0){
-				nbErr++;
-				for(int j=0; j<  w.length;j++){
-					w[j]=w[j]+refs[i]*data[i][j];
+		//vecteur labels
+		int[] labels = new int [DIM];
+		for (int i=0; i<labels.length; i++ ){
+			labels[i]=0;
+		}
+		labels[label]=1;
+		float[] predicts = new float [DIM];
+		for (int i=0; i<predicts.length; i++ ){
+			predicts[i]=0;
+		}
+		
+		
+		
+		for (int j = 0; j < data.length; j++) {
+			float prediction = scalaire(w,data[j]);
+				
+			/*
+			if(prediction*labels[j] <=0){
+					nbErr++;
+					for(int k=0; k<  w.length;k++){
+						w[k]=w[k]+labels[j]*data[j][k];
+					}
 				}
-			}
+			*/
 		}
 		return nbErr;
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		System.out.println("Test load images");
-                String path="/home/seb/Bureau/IA/"; //  indiquer le path correct
+                String path="/home/seb/Bureau/Git/Java/IA/"; //  indiquer le path correct
                 String CaltechCheminFichier=path+"caltech101.mat";
 		CalTech101 CT = new CalTech101(CaltechCheminFichier);
  
@@ -53,6 +69,12 @@ public class LoadImage {
 			trainIm[i] = CT.getTrainImage(i);
 		}
  
+		//apprentissage
+		float w[]= new float[785];
+		for(int i=0; i<w.length; i++){
+			w[i]=1;
+		}
+		
 		// Pour les donnees de test, utiliser  CT.getTestLabel  et  CT.getTestImage
 		
 	}
