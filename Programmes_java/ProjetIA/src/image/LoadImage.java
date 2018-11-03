@@ -4,32 +4,37 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import caltech.CalTech101;
  
+ 
 public class LoadImage {
 	
-	public static float scalaire(float[]x, float[]y){
-    	float result=0;
+	
+
+	public static double scalaire(double[]x, double[] w){
+    	double result=0;
     	for(int i=0; i< x.length; i++){
-    		result+= x[i]*y[i]; 
+    		result+= x[i]*w[i]; 
     	}return result;
     }
 	
-	public static int epoque(float[][] data, float[] w, int label, int DIM){
-		int nbErr = 0;
+
+	/*
+	public static float epoque(double[] data, double[] w, int label, int DIM){
+
 		//vecteur labels
 		int[] labels = new int [DIM];
+		float predict = 0;
 		for (int i=0; i<labels.length; i++ ){
-			labels[i]=0;
+			labels[i]=0;	
 		}
-		labels[label]=1;
-		float[] predicts = new float [DIM];
-		for (int i=0; i<predicts.length; i++ ){
-			predicts[i]=0;
-		}
+		//labels[label]=1;
 		
 		
 		
-		for (int j = 0; j < data.length; j++) {
-			float prediction = scalaire(w,data[j]);
+		
+		
+			predict = scalaire(w,data);
+			return predict;
+			
 				
 			/*
 			if(prediction*labels[j] <=0){
@@ -39,8 +44,23 @@ public class LoadImage {
 					}
 				}
 			*/
+		//}
+		
+	public static double prediction(double[] w, double[] x){
+		double prediction= scalaire(x,w);
+		prediction = Math.exp(prediction);
+		return prediction;
+	}
+	
+	public static double[] softmax(double[] predicts){
+		double sommePredicts=0;
+		for(int i=0;i<predicts.length;i++){
+			sommePredicts+=predicts[i];
 		}
-		return nbErr;
+		for(int j=0; j<predicts.length; j++){
+			predicts[j]/=sommePredicts;
+		}
+		return predicts;
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -61,19 +81,58 @@ public class LoadImage {
 		System.out.println("Label "+lab); // print le label de cette image la
  
  
+		double w[][]= new double[101][785];
+		for(int i=0; i<w.length; i++){
+			for(int j=0; j<w[i].length;j++){
+				w[i][j]=1;
+			}
+			
+		}
 		// charger toutes les donnees d'apprentissage (train)
-		double[][] trainIm = new double[4100][0];
+		double[][] trainIm = new double[4100][(28*28)+1];
 		int[] trainRefs = new int[4100];
-		for(int i=0; i<4100; i++) {
+		double[] predictions= new double [101];
+		for(int i=0; i<2; i++) {   //i<4100
 			trainRefs[i] = CT.getTrainLabel(i);
 			trainIm[i] = CT.getTrainImage(i);
+			
+			//ajout du biais 
+			
+			trainIm[i][trainIm[i].length-1]=1;
+			
+			//init Tlabel
+			float[] Tlabel= new float [101];
+			for (int cptlabel=0; cptlabel<Tlabel.length; cptlabel++){
+				Tlabel[cptlabel]=0;
+			}Tlabel[trainRefs[i]]=1;
+			
+			//apprentissage
+			for(int j=0; j<w.length;j++){
+				predictions[j]=prediction(w[j],trainIm[i]);
+				//System.out.println(predictions[j]);	
+			}
+			//softmax
+			predictions=softmax(predictions);
+			//test softmax
+			double Stest=0;
+			for(int test=0; test<predictions.length;test++){
+				Stest+=predictions[test];
+			}
+			
+			//MAJ du poids
+			for(int k=0; k<w.length;k++){
+				for(int l=0; l<w[k].length-1;l++){
+					w[k][l]=  (w[k][l] + (0.7  * trainIm[i][l] * (Tlabel[k] - predictions[k])));
+					System.out.println("w["+ k +"]["+ l +"] =  "+w[k][l]);
+				}
+				 
+			}
+			System.out.println("SommePredicts = "+ Stest);
+			//System.out.println(trainIm[i][i] + " "+ trainRefs[i]);
+			System.out.println(trainIm[0].length);
 		}
- 
-		//apprentissage
-		float w[]= new float[785];
-		for(int i=0; i<w.length; i++){
-			w[i]=1;
-		}
+		//image2VecteurReel_withB(trainIm[0]);
+		
 		
 		// Pour les donnees de test, utiliser  CT.getTestLabel  et  CT.getTestImage
 		
