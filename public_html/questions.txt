@@ -1,0 +1,42 @@
+Who would cross the Bridge of Death must answer me these questions
+three, ere the other side he see.
+---
+What... is your name?
+--
+It is 'Arthur', King of the Britons.
+--
+Obi Wan Kenobi.
+--
+1,0
+--
+60
+--
+1
+---
+What... is your quest?
+--
+Don't know.
+--
+I seek the Grail.
+--
+What ?
+--
+1,0
+--
+60
+--
+2
+---
+What... is the air-speed velocity of an unladen swallow?
+--
+An African swallow ?
+--
+An European swallow ?
+--
+Niii
+--
+1,0
+--
+60
+--
+1,2

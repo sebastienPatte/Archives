@@ -1,0 +1,3 @@
+*.pair > *:hover { background: red;
+border: 1pt dashed black;
+}
