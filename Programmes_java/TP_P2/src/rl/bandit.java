@@ -108,6 +108,7 @@ public class bandit {
 			gain[j]=ChoixBras_EpsG(eps);
 		}
 		return gain;
+		
 	}
  
  
