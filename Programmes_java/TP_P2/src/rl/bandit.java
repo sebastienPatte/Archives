@@ -63,6 +63,21 @@ public class bandit {
 	 */
 	public double ChoixBras_EpsG(double epsilon){
 		// TODO
+		int rew=0;
+		int bras=0;
+		double alea = this.rdm.nextDouble();
+		if(alea >= 1-epsilon) {
+			bras=argmax(this.paramB);
+			rew =TireBras(bras);
+			MAJ_Q(bras,rew,1/epsilon);
+			return rew;
+		}else {
+			bras =(int) this.rdm.nextDouble()*this.T;
+			rew = TireBras(bras);
+			MAJ_Q(bras,rew,1/epsilon);
+			return rew;
+		}
+		
 	}
  
 	/*
@@ -73,6 +88,8 @@ public class bandit {
 	public void MAJ_Q(int bras, double rew, double alpha){
 		// TODO
 		
+		this.Q[bras]=(rew/nbTireBras[bras])*alpha;
+		System.out.println("Q["+bras+"] = "+this.Q[bras]);
 		
 		
 	}
@@ -103,6 +120,8 @@ public class bandit {
 		// Calcul le gain total moyen en fonction du temps
 		for(int xp=0; xp<1000; xp++) {
 			//TODO : on initialise les bras et appelle Experiment
+			
+			
 		}
  
 		// Ecrit le resultat dans un fichier
