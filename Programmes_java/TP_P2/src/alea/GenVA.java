@@ -1,7 +1,7 @@
 package alea;
  
 import java.util.Random;
- 
+
 public class GenVA {
     static long seed = 1265;
  
