@@ -163,6 +163,24 @@ public class Piece {
 	 */
 	public Piece computeNextRotation() {
 	    // YOUR CODE HERE
+		int X=0;
+		int Y=0;
+		List<TPoint> body = this.body;
+		//Symetrie par rapport a un axe horizontal
+		//newY=(heigth-1)-Y;
+		for (TPoint point : body) {
+			
+		}
+		//inversion abcisse/ordonee
+		
+		int cpt=0;
+		for (TPoint point : body) {
+			X=point.y;
+			Y=point.x;
+			body.add(cpt,new TPoint(X, Y));	
+		}
+		
+		
 	    return null;
 	}
 
