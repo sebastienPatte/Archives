@@ -12,12 +12,6 @@ public class PieceTest {
 	public void testWidthHeight() {
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
 		
-		
-//		List<TPoint> bodytest = pyr1.getBody();
-//		for(TPoint pointest : bodytest) {
-//			System.out.println(pointest.x+" "+pointest.y);
-//		}
-		
 		assertEquals(3, pyr1.getWidth());
 		assertEquals(2, pyr1.getHeight());		
 
