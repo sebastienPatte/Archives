@@ -49,7 +49,7 @@ public class Piece {
 	    for (TPoint point : points){
 	    	body.add(cpt,point);
 	    	cpt++;
-	    	System.out.println(point);
+//	    	System.out.println(point);
 	    }
 	    this.body=body;
 	    
@@ -85,11 +85,11 @@ public class Piece {
 	 */
 	public Piece(String points) {
 		
-		this(parsePoints(points));
-		System.out.println(points);
-		
-		for (int i=0; i< parsePoints(points).size();i++) {
-			System.out.println(parsePoints(points).get(i));
+	//	this(parsePoints(points));
+	//	System.out.println(points);
+		List<TPoint> pointsPiece= new ArrayList<TPoint>(points.length());
+		for (TPoint point : points) {
+			System.out.println("Piece : "+point);
 		}
 	}
 
@@ -111,16 +111,14 @@ public class Piece {
 	private static List<TPoint> parsePoints(String rep) {
 	    TPoint point= new TPoint(0,0); 
 		String[] repSplited = rep.split(" ");
-		for(int i=0; i<repSplited.length;i++) {
-//			System.out.println(repSplited[i]);
-		}
-		List<TPoint> res= new ArrayList<TPoint>(repSplited.length);
+		System.out.println("ParsePoints : "+rep);
+		List<TPoint> res= new ArrayList<TPoint>(repSplited.length-1);
 		int j=0;
-	    for(int i=0; i<repSplited.length-1; i+=2) {
+	    for(int i=0; i<rep.length()/2; i+=2) {
 	    	point.x= Integer.parseInt(repSplited[i]);
 	    	point.y= Integer.parseInt(repSplited[i+1]);
 	    	res.add(j, point);
-//	    	System.out.println(res.get(j));
+	    	System.out.println(res.get(j));
 	    	j++;
 	    }
 	    return res;
