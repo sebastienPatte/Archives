@@ -40,35 +40,43 @@ public class Piece {
 	 * Defines a new piece given a TPoint[] array of its body. Makes its own
 	 * copy of the array and the TPoints inside it.
 	 */
+
 	public Piece(List<TPoint> points) {
-	    TPoint point= new TPoint(0,0);
-	    List<Integer> skirt= new ArrayList<Integer>();
 	    int width=0;
 	    int height=0;
-		for (int i=0; i<points.size(); i++){
-	    	point=points.get(i);
-	    	
-	    	if(point.x+1 > width) {
-	    		width=point.x+1;
-	    	}
-	    	
-	    	if(point.y+1 > height) {
-	    		//pourquoi height prend toujours le dernier point (width aussi)
-	    		height=point.y+1;
-	    		
-	    	}
-	    	
-	    	// a corriger (mettre l abscisse des points les plus bas)
-	    	if(point.x == 0) {
-	    		skirt.add(point.y);
-	    	}
-	    	
+	    List<TPoint> body = new ArrayList<TPoint>(points.size());
+	    int cpt=0;
+	    for (TPoint point : points){
+	    	body.add(cpt,point);
+	    	cpt++;
+	    	System.out.println(point);
 	    }
-		this.body=points;
-		this.skirt=skirt;
-		this.width=width;
-		this.height=height;
+	    this.body=body;
 	    
+	    for (TPoint point : points){	    	
+	    	if( width < point.x ) {
+	    		width=point.x;
+	    	}
+	    	
+	    	if( height < point.y ) {
+	    		height=point.y;	
+	    	}
+	    }
+		this.width=width+1;
+		this.height=height+1;
+		/*
+		List<Integer> skirt= new ArrayList<Integer>(this.width);
+		for (int i=0; i< skirt.size();i++) {
+			skirt.add(i,this.height-1);
+		}
+		for (TPoint point : points){
+			if(skirt.get(point.x)>point.y) {
+				skirt.add(point.x,point.y);
+			}
+					
+		}
+		this.skirt=skirt;
+	    */
 	}
 	
 	/**
@@ -76,7 +84,13 @@ public class Piece {
 	 * separated by spaces, such as "0 0 1 0 2 0 1 1". (provided)
 	 */
 	public Piece(String points) {
+		
 		this(parsePoints(points));
+		System.out.println(points);
+		
+		for (int i=0; i< parsePoints(points).size();i++) {
+			System.out.println(parsePoints(points).get(i));
+		}
 	}
 
 	/*
@@ -97,12 +111,16 @@ public class Piece {
 	private static List<TPoint> parsePoints(String rep) {
 	    TPoint point= new TPoint(0,0); 
 		String[] repSplited = rep.split(" ");
+		for(int i=0; i<repSplited.length;i++) {
+//			System.out.println(repSplited[i]);
+		}
 		List<TPoint> res= new ArrayList<TPoint>(repSplited.length);
 		int j=0;
 	    for(int i=0; i<repSplited.length-1; i+=2) {
 	    	point.x= Integer.parseInt(repSplited[i]);
 	    	point.y= Integer.parseInt(repSplited[i+1]);
 	    	res.add(j, point);
+//	    	System.out.println(res.get(j));
 	    	j++;
 	    }
 	    return res;

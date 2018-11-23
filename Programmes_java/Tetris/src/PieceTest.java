@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -10,7 +11,13 @@ public class PieceTest {
 	@Test
 	public void testWidthHeight() {
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
-
+		
+		
+		List<TPoint> bodytest = pyr1.getBody();
+		for(TPoint pointest : bodytest) {
+//			System.out.println(pointest.x+" "+pointest.y);
+		}
+		
 		assertEquals(3, pyr1.getWidth());
 		assertEquals(2, pyr1.getHeight());		
 
@@ -42,7 +49,7 @@ public class PieceTest {
 	@Test
 	public void testSampleSkirt() {
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
-
+		
 		assertEquals(new ArrayList<Integer>(Arrays.asList(new Integer[] {0, 0, 0})), pyr1.getSkirt());
 
 		Piece s = new Piece(Piece.S1_STR);	
