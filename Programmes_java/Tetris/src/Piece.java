@@ -63,19 +63,25 @@ public class Piece {
 	    }
 		this.width=width+1;
 		this.height=height+1;
-		/*
+		
+		//init skirt
 		List<Integer> skirt= new ArrayList<Integer>(this.width);
-		for (int i=0; i< skirt.size();i++) {
+		for (int i=0; i<this.width;i++) {
 			skirt.add(i,this.height-1);
 		}
-		for (TPoint point : points){
+		
+		//Maj Skirt
+		for (TPoint point : this.body){
+			System.out.println("Maj skirt point = "+point);
 			if(skirt.get(point.x)>point.y) {
-				skirt.add(point.x,point.y);
+				skirt.set(point.x,point.y);
+				System.out.println("skirt get(point.x) = "+skirt.get(point.x));
+				System.out.println(" ");
 			}
 					
 		}
 		this.skirt=skirt;
-	    */
+	    
 	}
 	
 	/**

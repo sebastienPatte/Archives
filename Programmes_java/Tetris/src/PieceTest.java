@@ -43,7 +43,7 @@ public class PieceTest {
 	@Test
 	public void testSampleSkirt() {
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
-		
+		System.out.println("pyr1");
 		assertEquals(new ArrayList<Integer>(Arrays.asList(new Integer[] {0, 0, 0})), pyr1.getSkirt());
 
 		Piece s = new Piece(Piece.S1_STR);	
