@@ -117,7 +117,6 @@ public class Piece {
 	    	point.x= Integer.parseInt(repSplited[i]);
 	    	point.y= Integer.parseInt(repSplited[i+1]);
 	    	res.set(j, new TPoint(point.x,point.y));
-	    	System.out.println(res.get(j));
 	    	j++;
 	    }
 	    return res;
