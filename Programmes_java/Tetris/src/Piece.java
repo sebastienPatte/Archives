@@ -72,11 +72,8 @@ public class Piece {
 		
 		//Maj Skirt
 		for (TPoint point : this.body){
-			System.out.println("Maj skirt point = "+point);
 			if(skirt.get(point.x)>point.y) {
 				skirt.set(point.x,point.y);
-				System.out.println("skirt get(point.x) = "+skirt.get(point.x));
-				System.out.println(" ");
 			}
 					
 		}
