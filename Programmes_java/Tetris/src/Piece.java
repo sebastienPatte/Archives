@@ -174,7 +174,7 @@ public class Piece {
 			point.y=(this.height-1)-point.y;
 			body.set(i, point);
 		}System.out.println(body);
-		//inversion abcisse/ordonee
+		//inversion abcisse/ordonee 
 		
 		
 		for (int j=0; j<body.size();j++) {
