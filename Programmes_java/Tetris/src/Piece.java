@@ -165,28 +165,33 @@ public class Piece {
 	    // YOUR CODE HERE
 		int X=0;
 		int Y=0;
-		//Symetrie par rapport a un axe horizontal
+		//Symetrie par rapport a un axe horizontal et inversion abcisse/ordonee 
+
 		//newY=(height-1)-Y;
 		TPoint point=new TPoint(0,0);
-		List<TPoint> body= this.body;
-		for (int i=0; i<body.size();i++) {
-			point = body.get(i);
-			point.y=(this.height-1)-point.y;
-			body.set(i, point);
-		}System.out.println(body);
+		List<TPoint> nextBody= new ArrayList<TPoint>(this.body.size());
+		for (int cpt=0; cpt<this.body.size();cpt++) {
+			nextBody.add(this.body.get(cpt));
+		}
+	
+		System.out.println(this.body);
+		
+		for (int i=0; i<this.body.size();i++) {
+			point = this.body.get(i);
+			System.out.println(this.body.get(i));
+		//	System.out.println(nextBody.get(i));
+	//	System.out.println("ancien "+point.x+" "+point.y);
+			System.out.println("nouveau "+(this.height-point.y-1)+" "+point.x);
+			nextBody.set(i,new TPoint((this.height-point.y-1),point.x));
+		}
+		
+		System.out.println(nextBody);
 		//inversion abcisse/ordonee 
 		
 		
-		for (int j=0; j<body.size();j++) {
-			point = body.get(j);
-			X=point.y;
-			Y=point.x;
-			body.set(j,new TPoint(X, Y));	
-		}
-		Piece res = new Piece(body);
-		System.out.println(body);
-		System.out.println(res.width+" "+res.height);
-		
+
+		Piece res = new Piece(nextBody);
+		System.out.println(res);
 	    return res;
 	}
 
@@ -198,8 +203,7 @@ public class Piece {
 	 */
 	public boolean equals(Object obj) {
 	    return false;
-	    // YOUR CODE HERE
-	    
+	    	    
 	}
 
 	public String toString() {
