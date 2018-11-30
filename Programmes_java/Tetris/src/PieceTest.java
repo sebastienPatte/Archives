@@ -22,7 +22,6 @@ public class PieceTest {
 	
 	@Test 
 	public void TestWidthHeightAfterRotation() {
-		System.out.println("testHeightAfterRotation()");
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
 		
 		Piece pyr2 = pyr1.computeNextRotation();
@@ -34,9 +33,8 @@ public class PieceTest {
 	public void testRotation() {
 		
 		Piece p = new Piece(Piece.STICK_STR);
-		System.out.println("testRotation() =  "+p.computeNextRotation().equals(new Piece("0 0 1 0 2 0 3 0")));
 		assertEquals(p.computeNextRotation(), new Piece("0 0 1 0 2 0 3 0"));
-		System.out.println("testRotation() 2 "+p.getWidth());
+		
 		p = new Piece(Piece.PYRAMID_STR);
 		assertEquals(p.computeNextRotation(), new Piece("0 1 1 0 1 1 1 2"));
 	}
@@ -46,7 +44,6 @@ public class PieceTest {
 	@Test
 	public void testSampleSkirt() {
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
-		System.out.println("pyr1");
 		assertEquals(new ArrayList<Integer>(Arrays.asList(new Integer[] {0, 0, 0})), pyr1.getSkirt());
 
 		Piece s = new Piece(Piece.S1_STR);	
@@ -55,7 +52,6 @@ public class PieceTest {
 	
 	@Test
 	public void testSkirtAfterRotation() {
-		System.out.println("testSkirtAfterRotation()");
 		Piece pyr1 = new Piece(Piece.PYRAMID_STR);
 		Piece pyr2 = pyr1.computeNextRotation();
 		Piece pyr3 = pyr2.computeNextRotation();

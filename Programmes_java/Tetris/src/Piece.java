@@ -173,25 +173,13 @@ public class Piece {
 		for (int cpt=0; cpt<this.body.size();cpt++) {
 			nextBody.add(this.body.get(cpt));
 		}
-	
-		System.out.println(this.body);
-		
+
 		for (int i=0; i<this.body.size();i++) {
 			point = this.body.get(i);
-	//		System.out.println(this.body.get(i));
-		//	System.out.println(nextBody.get(i));
-	//	System.out.println("ancien "+point.x+" "+point.y);
-	//		System.out.println("nouveau "+(this.height-point.y-1)+" "+point.x);
 			nextBody.set(i,new TPoint((this.height-point.y-1),point.x));
 		}
 		
-		System.out.println(nextBody);
-		//inversion abcisse/ordonee 
-		
-		
-
 		Piece res = new Piece(nextBody);
-	//	System.out.println(res);
 	    return res;
 	}
 
@@ -202,9 +190,7 @@ public class Piece {
 	 * Used internally to detect if two rotations are effectively the same.
 	 */
 	public boolean equals(Object obj) {
-		boolean bool= false;
 		Piece object=new Piece(obj.toString());
-		System.out.println("object.body = "+object.body);
 	    if(object.body.containsAll(object.body)) {
 	    	return true;
 	    }else {
