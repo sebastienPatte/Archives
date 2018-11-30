@@ -178,10 +178,10 @@ public class Piece {
 		
 		for (int i=0; i<this.body.size();i++) {
 			point = this.body.get(i);
-			System.out.println(this.body.get(i));
+	//		System.out.println(this.body.get(i));
 		//	System.out.println(nextBody.get(i));
 	//	System.out.println("ancien "+point.x+" "+point.y);
-			System.out.println("nouveau "+(this.height-point.y-1)+" "+point.x);
+	//		System.out.println("nouveau "+(this.height-point.y-1)+" "+point.x);
 			nextBody.set(i,new TPoint((this.height-point.y-1),point.x));
 		}
 		
@@ -191,7 +191,7 @@ public class Piece {
 		
 
 		Piece res = new Piece(nextBody);
-		System.out.println(res);
+	//	System.out.println(res);
 	    return res;
 	}
 
@@ -202,13 +202,28 @@ public class Piece {
 	 * Used internally to detect if two rotations are effectively the same.
 	 */
 	public boolean equals(Object obj) {
-	    return false;
-	    	    
-	}
+		boolean bool= false;
+		Piece object=new Piece(obj.toString());
+		System.out.println("object.body = "+object.body);
+	    if(object.body.containsAll(object.body)) {
+	    	return true;
+	    }else {
+	    	return false;
+	    }
+	 }
 
 	public String toString() {
 	    // YOUR CODE HERE
-		return null;
+		String str="";
+		boolean premier=true;
+		for(TPoint point : this.body) {
+			if(premier){
+				str+=point.x+" "+point.y;
+				premier=false;
+			}else {
+			str+=" "+point.x+" "+point.y;
+			}
+		}return str;
 	}
 
 	/**

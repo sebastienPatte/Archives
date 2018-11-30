@@ -198,7 +198,7 @@ public class GridWorld_sql {
 				System.out.print(this.reward[i][j]+" ");
 			System.out.println();
 		}
-	}
+	} 
 	
 	// improve the policy by looking at the best_a Q(s,a)
 	private void ImprovePolicy(double[][] V) {

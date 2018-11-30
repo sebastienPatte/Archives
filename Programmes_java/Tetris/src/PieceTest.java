@@ -34,7 +34,7 @@ public class PieceTest {
 	public void testRotation() {
 		
 		Piece p = new Piece(Piece.STICK_STR);
-		System.out.println("testRotation() =  "+p.computeNextRotation().getBody());
+		System.out.println("testRotation() =  "+p.computeNextRotation().equals(new Piece("0 0 1 0 2 0 3 0")));
 		assertEquals(p.computeNextRotation(), new Piece("0 0 1 0 2 0 3 0"));
 		System.out.println("testRotation() 2 "+p.getWidth());
 		p = new Piece(Piece.PYRAMID_STR);
