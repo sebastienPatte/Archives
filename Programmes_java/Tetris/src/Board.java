@@ -144,7 +144,7 @@ public class Board {
 				{
 					result = PLACE_OUT_BOUNDS;
 					break;
-				}
+				} 
 	 			
 	 			if(this.grid[pieceX][pieceY])
 				{
