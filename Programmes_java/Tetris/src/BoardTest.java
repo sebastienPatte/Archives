@@ -101,6 +101,7 @@ public class BoardTest {
 	@Test
 	public void testMaxHeight() {
 		Board b = new Board(3, 6);
+		System.out.println("TEST");
 		assertEquals(0, b.getMaxHeight());
 		
 		Piece p = new Piece(Piece.STICK_STR);

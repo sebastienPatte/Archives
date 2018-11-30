@@ -14,6 +14,8 @@ public class Board {
 
 	protected boolean[][] grid;
 	private boolean committed;
+	private int[] widths;
+	private int[] heights;
 	
 	/**
 	 * Creates an empty board of the given width and height measured in blocks.
@@ -25,6 +27,11 @@ public class Board {
 		this.grid = new boolean[width][height];
 		this.committed = true;
 		// YOUR CODE HERE
+		for (int i=0; i<this.grid.length;i++) {
+			for (int j=0; j<this.grid[i].length;j++) {
+				this.grid[i][j]=false;
+			}
+		}System.out.println(this.toString());
 	}
 	
 	public int getWidth() {
@@ -34,13 +41,26 @@ public class Board {
 	public int getHeight() {
 		return this.height;
 	}
+	
+	public Board (Board board) {
+		board.width=this.width;
+		board.height=this.height;
+		board.grid=this.grid;
+		board.committed=this.committed;
+	}
 
 	/**
 	 * Returns the max column height present in the board. For an empty board
 	 * this is 0.
 	 */
 	public int getMaxHeight() {
-	    return 0; // YOUR CODE HERE
+	    // YOUR CODE HERE
+		int maxHeight= 0;
+	    for (int i=0; i<this.grid.length;i++) {
+	    	if (getColumnHeight(i)>maxHeight) {
+	    		maxHeight=getColumnHeight(i);
+	    	}
+	    }return maxHeight;
 	}
 
 	/**
@@ -60,14 +80,21 @@ public class Board {
 	 * block + 1. The height is 0 if the column contains no blocks.
 	 */
 	public int getColumnHeight(int x) {
-	    return 0; // YOUR CODE HERE
+		// YOUR CODE HERE
+		int res=-1;
+		for(int y=0; y<this.grid[x].length;y++) {
+			if(this.grid[x][y]) {
+				res=y;
+			}
+	    }return res+1;
 	}
 
 	/**
 	 * Returns the number of filled blocks in the given row.
 	 */
 	public int getRowWidth(int y) {
-	    return 0; // YOUR CODE HERE
+	    // YOUR CODE HERE
+		return widths[y];
 	}
 
 	/**
@@ -75,7 +102,8 @@ public class Board {
 	 * the valid width/height area always return true.
 	 */
 	public boolean getGrid(int x, int y) {
-	    return false; // YOUR CODE HERE
+	    // YOUR CODE HERE
+	    return this.grid[x][y];
 	}
 
 	public static final int PLACE_OK = 0;
@@ -101,10 +129,47 @@ public class Board {
 	    if (!this.committed) {
 		throw new RuntimeException("can only place object if the board has been commited");
 	    }
+	    	int pieceX=0;
+	    	int pieceY=0;
+	    	committed = false;
+	    	int result = PLACE_OK;
+	 		List<TPoint> body = piece.getBody();
+	 		
+	 		for (TPoint point : body) {
+	 			
+	 			pieceX= x+point.x;
+	 			pieceY= y+point.y;
+	 			
+	 			if(pieceX<0 || pieceY< 0 || pieceX>=width || pieceY >=height )
+				{
+					result = PLACE_OUT_BOUNDS;
+					break;
+				}
+	 			
+	 			if(this.grid[pieceX][pieceY])
+				{
+					result = PLACE_BAD;
+					break;
+				}
+	 			this.grid[pieceX][pieceY] = true;
+	 		/*------------------------------------------------	
+	 			if(this.heights[pieceX]<pieceY+1)
+	 				this.heights[pieceX]=pieceY+1;
 
+	 			this.widths[pieceY]++;
+
+				if(this.widths[pieceY] == this.width)
+					result = PLACE_ROW_FILLED;
+	 		*/	
+	 			
+	 		}
+	 		
+	 		System.out.println(this.toString());
+	 		
+	 return result;
+	    
 	    // YOUR CODE HERE
 	    
-	    return PLACE_OK;
 	}
 
 	/**
