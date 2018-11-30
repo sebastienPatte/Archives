@@ -22,17 +22,21 @@ public class Board {
 	 */
 	public Board(int width, int height) {
 		this.width = width;
-		this.height = height;
-
+		this.height = height; 
+		
 		this.grid = new boolean[width][height];
+		this.widths= new int[this.grid.length+1];
+		this.heights= new int[this.grid.length+1];
 		this.committed = true;
 		// YOUR CODE HERE
 		for (int i=0; i<this.grid.length;i++) {
 			for (int j=0; j<this.grid[i].length;j++) {
 				this.grid[i][j]=false;
-			}
-		}System.out.println(this.toString());
+			}this.widths[i]=0;
+			this.heights[i]=0;
+		
 	}
+	}System.out.println(this.toString());
 	
 	public int getWidth() {
 		return this.width;
@@ -47,6 +51,8 @@ public class Board {
 		board.height=this.height;
 		board.grid=this.grid;
 		board.committed=this.committed;
+		board.widths=this.widths;
+		board.heights=this.heights;
 	}
 
 	/**
@@ -72,7 +78,16 @@ public class Board {
 	 * O(skirt length).
 	 */
 	public int dropHeight(Piece piece, int x) {
-	    return 0; // YOUR CODE HERE
+	    // YOUR CODE HERE
+		int result = 0;
+		List<Integer> skirt = piece.getSkirt();
+		for(int i =0 ; i < skirt.size();i++){
+			int y = heights[x+i]-skirt.get(i);
+			if(y>result) {
+				result=y;
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -112,6 +127,19 @@ public class Board {
 	public static final int PLACE_BAD = 3;
 
 	/**
+	 * private helper method that recomputes the maxHeight field
+	 * */
+	private void recomputeMaxheight()
+	{
+		maxHeight = 0;
+		for (int i = 0 ; i<heights.length;i++)
+		{
+			if(maxHeight<heights[i])
+				maxHeight = heights[i];
+		}
+}
+	
+	/**
 	 * Attempts to add the body of a piece to the board. Copies the piece blocks
 	 * into the board grid. Returns PLACE_OK for a regular placement, or
 	 * PLACE_ROW_FILLED for a regular placement that causes at least one row to
@@ -125,10 +153,10 @@ public class Board {
 	 * an invalid state. The client can use undo(), to recover the valid,
 	 * pre-place state.
 	 */
-	public int place(Piece piece, int x, int y) {
 	    if (!this.committed) {
-		throw new RuntimeException("can only place object if the board has been commited");
+	    	throw new RuntimeException("can only place object if the board has been commited");
 	    }
+	    public int place(Piece piece, int x, int y) {
 	    	int pieceX=0;
 	    	int pieceY=0;
 	    	committed = false;
@@ -152,24 +180,21 @@ public class Board {
 					break;
 				}
 	 			this.grid[pieceX][pieceY] = true;
-	 		/*------------------------------------------------	
+	 			
 	 			if(this.heights[pieceX]<pieceY+1)
 	 				this.heights[pieceX]=pieceY+1;
-
+	 			System.out.println("pieceY = "+pieceY+"  "+this.heights.length);
+	 			
 	 			this.widths[pieceY]++;
 
-				if(this.widths[pieceY] == this.width)
+				if(this.widths[pieceY] == this.width) {
 					result = PLACE_ROW_FILLED;
-	 		*/	
-	 			
+				}
 	 		}
 	 		
 	 		System.out.println(this.toString());
-	 		
-	 return result;
-	    
-	    // YOUR CODE HERE
-	    
+	 		System.out.println(result);
+	 		return result;
 	}
 
 	/**
