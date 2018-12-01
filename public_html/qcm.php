@@ -19,12 +19,12 @@ function parse_question($str)
 	$result= array();
 	$result["question"]= $data[0];
 	$result["choices"] = array();
-	for( $i=0; $i< count($data)-3 ; $i++){
-		$result["reponse"][$i]=$data[$i+1];
+	for( $i=1; $i< count($data)-3 ; $i++){
+		$result["choices"][$i]=$data[$i];
 	}
-	$result["points"]= explode(",", $data[count($data)-3]);
-	$result["time"]= $data[count($data)-2];
-	$result["answers"]= explode(",", $data[count($data)-1]);
+	$result["points"]= explode(",", $data[$i]);
+	$result["time"]= $data[$i+1];
+	$result["answers"]= explode(",", $data[$i+2]);
 	
 	return $result;	
 }
@@ -46,7 +46,6 @@ function load_questions($file)
 	}
 	return $result;
 }
-
 
 
 
@@ -76,10 +75,8 @@ $_SESSION["score"] = 0;
 <body>
 
 <div>
-<?php
-/// À COMPLETER : AFFICHER LA DESCRIPTION
-echo ($_SESSION["qcm"]["description"]);
-?>
+
+<?php echo $_SESSION["qcm"]["description"]; ?>
 </div>
 <div>
 <?php
@@ -88,12 +85,13 @@ echo ($_SESSION["qcm"]["description"]);
 	{
 		//A COMPLETER : AFFICHER UN MESSAGE DISANT QUE LE QUESTIONNAIRE
 		//A DEJA ÉTÉ VU
-		echo ("le questionnaire a déjà été vu");
 
+		echo "Vous avez déjà tenté de répondre au questionnaire<br/>";
 	} else {
 
 		//A COMPLETER : AFFICHER UN LIEN VERS LA PAGE question.php
-		echo('<a href="https://tp-ssh1.dep-informatique.u-psud.fr/~spatte/question.php"> Commencer le test </a>');
+
+	        echo "Pour le QCM <a href='question.php'>c&apos;est par ici</a>";
 	}
 
 ?>

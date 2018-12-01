@@ -23,10 +23,14 @@ if ($q >= 0)
    //A COMPLETER : METTRE TRUE DANS $correct SI ET SEULEMENT SI
    // - LES TABLEAUX $user_answers et $answers CONTIENNENT LES MEMES ENTIERS
    // - IL S'EST ECOULÉ MOINS DE TEMPS QUE $q_data["time"]
+   asort($user_answers);
+
+   $answers = $q_data["answers"];
+   asort($answers);
+
    
-   
-   if(($user_answers === $answers) && (time() - $_SESSION['time']<= $q_data["time"])){
-   	foreach(super_answers as $i => $v)
+   if((count($user_answers) === count($answers)) && ( (time() - $_SESSION['time']) <= $q_data["time"])){
+   	foreach($uper_answers as $i => $v)
    	{
    		if($v !== $anwers[$i])
    		{
@@ -73,16 +77,31 @@ $_SESSION["time"] = time();
 //
 //SI ON EST SUR LA DERNIERE QUESTION, AFFICHER LE SCORE.
 
-if($q< count($_SESSION["qcm"]["questions"])){
+if ($q< count($_SESSION["qcm"]["questions"]))
+{
 	
-	for($i=0; $i< count($_SESSION["qcm"]["questions"][$q]["choices"]); $i++){
-		$value=$_SESSION["qcm"]["questions"][$q]["choices"][$i];
-		echo($value);
-		echo('<input type="checkbox" name="user_answers[]" value='+$i+'/>'+$value+'</br>');
-	}
-	echo('<a href="https://tp-ssh1.dep-informatique.u-psud.fr/~spatte/question.php"> Question Suivante </a>');
-}else{
-	echo("score : " + $_SESSION["qcm"]["score"]);
+   $q_data = $_SESSION["qcm"]["questions"][$q];
+   
+   echo $q_data["question"];
+   echo "<form method='post' action='question.php'>";
+
+   foreach($q_data["choices"] as $i => $c)
+   {
+     echo $c;
+     echo "&nbsp;";
+     echo "<input type='checkbox' name='user_answers[]' value='$i' /><br/>";
+
+   }
+   
+   echo "<button type='submit'>Répondre</button>";
+   echo "</form>";
+
+
+} else {
+
+   echo "Score final:  ";
+   echo $_SESSION["score"];
+   echo " points";
 }
 
 ?>
