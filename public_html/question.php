@@ -30,7 +30,7 @@ if ($q >= 0)
 
    
    if((count($user_answers) === count($answers)) && ( (time() - $_SESSION['time']) <= $q_data["time"])){
-   	foreach($uper_answers as $i => $v)
+   	foreach($user_answers as $i => $v)
    	{
    		if($v !== $anwers[$i])
    		{
