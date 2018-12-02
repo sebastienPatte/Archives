@@ -35,8 +35,8 @@ public class Board {
 			}this.widths[i]=0;
 			this.heights[i]=0;
 		
+		}System.out.println(this.toString());
 	}
-	}System.out.println(this.toString());
 	
 	public int getWidth() {
 		return this.width;
@@ -153,10 +153,10 @@ public class Board {
 	 * an invalid state. The client can use undo(), to recover the valid,
 	 * pre-place state.
 	 */
+	public int place(Piece piece, int x, int y) {
 	    if (!this.committed) {
 	    	throw new RuntimeException("can only place object if the board has been commited");
 	    }
-	    public int place(Piece piece, int x, int y) {
 	    	int pieceX=0;
 	    	int pieceY=0;
 	    	committed = false;

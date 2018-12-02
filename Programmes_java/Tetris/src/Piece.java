@@ -163,8 +163,6 @@ public class Piece {
 	 */
 	public Piece computeNextRotation() {
 	    // YOUR CODE HERE
-		int X=0;
-		int Y=0;
 		//Symetrie par rapport a un axe horizontal et inversion abcisse/ordonee 
 
 		//newY=(height-1)-Y;
