@@ -14,8 +14,8 @@ public class Board {
 
 	protected boolean[][] grid;
 	private boolean committed;
-	private int[] widths;
-	private int[] heights;
+	 int[] widths;
+	 int[] heights;
 	
 	/**
 	 * Creates an empty board of the given width and height measured in blocks.
@@ -126,18 +126,6 @@ public class Board {
 	public static final int PLACE_OUT_BOUNDS = 2;
 	public static final int PLACE_BAD = 3;
 
-	/**
-	 * private helper method that recomputes the maxHeight field
-	 * */
-	private void recomputeMaxheight()
-	{
-		maxHeight = 0;
-		for (int i = 0 ; i<heights.length;i++)
-		{
-			if(maxHeight<heights[i])
-				maxHeight = heights[i];
-		}
-}
 	
 	/**
 	 * Attempts to add the body of a piece to the board. Copies the piece blocks
@@ -154,55 +142,86 @@ public class Board {
 	 * pre-place state.
 	 */
 	public int place(Piece piece, int x, int y) {
-	    if (!this.committed) {
-	    	throw new RuntimeException("can only place object if the board has been commited");
-	    }
-	    	int pieceX=0;
-	    	int pieceY=0;
-	    	committed = false;
-	    	int result = PLACE_OK;
-	 		List<TPoint> body = piece.getBody();
-	 		
-	 		for (TPoint point : body) {
-	 			
-	 			pieceX= x+point.x;
-	 			pieceY= y+point.y;
-	 			
-	 			if(pieceX<0 || pieceY< 0 || pieceX>=width || pieceY >=height )
-				{
-					result = PLACE_OUT_BOUNDS;
-					break;
-				} 
-	 			
-	 			if(this.grid[pieceX][pieceY])
-				{
-					result = PLACE_BAD;
-					break;
-				}
-	 			this.grid[pieceX][pieceY] = true;
-	 			
-	 			if(this.heights[pieceX]<pieceY+1)
-	 				this.heights[pieceX]=pieceY+1;
-	 			System.out.println("pieceY = "+pieceY+"  "+this.heights.length);
-	 			
-	 			this.widths[pieceY]++;
+		 if (!this.committed) {
+		    	throw new RuntimeException("can only place object if the board has been commited");
+		    }
+		    	int pieceX=0;
+		    	int pieceY=0;
+		    	committed = false;
+		    	int result = PLACE_OK;
+		 		List<TPoint> body = piece.getBody();
+		 		
+		 		for (TPoint point : body) {
+		 			
+		 			pieceX= x+point.x;
+		 			pieceY= y+point.y;
+		 			
+		 			if(pieceX<0 || pieceY< 0 || pieceX>=width || pieceY >=height )
+					{
+						result = PLACE_OUT_BOUNDS;
+						break;
+					} 
+		 			
+		 			if(this.grid[pieceX][pieceY])
+					{
+						result = PLACE_BAD;
+						break;
+					}
+		 			this.grid[pieceX][pieceY] = true;
+		 			
+		 			if(this.heights[pieceX]<pieceY+1)
+		 				this.heights[pieceX]=pieceY+1;
+		 			System.out.println("pieceY = "+pieceY+"  "+this.heights.length);
+		 			
+		 			this.widths[pieceY]++;
 
-				if(this.widths[pieceY] == this.width) {
-					result = PLACE_ROW_FILLED;
-				}
-	 		}
-	 		
-	 		System.out.println(this.toString());
-	 		System.out.println(result);
-	 		return result;
-	}
+					if(this.widths[pieceY] == this.width) {
+						result = PLACE_ROW_FILLED;
+					}
+		 		}
+		 		
+		 		System.out.println(this.toString());
+		 		System.out.println(result);
+		 		return result;
+		}
 
 	/**
 	 * Deletes rows that are filled all the way across, moving things above
 	 * down. Returns the number of rows cleared.
 	 */
 	public int clearRows() {
-	    return 0; // YOUR CODE HERE
+		boolean[][] grid_temp= this.grid;
+		int nbRowsCleared=0;
+		if(this.committed) {
+			this.committed=false;
+		}
+		boolean ligneRemplie= true;
+		
+		for(int i=0; i<this.height; i++) {
+			ligneRemplie=true;
+	    	for(int j=0; j<this.width; j++) {
+	    		if(!grid_temp[j][i]) {
+	    			ligneRemplie=false;
+	    		}
+	    	}
+	    	//si la ligne est pleine
+	    	if(ligneRemplie) {
+	    		nbRowsCleared++;
+	    		
+	    		for (int cptClear=0; cptClear<this.width; cptClear++) {
+	    			grid_temp[cptClear][i]=false;
+	    		}
+	    		
+	    		for(int cpty=i+1; cpty<this.height; cpty++) {
+	    			for(int cptx=0; cptx<this.width; cptx++) {
+	    				grid_temp[cptx][cpty-1]=this.grid[cptx][cpty];
+	    			}
+	    		}
+	    	}
+	    	
+	    }this.grid=grid_temp;
+	    return nbRowsCleared;
+		
 	}
 
 	/**

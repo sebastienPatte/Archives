@@ -175,7 +175,8 @@ public class BoardTest {
 		Board expected = new Board(5, 5);
 
 		assertEquals(b.clearRows(), 1);
-				
+		
+
 		assertArrayEquals(expected.grid, b.grid);;
 	}
 
@@ -291,6 +292,10 @@ public class BoardTest {
 		expected.updateWidthsHeights();
 	
 		assertEquals(1, b.clearRows());
+		System.out.println("expected: ");
+		System.out.println(expected.toString());
+		System.out.println("b: ");
+		System.out.println(b.toString());
 		
 		assertArrayEquals(expected.grid, b.grid);;
 		
