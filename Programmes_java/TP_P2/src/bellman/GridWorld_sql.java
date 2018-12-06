@@ -112,9 +112,37 @@ public class GridWorld_sql {
 	// To each state, give the reachable states given an action
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) {
 		HashMap<Integer,ArrayList<double[]>> trans = new HashMap<Integer,ArrayList<double[]>>();
-		for(int i=0; i<size_x*size_y; i++) {
-			StateToGrid(i);
+		ArrayList<double[]> tabDouble = new ArrayList<double[]>(2);
+		int[] State= new int[2];
+		int[] dir= new int[2];
+		double[] dbl = new double[2];
+		for(int s=0; s<size_x*size_y; s++) {
+			
+			
+			dbl = new double[2];
+			tabDouble = new ArrayList<double[]>(2);
+			
+			dir=getDirNeighbor(act);
+			
+			State=StateToGrid(s);
+			State[0]+=dir[0];
+			State[1]+=dir[1];
+			if( !((State[0] < 0) || (State[1] < 0) || (State[0] >= size_x) || (State[1] >= size_y) ) ) {
+				dbl[0] =  (double) (GridToState (State[0], State[1]));
+				dbl[1] =  1.0; //proba
+			}else {
+				dbl[0] = -1.0;
+				dbl[1] = 0.0;
+			}
+			
+			System.out.println(dbl[0]);
+			
+			tabDouble.add(0, dbl);
+			trans.put(s,tabDouble);
+			
+		
 		}
+		
 		return trans;
 	}
 	
@@ -122,7 +150,7 @@ public class GridWorld_sql {
 	private void InitTransitionMat() {
 		pi = new HashMap<String,HashMap<Integer,ArrayList<double[]>>>();
 		for(String act : this.dir) {
-			pi.put(act,computeTrans(act));
+			pi.put(act,computeTrans(act));	
 		}
 	}
 	
@@ -132,9 +160,15 @@ public class GridWorld_sql {
 		for(int s=0; s<nbStates; s++) {
 			double sum = 0;
 			HashMap<String,Double> a = action.get(s);
-			// compute the reward obtained fomo state s, by doing all potential action a
+			// compute the reward obtained from state s, by doing all potential action a
 			for(String act : this.dir) {
-				// TODO
+				// TODO 
+				HashMap<Integer,ArrayList<double[]>>trans=computeTrans(act);
+				double[] tabDouble= trans.get(0).get(0);
+				if(tabDouble[0]!=-1) {
+					R[s]=this.reward[StateToGrid( (int) (tabDouble[0]))[0] ] [StateToGrid((int) (tabDouble[0]))[1] ] ;
+				}
+				
 			}
 			R[s] = sum;
 		}
@@ -143,11 +177,14 @@ public class GridWorld_sql {
 	
 	private double[][] computeMatP() {
 		double[][] P = new double[nbStates][nbStates];
-		
+		HashMap<Integer,ArrayList<double[]>> tab = new HashMap<Integer, ArrayList<double[]>>(this.dir.size());
 		for(int s=0; s<nbStates; s++) {
 			// from state s, compute P^{\pi}(s,s')
 			for(String act : this.dir) {
 				//TODO
+				tab=computeTrans(act);
+				
+				
 			}
 		}
 		return P;
