@@ -233,7 +233,8 @@ public class BoardTest {
 		expected.grid[0][0] = true;
 		expected.grid[0][1] = true;
 		expected.grid[4][0] = true;
-		
+		System.out.println("Total fait de la merde");
+		System.out.println(b.toString());
 		assertEquals(b.clearRows(), 2);
 				
 		assertArrayEquals(expected.grid, b.grid);;

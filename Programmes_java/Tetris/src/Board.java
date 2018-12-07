@@ -116,7 +116,7 @@ public class Board {
 				result=y;
 			}
 		}
-		return result;
+		return result-1;
 	}
 
 	/**
@@ -251,6 +251,7 @@ public class Board {
 	 */
 	public int clearRows() {
 		boolean[][] grid_temp= this.grid;
+		affiche_grid(grid_temp); 
 		int nbRowsCleared=0;
 		if(this.committed) {
 			this.committed=false;
@@ -263,12 +264,15 @@ public class Board {
 			ligneRemplie=true;
 	    	for(int j=0; j<this.width; j++) {
 	    		if(!grid_temp[j][i]) {
+	    			System.out.println("line "+i);
+	    			System.out.println("False");
 	    			ligneRemplie=false;
 	    		}
 	    	}
 	    	//si la ligne est pleine
 	    	if(ligneRemplie) {
 	    		nbRowsCleared++;
+	    		System.out.println(nbRowsCleared);
 	    		
 	    		for (int cptClear=0; cptClear<this.width; cptClear++) {
 	    			grid_temp[cptClear][i]=false;
