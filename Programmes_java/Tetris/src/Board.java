@@ -157,10 +157,10 @@ public class Board {
 		for(int cptWidths=0; cptWidths<this.height; cptWidths++) {
 			this.widths_backup[cptWidths]=this.widths[cptWidths];
 		}
-		for(int cptHeight=0; cptHeight<this.width; cptHeight++) {
-			this.heights_backup[cptHeight]=this.heights[cptHeight];
+		for(int cptHeights=0; cptHeights<this.width; cptHeights++) {
+			this.heights_backup[cptHeights]=this.heights[cptHeights];
 		}
-		this.heights_backup=this.heights;
+		
 		for(int i=0; i<this.grid.length; i++) {
 			for(int j = 0; j <this.grid[i].length; j++)
 			this.grid_backup[i][j]=this.grid[i][j];
@@ -224,8 +224,9 @@ public class Board {
 		 			
 		 			this.grid[pieceX][pieceY] = true;
 		 			
-		 			if(this.heights[pieceX]<pieceY+1)
+		 			if(this.heights[pieceX]<pieceY+1) {
 		 				this.heights[pieceX]=pieceY+1;
+		 			}
 		 			System.out.println("pieceY = "+pieceY+"  "+this.widths.length);
 		 			
 		 			this.widths[pieceY]++;
@@ -239,7 +240,8 @@ public class Board {
 		 		System.out.println(this.toString());
 		 		System.out.println(result);
 		 		return result;
-		 		// recompute WIDTH/HEIGHTS
+		 		// recompute WIDTH/HEIGHTS	
+		 		
 		 		
 		}
 
@@ -293,6 +295,7 @@ public class Board {
 	public void undo() {
 	    // YOUR CODE HERE
 			if(!committed) {
+				
 				for(int i=0; i<this.grid_backup.length; i++) {
 					for (int j=0; j< this.grid_backup[i].length; j++) {
 						if(this.grid[i][j]) {
@@ -303,22 +306,25 @@ public class Board {
 					}
 				}
 				
+				//-------------------------------------------------------------------
+				
 				for(int cpt1=0; cpt1<this.widths.length;cpt1++) {
 					int temp = this.widths_backup[cpt1];
 					this.widths_backup[cpt1] = this.widths[cpt1];
-					widths[cpt1]=temp;
+					this.widths[cpt1]=temp;
 				}
 				
 				for(int cpt2=0; cpt2<this.heights.length;cpt2++) {
 					int temp = this.heights_backup[cpt2];
 					this.heights_backup[cpt2] = this.heights[cpt2];
-					heights[cpt2]=temp;
+					this.heights[cpt2]=temp;
 				}
 				boolean[][] grid_temp = this.grid_backup;
 				this.grid_backup=this.grid;
 				this.grid=grid_temp;
 				System.out.println("UNDO ");
 				System.out.println(this.toString());
+				
 				
 				
 				
