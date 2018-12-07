@@ -16,6 +16,11 @@ public class Board {
 	private boolean committed;
 	 int[] widths;
 	 int[] heights;
+	 
+	 //backups
+	 private boolean[][] grid_backup;
+	 private int[] widths_backup;
+	 private int[] heights_backup;
 	
 	/**
 	 * Creates an empty board of the given width and height measured in blocks.
@@ -36,6 +41,11 @@ public class Board {
 			this.heights[i]=0;
 		
 		}System.out.println(this.toString());
+		
+		//backups 
+		this.grid_backup = new boolean[width][height];
+		this.widths_backup = new int[height];
+		this.heights_backup = new int[width];
 	}
 	
 	public int getWidth() {
@@ -53,8 +63,27 @@ public class Board {
 		board.committed=this.committed;
 		board.widths=this.widths;
 		board.heights=this.heights;
+		board.grid_backup=this.grid_backup;
+		board.widths_backup=this.widths_backup;
+		board.heights_backup=this.heights_backup;
 	}
-
+//FOR DEBUGGING
+	public void affiche_grid(boolean[][] grid)
+	{
+		String str="";
+		System.out.println("Affiche grid");
+	for(int i=0; i<grid.length; i++) {
+			for (int j=0; j< grid[i].length; j++) {
+				if(grid[i][j]) {
+					str+="1";
+				}else {
+					str+="0";
+				}
+			}System.out.println(str);
+			str="";
+		}
+	}
+	
 	/**
 	 * Returns the max column height present in the board. For an empty board
 	 * this is 0.
@@ -121,6 +150,29 @@ public class Board {
 	    return this.grid[x][y];
 	}
 
+	
+	// to copy the state of the grid in backups 
+	private void backup(){
+		
+		for(int cptWidths=0; cptWidths<this.height; cptWidths++) {
+			this.widths_backup[cptWidths]=this.widths[cptWidths];
+		}
+		for(int cptHeight=0; cptHeight<this.width; cptHeight++) {
+			this.heights_backup[cptHeight]=this.heights[cptHeight];
+		}
+		this.heights_backup=this.heights;
+		for(int i=0; i<this.grid.length; i++) {
+			for(int j = 0; j <this.grid[i].length; j++)
+			this.grid_backup[i][j]=this.grid[i][j];
+		}
+			
+		System.out.println("Backup");
+		affiche_grid(this.grid_backup);
+		
+	}
+	
+	
+	
 	public static final int PLACE_OK = 0;
 	public static final int PLACE_ROW_FILLED = 1;
 	public static final int PLACE_OUT_BOUNDS = 2;
@@ -142,9 +194,11 @@ public class Board {
 	 * pre-place state.
 	 */
 	public int place(Piece piece, int x, int y) {
-		 if (!this.committed) {
+		
+		if (!this.committed) {
 		    	throw new RuntimeException("can only place object if the board has been commited");
 		    }
+		  		backup();
 		    	int pieceX=0;
 		    	int pieceY=0;
 		    	committed = false;
@@ -156,7 +210,7 @@ public class Board {
 		 			pieceX= x+point.x;
 		 			pieceY= y+point.y;
 		 			
-		 			if(pieceX<0 || pieceY< 0 || pieceX>=this.width || pieceY >=height )
+		 			if(pieceX<0 || pieceY< 0 || pieceX>=this.width || pieceY >=height)
 					{
 						result = PLACE_OUT_BOUNDS;
 						break;
@@ -167,11 +221,12 @@ public class Board {
 						result = PLACE_BAD;
 						break;
 					}
+		 			
 		 			this.grid[pieceX][pieceY] = true;
 		 			
 		 			if(this.heights[pieceX]<pieceY+1)
 		 				this.heights[pieceX]=pieceY+1;
-		 			System.out.println("pieceY = "+pieceY+"  "+this.heights.length);
+		 			System.out.println("pieceY = "+pieceY+"  "+this.widths.length);
 		 			
 		 			this.widths[pieceY]++;
 
@@ -179,10 +234,13 @@ public class Board {
 						result = PLACE_ROW_FILLED;
 					}
 		 		}
-		 		
+		 		System.out.println("finPlace");
+		 		affiche_grid(this.grid_backup);
 		 		System.out.println(this.toString());
 		 		System.out.println(result);
 		 		return result;
+		 		// recompute WIDTH/HEIGHTS
+		 		
 		}
 
 	/**
@@ -194,7 +252,9 @@ public class Board {
 		int nbRowsCleared=0;
 		if(this.committed) {
 			this.committed=false;
+			backup();
 		}
+		
 		boolean ligneRemplie= true;
 		
 		for(int i=0; i<this.height; i++) {
@@ -232,6 +292,38 @@ public class Board {
 	 */
 	public void undo() {
 	    // YOUR CODE HERE
+			if(!committed) {
+				for(int i=0; i<this.grid_backup.length; i++) {
+					for (int j=0; j< this.grid_backup[i].length; j++) {
+						if(this.grid[i][j]) {
+							System.out.println("1");
+						}else {
+							System.out.println("0");
+						}
+					}
+				}
+				
+				for(int cpt1=0; cpt1<this.widths.length;cpt1++) {
+					int temp = this.widths_backup[cpt1];
+					this.widths_backup[cpt1] = this.widths[cpt1];
+					widths[cpt1]=temp;
+				}
+				
+				for(int cpt2=0; cpt2<this.heights.length;cpt2++) {
+					int temp = this.heights_backup[cpt2];
+					this.heights_backup[cpt2] = this.heights[cpt2];
+					heights[cpt2]=temp;
+				}
+				boolean[][] grid_temp = this.grid_backup;
+				this.grid_backup=this.grid;
+				this.grid=grid_temp;
+				System.out.println("UNDO ");
+				System.out.println(this.toString());
+				
+				
+				
+			}
+			commit();
 	}
 
 	/**
@@ -242,6 +334,8 @@ public class Board {
 	    this.committed = true;
 	}
 
+
+	
 	/*
 	 * Renders the board state as a big String, suitable for printing. This is
 	 * the sort of print-obj-state utility that can help see complex state

@@ -37,7 +37,7 @@ public class Piece {
 	static private Piece[] pieces; // singleton static array of first rotations
 
 	/**
-	 * Defines a new piece given a TPoint[] array of its body. Makes its own
+	 * Defines a new piece given a TPoint[] array of its body. Makes its ownthis.grid_backup=this.grid;
 	 * copy of the array and the TPoints inside it.
 	 */
 

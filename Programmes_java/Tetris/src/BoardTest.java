@@ -120,6 +120,7 @@ public class BoardTest {
 		b.undo();
 		b.place(p, 0, 0);
 		b.commit();
+		//NEEDS UNDO
 		assertEquals(4, b.getMaxHeight());
 	}
 	
@@ -131,11 +132,14 @@ public class BoardTest {
 		b2.place(p1, 1, 1);
 		
 		b2.commit();
+		for(int nb: b2.heights)System.out.println(nb);
 		b2.place(p1, 0, 3);
 		b2.undo();
+		for(int nb: b2.heights)System.out.println(nb);
 		b2.place(p1, 0, 0);
 		b2.undo();
-		
+		System.out.println("B222");
+		for(int nb: b2.heights)System.out.println(nb);
 		assertTrue(Arrays.equals(new int[] {0, 5, 0}, b2.heights));
 	}
 	
