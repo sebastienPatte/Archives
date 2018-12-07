@@ -167,7 +167,6 @@ public class Board {
 		}
 			
 		System.out.println("Backup");
-		affiche_grid(this.grid_backup);
 		
 	}
 	
@@ -236,12 +235,10 @@ public class Board {
 					}
 		 		}
 		 		System.out.println("finPlace");
-		 		affiche_grid(this.grid_backup);
 		 		System.out.println(this.toString());
 		 		System.out.println(result);
 		 		return result;
-		 		// recompute WIDTH/HEIGHTS	
-		 		
+		 				 		
 		 		
 		}
 
@@ -251,7 +248,6 @@ public class Board {
 	 */
 	public int clearRows() {
 		boolean[][] grid_temp= this.grid;
-		affiche_grid(grid_temp); 
 		int nbRowsCleared=0;
 		if(this.committed) {
 			this.committed=false;
