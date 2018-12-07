@@ -25,8 +25,8 @@ public class Board {
 		this.height = height; 
 		
 		this.grid = new boolean[width][height];
-		this.widths= new int[this.grid.length+1];
-		this.heights= new int[this.grid.length+1];
+		this.widths= new int[height];
+		this.heights= new int[width];
 		this.committed = true;
 		// YOUR CODE HERE
 		for (int i=0; i<this.grid.length;i++) {
@@ -156,7 +156,7 @@ public class Board {
 		 			pieceX= x+point.x;
 		 			pieceY= y+point.y;
 		 			
-		 			if(pieceX<0 || pieceY< 0 || pieceX>=width || pieceY >=height )
+		 			if(pieceX<0 || pieceY< 0 || pieceX>=this.width || pieceY >=height )
 					{
 						result = PLACE_OUT_BOUNDS;
 						break;
