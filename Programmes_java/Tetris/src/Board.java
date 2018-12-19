@@ -109,14 +109,14 @@ public class Board {
 	public int dropHeight(Piece piece, int x) {
 	    // YOUR CODE HERE
 		int result = 0;
-		List<Integer> skirt = piece.getSkirt();
-		for(int i =0 ; i < skirt.size();i++){
-			int y = heights[x+i]-skirt.get(i);
+		
+		for(int i =0 ; i < piece.getSkirt().size();i++){
+			int y = getColumnHeight(i);
 			if(y>result) {
 				result=y;
 			}
 		}
-		return result-1;
+		return result;
 	}
 
 	/**
@@ -247,44 +247,50 @@ public class Board {
 	 * down. Returns the number of rows cleared.
 	 */
 	public int clearRows() {
-		boolean[][] grid_temp= this.grid;
 		int nbRowsCleared=0;
-		if(this.committed) {
+		
+		
+		 if(this.committed) {
 			this.committed=false;
 			backup();
 		}
 		
-		boolean ligneRemplie= true;
 		
-		for(int i=0; i<this.height; i++) {
-			ligneRemplie=true;
-	    	for(int j=0; j<this.width; j++) {
-	    		if(!grid_temp[j][i]) {
-	    			System.out.println("line "+i);
-	    			System.out.println("False");
-	    			ligneRemplie=false;
-	    		}
-	    	}
-	    	//si la ligne est pleine
-	    	if(ligneRemplie) {
-	    		nbRowsCleared++;
-	    		System.out.println(nbRowsCleared);
-	    		
-	    		for (int cptClear=0; cptClear<this.width; cptClear++) {
-	    			grid_temp[cptClear][i]=false;
-	    		}
-	    		
-	    		for(int cpty=i+1; cpty<this.height; cpty++) {
-	    			for(int cptx=0; cptx<this.width; cptx++) {
-	    				grid_temp[cptx][cpty-1]=this.grid[cptx][cpty];
-	    			}
+		for(int i=0; i<this.widths.length; i++) {
+			if(this.widths[i]==this.width) {
+				nbRowsCleared++;
+			
+			
+			for (int cptClear=0; cptClear<this.width; cptClear++) {
+				this.heights[cptClear]-=1;
+    		}
+			
+	    	//decalage de valeurs de widths et grille
+	    	for(int cpty=i; cpty<this.height-1; cpty++) {
+	    		this.widths[cpty]=this.widths[cpty+1];
+	    		for(int cptx=0; cptx<this.width; cptx++) {
+	    			this.grid[cptx][cpty]=this.grid[cptx][cpty+1];
 	    		}
 	    	}
 	    	
-	    }this.grid=grid_temp;
-	    return nbRowsCleared;
-		
-	}
+	    	//réinitialisation des lignes du haut
+	    	
+	    	this.widths[this.height-1]=0;
+	    	for (int x=0; x<this.width; x++) {
+	    		this.grid[x][this.height-1]=false;
+	    	}
+	    	
+	    	/*
+	    	 * on a supprimé une ligne on doit donc rester 
+	    	 * au même i car la ligne suivante a été 
+	    	 * déplacée à la position currente 
+	    	 */
+	    	i--;
+			}
+	    }
+		return nbRowsCleared;
+	}	
+	
 
 	/**
 	 * Reverts the board to its state before up to one place and one
