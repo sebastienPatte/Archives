@@ -21,21 +21,26 @@ public class DefaultBrain implements Brain {
 		Brain.Move move = new Brain.Move();
 		board = new Board(board);
 
+		System.out.println(piece.toString());
 		double bestScore = 1e20;
 		int bestX = 0;
 		int bestY = 0;
 		Piece bestPiece = null;
 		Piece current = new Piece(piece);
-
+		//System.out.println(piece.toString());
+		//System.out.println("--piece--");
+		System.out.println(current.toString());
+		System.out.println("--current--");
 		board.commit();
-
+		
 		// loop through all the rotations
 		while (true) {
 			final int yBound = limitHeight - current.getHeight() + 1;
 			final int xBound = board.getWidth() - current.getWidth() + 1;
-
+			
 			// For current rotation, try all the possible columns
 			for (int x = 0; x < xBound; x++) {
+				
 				int y = board.dropHeight(current, x);
 				if (y > yBound) { // piece does stick up too far
 					continue;
@@ -63,7 +68,7 @@ public class DefaultBrain implements Brain {
 				break; // break if back to original rotation
 			}
 		}
-
+		
 		if (bestPiece == null) {
 			return null; // could not find a play at all!
 		} else {

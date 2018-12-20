@@ -160,6 +160,8 @@ public class JTetris extends JComponent {
 		// tick(DOWN) periodically
 		timer = new javax.swing.Timer(DELAY, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("BOARD JTETRIS "+board.toString());
+				System.out.println("CURR PIECE JTETRIS "+currentPiece.toString());
 				tick(DOWN);
 			}
 		});
@@ -384,10 +386,11 @@ public class JTetris extends JComponent {
 		}
 
 		if (currentPiece != null) {
+			System.out.println("appelUNDO "+this.board.widths);
 			this.board.undo(); // remove the piece from its old position
 		}
 
-		// Sets the newXXX ivars
+		// Sets the new vars
 		this.computeNewPosition(verb);
 
 		// try out the new position (rolls back if it doesn't work)

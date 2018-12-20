@@ -58,15 +58,15 @@ public class Board {
 	}
 	
 	public Board (Board board) {
-		board.width=this.width;
-		board.height=this.height;
-		board.grid=this.grid;
-		board.committed=this.committed;
-		board.widths=this.widths;
-		board.heights=this.heights;
-		board.grid_backup=this.grid_backup;
-		board.widths_backup=this.widths_backup;
-		board.heights_backup=this.heights_backup;
+		this.width=board.width;
+		this.height=board.height;
+		this.grid=board.grid;
+		this.committed=board.committed;
+		this.widths=board.widths;
+		this.heights=board.heights;
+		this.grid_backup=board.grid_backup;
+		this.widths_backup=board.widths_backup;
+		this.heights_backup=board.heights_backup;
 	}
 //FOR DEBUGGING
 	public void affiche_grid(boolean[][] grid)
@@ -301,7 +301,7 @@ public class Board {
 	    // YOUR CODE HERE
 			if(!committed) {
 
-				
+				System.out.println("UNDO "+this.widths);
 				for(int cpt1=0; cpt1<this.widths.length;cpt1++) {
 					int temp = this.widths_backup[cpt1];
 					this.widths_backup[cpt1] = this.widths[cpt1];
