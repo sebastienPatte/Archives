@@ -13,7 +13,8 @@ public class Board {
 	private int height;
 
 	protected boolean[][] grid;
-	private boolean committed;
+	
+	public boolean committed;
 	 int[] widths;
 	 int[] heights;
 	 
@@ -40,7 +41,7 @@ public class Board {
 			}this.widths[i]=0;
 			this.heights[i]=0;
 		
-		}System.out.println(this.toString());
+		}
 		
 		//backups 
 		this.grid_backup = new boolean[width][height];
@@ -109,6 +110,7 @@ public class Board {
 	public int dropHeight(Piece piece, int x) {
 	    // YOUR CODE HERE
 		int result = 0;
+	
 		
 		for(int i =0 ; i < piece.getSkirt().size();i++){
 			int y = getColumnHeight(i);
@@ -166,7 +168,7 @@ public class Board {
 			this.grid_backup[i][j]=this.grid[i][j];
 		}
 			
-		System.out.println("Backup");
+		
 		
 	}
 	
@@ -226,7 +228,7 @@ public class Board {
 		 			if(this.heights[pieceX]<pieceY+1) {
 		 				this.heights[pieceX]=pieceY+1;
 		 			}
-		 			System.out.println("pieceY = "+pieceY+"  "+this.widths.length);
+		 			
 		 			
 		 			this.widths[pieceY]++;
 
@@ -234,9 +236,6 @@ public class Board {
 						result = PLACE_ROW_FILLED;
 					}
 		 		}
-		 		System.out.println("finPlace");
-		 		System.out.println(this.toString());
-		 		System.out.println(result);
 		 		return result;
 		 				 		
 		 		
@@ -301,18 +300,7 @@ public class Board {
 	public void undo() {
 	    // YOUR CODE HERE
 			if(!committed) {
-				
-				for(int i=0; i<this.grid_backup.length; i++) {
-					for (int j=0; j< this.grid_backup[i].length; j++) {
-						if(this.grid[i][j]) {
-							System.out.println("1");
-						}else {
-							System.out.println("0");
-						}
-					}
-				}
-				
-				//-------------------------------------------------------------------
+
 				
 				for(int cpt1=0; cpt1<this.widths.length;cpt1++) {
 					int temp = this.widths_backup[cpt1];
@@ -328,8 +316,6 @@ public class Board {
 				boolean[][] grid_temp = this.grid_backup;
 				this.grid_backup=this.grid;
 				this.grid=grid_temp;
-				System.out.println("UNDO ");
-				System.out.println(this.toString());
 				
 				
 				
