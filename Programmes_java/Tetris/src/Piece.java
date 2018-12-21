@@ -93,8 +93,8 @@ public class Piece {
 	 * créé une piece en copiant la piece 'this'
 	 */
 	 public Piece(Piece piece) {
-		System.out.println("--Cpiece--");
-		System.out.println(piece.body);
+		//System.out.println("--Cpiece--");
+		//System.out.println(piece.body);
 	    this.body=piece.body;
 		this.skirt=piece.skirt;
 		this.width=piece.width;
@@ -191,7 +191,7 @@ public class Piece {
 	 */
 	public boolean equals(Object obj) {
 		Piece object=new Piece(obj.toString());
-	    if(object.body.containsAll(object.body)) {
+	    if(this.body.containsAll(object.body)) {
 	    	return true;
 	    }else {
 	    	return false;

@@ -101,7 +101,7 @@ public class BoardTest {
 	@Test
 	public void testMaxHeight() {
 		Board b = new Board(3, 6);
-		System.out.println("TEST");
+
 		assertEquals(0, b.getMaxHeight());
 		
 		Piece p = new Piece(Piece.STICK_STR);
@@ -132,14 +132,14 @@ public class BoardTest {
 		b2.place(p1, 1, 1);
 		
 		b2.commit();
-		for(int nb: b2.heights)System.out.println(nb);
+		
 		b2.place(p1, 0, 3);
 		b2.undo();
-		for(int nb: b2.heights)System.out.println(nb);
+		
 		b2.place(p1, 0, 0);
 		b2.undo();
-		System.out.println("B222");
-		for(int nb: b2.heights)System.out.println(nb);
+		
+		
 		assertTrue(Arrays.equals(new int[] {0, 5, 0}, b2.heights));
 	}
 	
@@ -233,8 +233,8 @@ public class BoardTest {
 		expected.grid[0][0] = true;
 		expected.grid[0][1] = true;
 		expected.grid[4][0] = true;
-		System.out.println("Total fait de la merde");
-		System.out.println(b.toString());
+		
+		
 		assertEquals(b.clearRows(), 2);
 				
 		assertArrayEquals(expected.grid, b.grid);;
@@ -297,10 +297,6 @@ public class BoardTest {
 		expected.updateWidthsHeights();
 	
 		assertEquals(1, b.clearRows());
-		System.out.println("expected: ");
-		System.out.println(expected.toString());
-		System.out.println("b: ");
-		System.out.println(b.toString());
 		
 		assertArrayEquals(expected.grid, b.grid);;
 		

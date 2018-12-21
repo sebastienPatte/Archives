@@ -51,41 +51,48 @@ public class JBrainTetris extends JTetris{
 	 }
 	 @Override
 		public void tick(int verb) {
-		 System.out.println("tick");
-		 System.out.println("1/  "+board.widths);
-			if(brainMode.isSelected() && verb == DOWN)
+		 
+			
+		 if(brainMode.isSelected() && verb == DOWN)
 			{
-				System.out.println("brain mode");
+		
 				if(currentCount!= count)
 				{
 					currentCount = count;
 					board.undo();
-					System.out.println("2/  "+board.widths);
-					System.out.println("bestmove");
-					System.out.println(board);
-					System.out.println(currentPiece);
-					this.bestMove = brain.bestMove(board, currentPiece, HEIGHT);
+
+					System.out.println("Avant Bestmove \n"+board.toString());
+					
+					this.bestMove = brain.bestMove(super.board, super.currentPiece, HEIGHT);
+					
+					if(bestMove!=null)System.out.println("Résultat BestMove : "+this.currentPiece+" "+this.bestMove.x+" "+this.bestMove.y);
+					if(bestMove==null)System.out.println("Résultat BestMove =NULL");
 				}
-				System.out.println("3/  "+board.widths);
+				//System.out.println("JBrainTetris \n"+board.toString());
 				if(this.bestMove != null)
 				{
-					// keep rotating once every tick(DOWN) till you get
-					// the right orientation
-					if(!currentPiece.equals(bestMove.piece))
-					{
-						currentPiece=currentPiece.computeNextRotation();
-					}
 
-					// move piece to left or right or DROP it depending
-					// on the current piece and its location
-					if(bestMove.x > currentX)	currentX++;
-					else if(bestMove.x < currentX)	currentX--;
+					
+					if(!this.currentPiece.equals(bestMove.piece)) {
+						this.currentPiece=this.currentPiece.computeNextRotation();
+					
+					}else {
+						if(bestMove.x > currentX) {
+							currentX++;
+						}else {
+							if(bestMove.x < currentX) {
+								currentX--;
+							}
+						}
+					}
+					
+						
 					
 				}
 			}
-			System.out.println("4/ "+board.widths);
 			super.tick(verb);
-	}
+			//System.out.println("JBrainTetris 2 \n"+board.toString());
+	 }
 	/*
 	 @Override
 	 public void tick(int verb) {
@@ -141,8 +148,8 @@ public class JBrainTetris extends JTetris{
 			 return super.pickNextPiece();
 		 }
 	 }
-
-	 */
+	*/
+	
 	 public static void main(String[] args) {
 		 try {
 			 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
