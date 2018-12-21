@@ -78,8 +78,7 @@ public class DefaultBrain implements Brain {
 			//System.out.println("Current : "+current);
 			//System.out.println("Piece   : "+piece);
 
-//			if (current.equals(piece)) {
-			if (rotation==4) {
+			if (current.equals(piece)) {
 				System.out.println("Break");
 				break; // break if back to original rotation
 			}			
