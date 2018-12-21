@@ -40,13 +40,13 @@ public class JBrainTetris extends JTetris{
 		 panel.add(new JLabel("Brain:"));
 		 brainMode = new JCheckBox("Brain active");
 		 panel.add(brainMode);
-		 /*
+		 
 		 panel.add(new JLabel("Adversaire:"));
 		 slider = new JSlider();
 		 slider.setMaximum(100);
 		 slider.setMinimum(0);
 		 panel.add(slider);
-		 */
+		 
 		 return panel;
 	 }
 	 @Override
@@ -93,34 +93,8 @@ public class JBrainTetris extends JTetris{
 			super.tick(verb);
 			//System.out.println("JBrainTetris 2 \n"+board.toString());
 	 }
-	/*
-	 @Override
-	 public void tick(int verb) {
-		 super.tick(verb);
-			if ((verb == DOWN) && (brainMode.isSelected()) && (this.lastCount!=super.count) && (super.currentPiece.getBody() != null)) {
-				if (!this.board.committed) {
-					
-					this.board.committed=true;
-				}
-				this.board.undo();
-				lastCount=super.count;
-				System.out.println(super.board.toString()+" "+super.currentPiece.toString()+" "+this.board.getHeight() );
-				Brain.Move moved = brain.bestMove(super.board, super.currentPiece, super.board.getHeight() - TOP_SPACE);
-				
-				if(moved != null) {
-					super.setCurrent(moved.piece, moved.x, moved.y );
-				}else {
-					verb= DROP;
-				}
-				
-				
-			}else {
-				// on lance la methode tick de JTetris.java 
-				super.tick(verb);
-			}
-	 }
-	 */
-	/*
+
+	
 	 @Override
 	 public Piece pickNextPiece() {
 					
@@ -148,7 +122,7 @@ public class JBrainTetris extends JTetris{
 			 return super.pickNextPiece();
 		 }
 	 }
-	*/
+	
 	
 	 public static void main(String[] args) {
 		 try {
