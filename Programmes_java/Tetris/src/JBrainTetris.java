@@ -94,7 +94,7 @@ public class JBrainTetris extends JTetris{
 	 public Piece pickNextPiece() {
 					
 		 rdm.nextInt(100);
-		 if ((brainMode.isSelected())&&(board.committed) && rdm.nextInt(slider.getMaximum()) < slider.getValue()) {
+		 if ((brainMode.isSelected())&&(board.isCommitted()) && rdm.nextInt(slider.getMaximum()) < slider.getValue()) {
 			 
 			 int limitHeightSup = super.board.getHeight() - TOP_SPACE;
 			 
