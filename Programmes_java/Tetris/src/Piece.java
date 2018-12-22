@@ -42,35 +42,35 @@ public class Piece {
 	 */
 
 	public Piece(List<TPoint> points) {
-	    int width=0;
-	    int height=0;
-	    List<TPoint> body = new ArrayList<TPoint>(points.size());
-	    int cpt=0;
+	    int Xmax=0;
+	    int Ymax=0;
+	    // copie de points dans body
+	    // et calcul de maxX et maxY
+	    List<TPoint> body= new ArrayList<TPoint>(points.size());
 	    for (TPoint point : points){
-	    	body.add(cpt,point);
-	    	cpt++;
+	    	body.add(point);
+	    	if( Xmax < point.x ) {
+	    		Xmax=point.x;
+	    	}
+	    	
+	    	if( Ymax < point.y ) {
+	    		Ymax=point.y;	
+	    	}
 	    }
 	    this.body=body;
 	    
-	    for (TPoint point : points){	    	
-	    	if( width < point.x ) {
-	    		width=point.x;
-	    	}
-	    	
-	    	if( height < point.y ) {
-	    		height=point.y;	
-	    	}
-	    }
-		this.width=width+1;
-		this.height=height+1;
+	    // la valeur minimale de X et Y est 0 donc width=X+1 et height=Y+1
+		this.width=Xmax+1;
+		this.height=Ymax+1;
 		
-		//init skirt
+		// initialisation skirt à sa valeur la plus grande possible (height-1)
 		List<Integer> skirt= new ArrayList<Integer>(this.width);
 		for (int i=0; i<this.width;i++) {
 			skirt.add(i,this.height-1);
 		}
 		
-		//Maj Skirt
+		// Maj Skirt : on parcours tous les points et si le points est plus bas que skirt 
+		// on met à jour skirt (skirt[X]=Y)
 		for (TPoint point : this.body){
 			if(skirt.get(point.x)>point.y) {
 				skirt.set(point.x,point.y);
@@ -90,7 +90,8 @@ public class Piece {
 	}
 
 	/*
-	 * créé une piece en copiant la piece 'this'
+	 * Constructeur Piece
+	 * créé une piece en copiant la piece passée en paramètre dans 'this'
 	 */
 	 public Piece(Piece piece) {
 	    this.body=piece.body;
@@ -105,22 +106,18 @@ public class Piece {
 	 * TPoint[] array. (Provided code)
 	 */
 	private static List<TPoint> parsePoints(String rep) {
-	    TPoint point= new TPoint(0,0); 
+	    
+		TPoint point= new TPoint(0,0); 
 		String[] repSplited = rep.split(" ");
+		List<TPoint> res = new ArrayList<TPoint>(repSplited.length/2);
 		
-		//Init res
-		List<TPoint> res= new ArrayList<TPoint>(repSplited.length/2);
-		for (int k=0;k<(repSplited.length/2);k++) {			
-			res.add(k,new TPoint(0,0));
-		}
 		
-		//Remplissage res (with parsed String)
-		int j=0;
-	    for(int i=0; i<rep.length()/2; i+=2) {
+		//Remplissage res (avec parsed String)
+	    for(int i=0; i<repSplited.length; i+=2) {
 	    	point.x= Integer.parseInt(repSplited[i]);
 	    	point.y= Integer.parseInt(repSplited[i+1]);
-	    	res.set(j, new TPoint(point.x,point.y));
-	    	j++;
+	    	res.add( new TPoint(point.x,point.y));
+	    	
 	    }
 	    return res;
 	}
@@ -162,19 +159,14 @@ public class Piece {
 	 * receiver.
 	 */
 	public Piece computeNextRotation() {
-	    // YOUR CODE HERE
+
 		//Symetrie par rapport a un axe horizontal et inversion abcisse/ordonee 
-
-		//newY=(height-1)-Y;
-		TPoint point=new TPoint(0,0);
+		//newX=(height-1)-Y;
+		//newY=X;
+		
 		List<TPoint> nextBody= new ArrayList<TPoint>(this.body.size());
-		for (int cpt=0; cpt<this.body.size();cpt++) {
-			nextBody.add(this.body.get(cpt));
-		}
-
-		for (int i=0; i<this.body.size();i++) {
-			point = this.body.get(i);
-			nextBody.set(i,new TPoint((this.height-point.y-1),point.x));
+		for (TPoint point : this.body) {
+			nextBody.add(new TPoint((this.height-point.y-1),point.x));
 		}
 		
 		Piece res = new Piece(nextBody);
@@ -188,19 +180,27 @@ public class Piece {
 	 * Used internally to detect if two rotations are effectively the same.
 	 */
 	public boolean equals(Object obj) {
+		//on renvoie true si obj=this
+		if(obj==this)return true;
+		// on revoie true si this.body contient tout les points de object.body et inversement
+		// Sinon on revoie false
 		Piece object=new Piece(obj.toString());
-	    if(this.body.containsAll(object.body)) {
+	    if(this.body.containsAll(object.body) && object.body.containsAll(this.body)) {
 	    	return true;
 	    }else {
 	    	return false;
 	    }
 	 }
-
+	
+	// renvoie un chaine de caractères contenant tous les points de this.body
+	// de la forme "0 0 1 0 1 1 0 1"
 	public String toString() {
-	    // YOUR CODE HERE
+	    
 		String str="";
 		boolean premier=true;
 		for(TPoint point : this.body) {
+			//si on est sur le premier point on nen met pas d'espace au début
+			// et on change premier en false pour ne plus repasser dans cette condition
 			if(premier){
 				str+=point.x+" "+point.y;
 				premier=false;

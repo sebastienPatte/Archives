@@ -9,14 +9,9 @@ import java.util.*;
 
 
 
+@SuppressWarnings("serial")
 public class JBrainTetris extends JTetris{
 
-
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private JCheckBox brainMode;
 	private DefaultBrain brain;
 	private JSlider slider;
