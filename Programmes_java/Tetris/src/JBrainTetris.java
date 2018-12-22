@@ -61,14 +61,14 @@ public class JBrainTetris extends JTetris{
 					currentCount = count;
 					board.undo();
 
-					System.out.println("Avant Bestmove \n"+board.toString());
+
 					
 					this.bestMove = brain.bestMove(super.board, super.currentPiece, HEIGHT);
 					
-					if(bestMove!=null)System.out.println("Résultat BestMove : "+this.currentPiece+" "+this.bestMove.x+" "+this.bestMove.y);
-					if(bestMove==null)System.out.println("Résultat BestMove =NULL");
+
+
 				}
-				//System.out.println("JBrainTetris \n"+board.toString());
+
 				if(this.bestMove != null)
 				{
 
@@ -91,7 +91,7 @@ public class JBrainTetris extends JTetris{
 				}
 			}
 			super.tick(verb);
-			//System.out.println("JBrainTetris 2 \n"+board.toString());
+			
 	 }
 
 	

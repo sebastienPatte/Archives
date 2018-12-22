@@ -19,19 +19,15 @@ public class DefaultBrain implements Brain {
 	 */
 	public Brain.Move bestMove(Board board, Piece piece, int limitHeight) {
 		Brain.Move move = new Brain.Move();
-//	    board = new Board(board);
 
-		//System.out.println("BRAIn");
+
+
 		double bestScore = 1e20;
 		int bestX = 0;
 		int bestY = 0;
 		int rotation = 0;
 		Piece bestPiece = null;
 		Piece current = new Piece(piece);
-		//System.out.println(piece.toString());
-		//System.out.println("--piece--");
-//		System.out.println(current.toString());
-//		System.out.println("--current--");
 		board.commit();
 		
 		// loop through all the rotations
@@ -46,7 +42,6 @@ public class DefaultBrain implements Brain {
 				if (y > yBound) { // piece does stick up too far
 					continue;
 				}
-				//System.out.println("DefaultBrain place : "+current+" "+" "+x+" "+y);
 				int result = board.place(current, x, y);
 
 				if (result <= Board.PLACE_ROW_FILLED) {
@@ -56,7 +51,6 @@ public class DefaultBrain implements Brain {
 
 					double score = rateBoard(board);
 
-					System.out.println("x="+x+" y="+y+" score="+score);
 
 					if (score < bestScore) {
 						bestScore = score;
@@ -66,7 +60,6 @@ public class DefaultBrain implements Brain {
 					}
 				}
 
-				System.out.println(board.toString());
 
 				board.undo();
 				
@@ -75,15 +68,12 @@ public class DefaultBrain implements Brain {
 
 			current = current.computeNextRotation();
             rotation++;
-			//System.out.println("Current : "+current);
-			//System.out.println("Piece   : "+piece);
 
 			if (current.equals(piece)) {
-				System.out.println("Break");
+				
 				break; // break if back to original rotation
 			}			
 		}
-		//System.out.println("FinBrain \n"+board.toString());
 		if (bestPiece == null) {
 			return null; // could not find a play at all!
 		} else {
@@ -91,7 +81,6 @@ public class DefaultBrain implements Brain {
 			move.y = bestY;
 			move.piece = bestPiece;
 			move.score = bestScore;
-			System.out.println("Bestscore "+bestScore);
 			return move;
 		}
 		

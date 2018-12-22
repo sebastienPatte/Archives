@@ -68,22 +68,7 @@ public class Board {
 		this.widths_backup=board.widths_backup;
 		this.heights_backup=board.heights_backup;
 	}
-//FOR DEBUGGING
-	public void affiche_grid(boolean[][] grid)
-	{
-		String str="";
-		System.out.println("Affiche grid");
-	for(int i=0; i<grid.length; i++) {
-			for (int j=0; j< grid[i].length; j++) {
-				if(grid[i][j]) {
-					str+="1";
-				}else {
-					str+="0";
-				}
-			}System.out.println(str);
-			str="";
-		}
-	}
+
 	
 	/**
 	 * Returns the max column height present in the board. For an empty board
@@ -115,7 +100,7 @@ public class Board {
 			int y = getColumnHeight(i+x)-skirt.get(i);
 			
 			
-			//System.out.println("i= "+i+" y="+y);
+			
 			if(y>result) {
 				result=y;
 			}
@@ -197,7 +182,7 @@ public class Board {
 	 * pre-place state.
 	 */
 	public int place(Piece piece, int x, int y) {
-		//System.out.println("PLACE "+piece+" "+x+" "+y);
+		
 		if (!this.committed) {
 		    	throw new RuntimeException("can only place object if the board has been commited");
 		    }
@@ -290,7 +275,7 @@ public class Board {
 			}
 	    }
 
-		System.out.println("ROWS CLEARED "+nbRowsCleared);
+		
 		return nbRowsCleared;
 	}	
 	
@@ -305,7 +290,7 @@ public class Board {
 	    // YOUR CODE HERE
 			if(!committed) {
 
-				//System.out.println("debut UNDO \n"+this.toString());
+
 				for(int cpt1=0; cpt1<this.widths.length;cpt1++) {
 					int temp = this.widths_backup[cpt1];
 					this.widths_backup[cpt1] = this.widths[cpt1];
@@ -322,7 +307,7 @@ public class Board {
 				this.grid=grid_temp;
 				
 				
-				//System.out.println("fin UNDO \n"+this.toString());
+
 				
 			}
 			commit();

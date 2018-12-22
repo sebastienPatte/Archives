@@ -93,8 +93,6 @@ public class Piece {
 	 * créé une piece en copiant la piece 'this'
 	 */
 	 public Piece(Piece piece) {
-		//System.out.println("--Cpiece--");
-		//System.out.println(piece.body);
 	    this.body=piece.body;
 		this.skirt=piece.skirt;
 		this.width=piece.width;
