@@ -85,7 +85,7 @@ public class JBrainTetris extends JTetris{
 				 *  OU on se déplace à droite si  bestMove est plus a droite
 				 *  OU on se déplace à gauche si  bestMove est plus a gauche
 				 */
-				if(!this.currentPiece.equals(bestMove.piece)) {
+				if(!this.currentPiece.equals(bestMove.piece) ) {
 					this.currentPiece=this.currentPiece.computeNextRotation();
 				}else {
 					if(bestMove.x > currentX) {

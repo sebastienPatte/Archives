@@ -20,12 +20,11 @@ public class DefaultBrain implements Brain {
 	public Brain.Move bestMove(Board board, Piece piece, int limitHeight) {
 		Brain.Move move = new Brain.Move();
 
-
+		//	board= new Board(board);
 
 		double bestScore = 1e20;
 		int bestX = 0;
 		int bestY = 0;
-		int rotation = 0;
 		Piece bestPiece = null;
 		Piece current = new Piece(piece);
 		board.commit();
@@ -62,8 +61,6 @@ public class DefaultBrain implements Brain {
 			}
 
 			current = current.computeNextRotation();
-            rotation++;
-
 			if (current.equals(piece)) {
 				break; // break if back to original rotation
 			}			
