@@ -376,7 +376,7 @@ public class Board {
 			buff.append('-');
 		return buff.toString();
 	}
-
+	
 	// Only for unit tests
 	protected void updateWidthsHeights() {
 		Arrays.fill(this.widths, 0);
@@ -392,3 +392,4 @@ public class Board {
 	}
 
 }
+
