@@ -51,7 +51,6 @@ public class DefaultBrain implements Brain {
 
 					double score = rateBoard(board);
 
-
 					if (score < bestScore) {
 						bestScore = score;
 						bestX = x;
@@ -59,18 +58,13 @@ public class DefaultBrain implements Brain {
 						bestPiece = current;
 					}
 				}
-
-
 				board.undo();
-				
-
 			}
 
 			current = current.computeNextRotation();
             rotation++;
 
 			if (current.equals(piece)) {
-				
 				break; // break if back to original rotation
 			}			
 		}
