@@ -92,7 +92,7 @@ public class GridWorld_sql {
 		HashMap<String,Double> mouv = new HashMap<String,Double>();
 		// on met chaque mouvement possible (avec sa probabilité 1/nbDirs) dans mouv
 		for(int i=0; i< this.dir.size(); i++) {
-			mouv.put(this.dir.get(i), (double) (1/this.dir.size()));
+			mouv.put(this.dir.get(i), (double) (1.0/this.dir.size()));
 		}
 		// on remplit action avec la HashMap mouv et un Integer allant de 0 à (taille-1)
 		int taille = size_x*size_y;
@@ -122,7 +122,7 @@ public class GridWorld_sql {
 		// init State and dir 2 int tabs of size 2 each
 		int[] State= new int[2];
 		int[] dir= new int[2];
-		// init sbl an double tab of size 2
+		// init dbl an double tab of size 2
 		double[] dbl = new double[2];
 		
 		// for each State in grid
@@ -130,7 +130,7 @@ public class GridWorld_sql {
 			
 			// reinit dbl and tabDouble 
 			dbl = new double[2];
-			tabDouble = new ArrayList<double[]>(2);
+			tabDouble = new ArrayList<double[]>();
 			// get the value of the tab dir[]
 			dir=getDirNeighbor(act);
 			// on remplit State avec StateToGrid(s)
@@ -144,21 +144,21 @@ public class GridWorld_sql {
 				dbl[0] =  (double) (GridToState (State[0], State[1]));
 				dbl[1] =  1.0; //proba
 			}else {
-				// else we put State= -1.0 and probability is 0
-				dbl[0] = -1.0;
+				// else we put State= -1.0 and probability is 0.0
+				dbl[0] = -1.0; 
 				dbl[1] = 0.0;
 			}
 			
 			// print of new State
-			System.out.println(dbl[0]);
+			System.out.println("State : " +dbl[0]+" Proba : "+dbl[1]);
 			
 			// fill trans with (s, {s', p}) 
-			tabDouble.add(0, dbl);
+			tabDouble.add(dbl);
 			trans.put(s,tabDouble);
 			
 		
 		}
-		
+		pi.put(act, trans);
 		return trans;
 	}
 	
@@ -185,17 +185,19 @@ public class GridWorld_sql {
 				double[] tabDouble = pi.get(act).get(s).get(0);
 				X =	StateToGrid ( (int) (tabDouble[0]) ) [0];
 				Y = StateToGrid ( (int) (tabDouble[0]) ) [1];
+				if(X!=-1)System.out.println("X: "+X+" Y: "+Y+" S="+GridToState()+" Rew = "+this.reward[X][Y]); 
 				// a.get(act) = p(a|s)	
-				sum+=this.reward[X][Y] * a.get(act);
+				if(X!=-1)sum+=this.reward[X][Y] * a.get(act);
 				
 			}
 			R[s] = sum;
+			System.out.println("R["+s+"] "+sum);
 		}
 		return R;
 	}
 	
 	//tab : une HashMap < Integer, ArrayList<Double[]> > par direction possible
-	//Integer : State ArrayList<Double>
+	//Integer : State ArrayList<Double[]>
 	private double[][] computeMatP() {
 		double[][] P = new double[nbStates][nbStates];
 		HashMap<Integer,ArrayList<double[]>> tab = new HashMap<Integer, ArrayList<double[]>>(this.dir.size());
@@ -203,7 +205,7 @@ public class GridWorld_sql {
 			// from state s, compute P^{\pi}(s,s')
 			for(String act : this.dir) {
 				//TODO
-				tab.put=computeTrans(act);
+				tab=this.pi.get(act);
 			}
 				
 				
