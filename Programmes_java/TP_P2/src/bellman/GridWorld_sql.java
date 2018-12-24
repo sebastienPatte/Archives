@@ -42,7 +42,7 @@ public class GridWorld_sql {
 				grid[i][j] = false;
 		}
 		
-		//this.ChooseRdmState();
+		this.ChooseRdmState();
 		// put n_rew reward randomly
 		this.PutRdmReward(n_rew);
 		// initialize the random policy
@@ -86,11 +86,15 @@ public class GridWorld_sql {
 
 	// add the possible actions for all states
 	private void InitRdmPol() {
+		// init action
 		action = new HashMap<Integer,HashMap<String,Double>>();
+		//init mouv
 		HashMap<String,Double> mouv = new HashMap<String,Double>();
+		// on met chaque mouvement possible (avec sa probabilité 1/nbDirs) dans mouv
 		for(int i=0; i< this.dir.size(); i++) {
 			mouv.put(this.dir.get(i), (double) (1/this.dir.size()));
 		}
+		// on remplit action avec la HashMap mouv et un Integer allant de 0 à (taille-1)
 		int taille = size_x*size_y;
 		for (int j=0; j< taille-1;j++) {
 			action.put(j,mouv);
@@ -111,32 +115,44 @@ public class GridWorld_sql {
 	
 	// To each state, give the reachable states given an action
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) {
+		// init trans
 		HashMap<Integer,ArrayList<double[]>> trans = new HashMap<Integer,ArrayList<double[]>>();
+		// init tabDouble of size 2
 		ArrayList<double[]> tabDouble = new ArrayList<double[]>(2);
+		// init State and dir 2 int tabs of size 2 each
 		int[] State= new int[2];
 		int[] dir= new int[2];
+		// init sbl an double tab of size 2
 		double[] dbl = new double[2];
+		
+		// for each State in grid
 		for(int s=0; s<size_x*size_y; s++) {
 			
-			
+			// reinit dbl and tabDouble 
 			dbl = new double[2];
 			tabDouble = new ArrayList<double[]>(2);
-			
+			// get the value of the tab dir[]
 			dir=getDirNeighbor(act);
-			
+			// on remplit State avec StateToGrid(s)
 			State=StateToGrid(s);
+			// puis on y ajoute les valeurs du déplacement
 			State[0]+=dir[0];
 			State[1]+=dir[1];
+			
 			if( !((State[0] < 0) || (State[1] < 0) || (State[0] >= size_x) || (State[1] >= size_y) ) ) {
+				// if new State is in the limit of grid we fill dbl with new state and probability of 1.0
 				dbl[0] =  (double) (GridToState (State[0], State[1]));
 				dbl[1] =  1.0; //proba
 			}else {
+				// else we put State= -1.0 and probability is 0
 				dbl[0] = -1.0;
 				dbl[1] = 0.0;
 			}
 			
+			// print of new State
 			System.out.println(dbl[0]);
 			
+			// fill trans with (s, {s', p}) 
 			tabDouble.add(0, dbl);
 			trans.put(s,tabDouble);
 			
@@ -157,17 +173,20 @@ public class GridWorld_sql {
 	// compute the vector r
 	private double[] computeVecR() {
 		double[] R = new double[nbStates];
+		int X,Y;
 		for(int s=0; s<nbStates; s++) {
 			double sum = 0;
+			// a = (String action, Double proba)
 			HashMap<String,Double> a = action.get(s);
 			// compute the reward obtained from state s, by doing all potential action a
 			for(String act : this.dir) {
 				// TODO 
-				HashMap<Integer,ArrayList<double[]>>trans=computeTrans(act);
-				double[] tabDouble= trans.get(0).get(0);
-				if(tabDouble[0]!=-1) {
-					R[s]=this.reward[StateToGrid( (int) (tabDouble[0]))[0] ] [StateToGrid((int) (tabDouble[0]))[1] ] ;
-				}
+				//  tabDouble = p(s'|s,a)
+				double[] tabDouble = pi.get(act).get(s).get(0);
+				X =	StateToGrid ( (int) (tabDouble[0]) ) [0];
+				Y = StateToGrid ( (int) (tabDouble[0]) ) [1];
+				// a.get(act) = p(a|s)	
+				sum+=this.reward[X][Y] * a.get(act);
 				
 			}
 			R[s] = sum;
@@ -175,6 +194,8 @@ public class GridWorld_sql {
 		return R;
 	}
 	
+	//tab : une HashMap < Integer, ArrayList<Double[]> > par direction possible
+	//Integer : State ArrayList<Double>
 	private double[][] computeMatP() {
 		double[][] P = new double[nbStates][nbStates];
 		HashMap<Integer,ArrayList<double[]>> tab = new HashMap<Integer, ArrayList<double[]>>(this.dir.size());
@@ -182,10 +203,10 @@ public class GridWorld_sql {
 			// from state s, compute P^{\pi}(s,s')
 			for(String act : this.dir) {
 				//TODO
-				tab=computeTrans(act);
-				
-				
+				tab.put=computeTrans(act);
 			}
+				
+				
 		}
 		return P;
 	}
