@@ -49,6 +49,7 @@ public class GridWorld_sql {
 		this.InitRdmPol();
 		// initialize the transition matrices
 		this.InitTransitionMat();
+		showGrid();
 	}
 	
 	// choose a random coordinate in the grid
@@ -85,8 +86,8 @@ public class GridWorld_sql {
 	}
 
 	// add the possible actions for all states
+	// init action
 	private void InitRdmPol() {
-		// init action
 		action = new HashMap<Integer,HashMap<String,Double>>();
 		//init mouv
 		HashMap<String,Double> mouv = new HashMap<String,Double>();
@@ -96,7 +97,7 @@ public class GridWorld_sql {
 		}
 		// on remplit action avec la HashMap mouv et un Integer allant de 0 à (taille-1)
 		int taille = size_x*size_y;
-		for (int j=0; j< taille-1;j++) {
+		for (int j=0; j< taille;j++) {
 			action.put(j,mouv);
 		}
 	}
@@ -115,6 +116,7 @@ public class GridWorld_sql {
 	
 	// To each state, give the reachable states given an action
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) {
+		System.out.println("ComputeTrans ("+act+") :");
 		// init trans
 		HashMap<Integer,ArrayList<double[]>> trans = new HashMap<Integer,ArrayList<double[]>>();
 		// init tabDouble of size 2
@@ -150,7 +152,7 @@ public class GridWorld_sql {
 			}
 			
 			// print of new State
-			System.out.println("State : " +dbl[0]+" Proba : "+dbl[1]);
+			System.out.println("	State : "+s+" to " +(int)dbl[0]+" Proba : "+(int)dbl[1]);
 			
 			// fill trans with (s, {s', p}) 
 			tabDouble.add(dbl);
@@ -173,7 +175,8 @@ public class GridWorld_sql {
 	// compute the vector r
 	private double[] computeVecR() {
 		double[] R = new double[nbStates];
-		int X,Y;
+		int X=0;
+		int Y=0;
 		for(int s=0; s<nbStates; s++) {
 			double sum = 0;
 			// a = (String action, Double proba)
@@ -182,17 +185,18 @@ public class GridWorld_sql {
 			for(String act : this.dir) {
 				// TODO 
 				//  tabDouble = p(s'|s,a)
+				// a.get(act) = p(a|s)
 				double[] tabDouble = pi.get(act).get(s).get(0);
 				X =	StateToGrid ( (int) (tabDouble[0]) ) [0];
 				Y = StateToGrid ( (int) (tabDouble[0]) ) [1];
-				if(X!=-1)System.out.println("X: "+X+" Y: "+Y+" S="+GridToState()+" Rew = "+this.reward[X][Y]); 
-				// a.get(act) = p(a|s)	
-				if(X!=-1)sum+=this.reward[X][Y] * a.get(act);
+				if(X!=-1)System.out.println("X: "+X+" Y: "+Y+" S="+GridToState(X,Y)+" Rew = "+this.reward[X][Y]); 
+				if(X!=-1)sum+=this.reward[X][Y];
 				
 			}
 			R[s] = sum;
 			System.out.println("R["+s+"] "+sum);
 		}
+		
 		return R;
 	}
 	
@@ -245,6 +249,7 @@ public class GridWorld_sql {
 	}
 	
 	private void showGrid() {
+		System.out.println("\n"+"showGrid()");
 		for(int i=0; i<size_x; i++) {
 			for(int j=0; j<size_y; j++)
 				System.out.print((this.grid[i][j]?1:0));
@@ -255,7 +260,7 @@ public class GridWorld_sql {
 	private void showRewGrid() {
 		for(int i=0; i<size_x; i++) {
 			for(int j=0; j<size_y; j++)
-				System.out.print(this.reward[i][j]+" ");
+				System.out.print(this.reward[j][i]+" ");
 			System.out.println();
 		}
 	} 
@@ -276,13 +281,16 @@ public class GridWorld_sql {
 		gd.showRewGrid();
 		double[][] V = gd.SolvingP();
 		// show V
+		gd.showRewGrid();
 		for(int i=0; i<gd.nbStates; i++) {
 			if(i%5==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
 		}
+		
 		System.out.println("\n");
 		// Improve the policy !
 		gd.ImprovePolicy(V);
+		
 		
 	}
 }
