@@ -115,6 +115,7 @@ public class GridWorld_sql {
 	}
 	
 	// To each state, give the reachable states given an action
+	// pi is the transition mat
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) {
 		System.out.println("ComputeTrans ("+act+") :");
 		// init trans
@@ -160,7 +161,6 @@ public class GridWorld_sql {
 			
 		
 		}
-		pi.put(act, trans);
 		return trans;
 	}
 	
@@ -177,11 +177,13 @@ public class GridWorld_sql {
 		double[] R = new double[nbStates];
 		int X=0;
 		int Y=0;
+		int nbRew=0;
 		for(int s=0; s<nbStates; s++) {
 			double sum = 0;
 			// a = (String action, Double proba)
 			HashMap<String,Double> a = action.get(s);
 			// compute the reward obtained from state s, by doing all potential action a
+			nbRew=0;
 			for(String act : this.dir) {
 				// TODO 
 				//  tabDouble = p(s'|s,a)
@@ -189,8 +191,11 @@ public class GridWorld_sql {
 				double[] tabDouble = pi.get(act).get(s).get(0);
 				X =	StateToGrid ( (int) (tabDouble[0]) ) [0];
 				Y = StateToGrid ( (int) (tabDouble[0]) ) [1];
-				if(X!=-1)System.out.println("X: "+X+" Y: "+Y+" S="+GridToState(X,Y)+" Rew = "+this.reward[X][Y]); 
-				if(X!=-1)sum+=this.reward[X][Y];
+				if(X!=-1) {
+					System.out.println("X: "+X+" Y: "+Y+" S="+GridToState(X,Y)+" Rew = "+this.reward[X][Y]); 
+					sum+=(this.reward[X][Y] * a.get(act));
+				}
+				
 				
 			}
 			R[s] = sum;
@@ -202,30 +207,40 @@ public class GridWorld_sql {
 	
 	//tab : une HashMap < Integer, ArrayList<Double[]> > par direction possible
 	//Integer : State ArrayList<Double[]>
+	// on met à jour les probas pour chaque state en ignorant les déplacements imposssible  
 	private double[][] computeMatP() {
+		
 		double[][] P = new double[nbStates][nbStates];
+		int newS=0;
 		HashMap<Integer,ArrayList<double[]>> tab = new HashMap<Integer, ArrayList<double[]>>(this.dir.size());
 		for(int s=0; s<nbStates; s++) {
 			// from state s, compute P^{\pi}(s,s')
 			for(String act : this.dir) {
 				//TODO
 				tab=this.pi.get(act);
+				newS=(int) (tab.get(s).get(0))[0];
+				if(newS!=-1) {
+					P[s][newS]=(tab.get(s).get(0))[1];
+				}
+				//FIN TODO
 			}
-				
-				
+			
 		}
 		return P;
 	}
 	
 	// converting to matrix for the inverse
 	private Matrix BuildMatA() {
+		String str="";
 		double[][] f_A = new double[nbStates][nbStates];
 		double[][] P = computeMatP();
 		for(int s=0; s<nbStates; s++) {
 			f_A[s][s] = 1;
 			for(int sp=0; sp<nbStates; sp++) {
 				f_A[s][sp] -= this.gamma*P[s][sp];
-			}
+				str+= (int) P[s][sp];
+			}System.out.println(str+"\n");
+			str="";
 		}
 		
 		Matrix matP = new Matrix(f_A);
@@ -281,7 +296,6 @@ public class GridWorld_sql {
 		gd.showRewGrid();
 		double[][] V = gd.SolvingP();
 		// show V
-		gd.showRewGrid();
 		for(int i=0; i<gd.nbStates; i++) {
 			if(i%5==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
