@@ -220,7 +220,7 @@ public class GridWorld_sql {
 				tab=this.pi.get(act);
 				newS=(int) (tab.get(s).get(0))[0];
 				if(newS!=-1) {
-					P[s][newS]=(tab.get(s).get(0))[1];
+					P[s][newS]=(tab.get(s).get(0))[1]*action.get(s).get(act);
 				}
 				//FIN TODO
 			}
@@ -231,16 +231,18 @@ public class GridWorld_sql {
 	
 	// converting to matrix for the inverse
 	private Matrix BuildMatA() {
+		System.out.println("Print Mat A : \n");
 		String str="";
 		double[][] f_A = new double[nbStates][nbStates];
-		double[][] P = computeMatP();
+		double[][] P = computeMatP();	
 		for(int s=0; s<nbStates; s++) {
 			f_A[s][s] = 1;
 			for(int sp=0; sp<nbStates; sp++) {
 				f_A[s][sp] -= this.gamma*P[s][sp];
-				str+= (int) P[s][sp];
+				str+=f_A[s][sp]+" ";
 			}System.out.println(str+"\n");
 			str="";
+
 		}
 		
 		Matrix matP = new Matrix(f_A);
@@ -249,11 +251,15 @@ public class GridWorld_sql {
 
 	// converting to matrix for the inverse
 	private Matrix BuildMatb() {
+		
+		String str="";
 		double[] vec_b = computeVecR();
 		double[][] b = new double[vec_b.length][1];
+		System.out.println("Print Mat B : \n");
 		for(int i=0; i<vec_b.length; i++) {
 			b[i][0] = vec_b[i];
-		}
+			str+=b[i][0]+"\n";
+		}System.out.println(str);
 		return new Matrix(b);
 	}
 	
