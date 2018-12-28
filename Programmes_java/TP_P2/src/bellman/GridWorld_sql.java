@@ -175,6 +175,8 @@ public class GridWorld_sql {
 	// compute the vector r
 	private double[] computeVecR() {
 		double[] R = new double[nbStates];
+		int newX=0;
+		int newY=0;
 		int X=0;
 		int Y=0;
 		int nbRew=0;
@@ -183,17 +185,19 @@ public class GridWorld_sql {
 			// a = (String action, Double proba)
 			HashMap<String,Double> a = action.get(s);
 			// compute the reward obtained from state s, by doing all potential action a
-			nbRew=0;
+			
 			for(String act : this.dir) {
 				// TODO 
 				//  tabDouble = p(s'|s,a)
 				// a.get(act) = p(a|s)
 				double[] tabDouble = pi.get(act).get(s).get(0);
-				X =	StateToGrid ( (int) (tabDouble[0]) ) [0];
-				Y = StateToGrid ( (int) (tabDouble[0]) ) [1];
-				if(X!=-1) {
-					System.out.println("X: "+X+" Y: "+Y+" S="+GridToState(X,Y)+" Rew = "+this.reward[X][Y]); 
-					sum+=(this.reward[X][Y] * a.get(act));
+				newX =	StateToGrid ( (int) (tabDouble[0]) ) [0];
+				newY = StateToGrid ( (int) (tabDouble[0]) ) [1];
+				X = StateToGrid(s)[0];
+				Y = StateToGrid(s)[1];
+				if(newX!=-1) {
+					System.out.println("newX: "+newX+" newY: "+newY+" newS="+GridToState(newX,newY)+" Rew = "+this.reward[newX][newY]); 
+					sum+=(this.reward[X][Y] * this.reward[newX][newY]* a.get(act) );
 				}
 				
 				
@@ -221,6 +225,7 @@ public class GridWorld_sql {
 				newS=(int) (tab.get(s).get(0))[0];
 				if(newS!=-1) {
 					P[s][newS]=(tab.get(s).get(0))[1]*action.get(s).get(act);
+					
 				}
 				//FIN TODO
 			}
@@ -231,7 +236,7 @@ public class GridWorld_sql {
 	
 	// converting to matrix for the inverse
 	private Matrix BuildMatA() {
-		System.out.println("Print Mat A : \n");
+		System.out.println("Print Mat A (I - (P/2)): \n");
 		String str="";
 		double[][] f_A = new double[nbStates][nbStates];
 		double[][] P = computeMatP();	
