@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 import Jama.*;
 
-public class GridWorld_sql {
+public class Gridworld2 {
 
 	private boolean[][] grid;
 	private double[][] reward;
@@ -17,10 +17,10 @@ public class GridWorld_sql {
 	private long seed = 124;
 	private int MAX_REWARD = 20;
 	private HashMap<Integer,HashMap<String,Double>> action;
-	private HashMap<String,HashMap<Integer,ArrayList<double[]>>> pi;
+	private HashMap<String,HashMap<Integer,Integer>> pi;
 	private ArrayList<String> dir;
 	
-	GridWorld_sql(int size_x, int size_y, int n_rew) {
+	Gridworld2(int size_x, int size_y, int n_rew) {
 		this.rdmnum = new Random(this.seed);
 		
 		this.grid = new boolean[size_x][size_y];
@@ -42,14 +42,13 @@ public class GridWorld_sql {
 				grid[i][j] = false;
 		}
 		
-		this.ChooseRdmState();
+		//this.ChooseRdmState();
 		// put n_rew reward randomly
 		this.PutRdmReward(n_rew);
 		// initialize the random policy
 		this.InitRdmPol();
 		// initialize the transition matrices
 		this.InitTransitionMat();
-		showGrid();
 	}
 	
 	// choose a random coordinate in the grid
@@ -77,7 +76,7 @@ public class GridWorld_sql {
 		return i+size_x*j;
 	}
 	
-	// return the coordinate on the grid given the state
+	// return the coordinate on the gris given the state
 	private int[] StateToGrid(int s) {
 		int[] index = new int[2];
 		index[1] = (int) s/size_x;
@@ -86,21 +85,18 @@ public class GridWorld_sql {
 	}
 
 	// add the possible actions for all states
-	// init action
 	private void InitRdmPol() {
 		action = new HashMap<Integer,HashMap<String,Double>>();
-		//init mouv
-		HashMap<String,Double> mouv = new HashMap<String,Double>();
-		// on met chaque mouvement possible (avec sa probabilité 1/nbDirs) dans mouv
-		for(int i=0; i< this.dir.size(); i++) {
-			mouv.put(this.dir.get(i), (double) (1.0/this.dir.size()));
-		}
-		// on remplit action avec la HashMap mouv et un Integer allant de 0 à (taille-1)
-		int taille = size_x*size_y;
-		for (int j=0; j< taille;j++) {
-			action.put(j,mouv);
+		HashMap<String,Double> set = new HashMap<String,Double>();
+		set.put("up", 0.2); set.put("down", 0.2); set.put("left", 0.2);
+		set.put("right", 0.2); set.put("stay", 0.2);
+		for(int i=0; i<this.size_x; i++) {
+			for(int j=0; j<this.size_y; j++) {
+				action.put(i*this.size_x+j, set);
+			}
 		}
 	}
+	
 	
 	// return the direction (on the grid) for a given action
 	private int[] getDirNeighbor(String act) {
@@ -115,139 +111,95 @@ public class GridWorld_sql {
 	}
 	
 	// To each state, give the reachable states given an action
-	// pi is the transition mat
-	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) {
-		System.out.println("ComputeTrans ("+act+") :");
-		// init trans
-		HashMap<Integer,ArrayList<double[]>> trans = new HashMap<Integer,ArrayList<double[]>>();
-		// init tabDouble of size 2
-		ArrayList<double[]> tabDouble = new ArrayList<double[]>(2);
-		// init State and dir 2 int tabs of size 2 each
-		int[] State= new int[2];
-		int[] dir= new int[2];
-		// init dbl an double tab of size 2
-		double[] dbl = new double[2];
-		
-		// for each State in grid
-		for(int s=0; s<size_x*size_y; s++) {
-			
-			// reinit dbl and tabDouble 
-			dbl = new double[2];
-			tabDouble = new ArrayList<double[]>();
-			// get the value of the tab dir[]
-			dir=getDirNeighbor(act);
-			// on remplit State avec StateToGrid(s)
-			State=StateToGrid(s);
-			// puis on y ajoute les valeurs du déplacement
-			State[0]+=dir[0];
-			State[1]+=dir[1];
-			
-			if( !((State[0] < 0) || (State[1] < 0) || (State[0] >= size_x) || (State[1] >= size_y) ) ) {
-				// if new State is in the limit of grid we fill dbl with new state and probability of 1.0
-				dbl[0] =  (double) (GridToState (State[0], State[1]));
-				dbl[1] =  1.0; //proba
-			}else {
-				// else we put State= -1.0 and probability is 0.0
-				dbl[0] = -1.0; 
-				dbl[1] = 0.0;
+	private HashMap<Integer,Integer> computeTrans(String act) {
+		HashMap<Integer,Integer> trans = new HashMap<Integer,Integer>();
+		int a = 0;
+		for(int i=0; i<this.size_x; i++) {
+			for(int j=0; j<this.size_y; j++) { 
+				if(act=="up") {
+					if(i==0) {
+						a=i*this.size_x+j;
+					} else {
+						a=(i-1)*this.size_x+j;
+					}
+				}
+				if(act=="down") {
+					if(i==this.size_x-1) {
+						a=i*this.size_x+j;
+					} else {
+						a=(i+1)*this.size_x+j;
+					}
+				}
+				if(act=="right") {
+					if(j==this.size_x-1) {
+						a=i*this.size_x+j;
+					} else {
+						a=i*this.size_x+j+1;
+					}
+				}
+				if(act=="left") {
+					if(j==0) {
+						a=i*this.size_x+j;
+					} else {
+						a=i*this.size_x+j-1;
+					}
+				}
+				if(act=="stay") {
+					a=i*this.size_x+j;
+				}
+				trans.put(i*this.size_x+j, a);
 			}
-			
-			// print of new State
-			System.out.println("	State : "+s+" to " +(int)dbl[0]+" Proba : "+(int)dbl[1]);
-			
-			// fill trans with (s, {s', p}) 
-			tabDouble.add(dbl);
-			trans.put(s,tabDouble);
-			
-		
 		}
 		return trans;
 	}
 	
 	// initiate values of P
 	private void InitTransitionMat() {
-		pi = new HashMap<String,HashMap<Integer,ArrayList<double[]>>>();
+		pi = new HashMap<String,HashMap<Integer,Integer>>();
 		for(String act : this.dir) {
-			pi.put(act,computeTrans(act));	
+			pi.put(act,computeTrans(act));
 		}
 	}
 	
 	// compute the vector r
 	private double[] computeVecR() {
 		double[] R = new double[nbStates];
-		int newX=0;
-		int newY=0;
-		int X=0;
-		int Y=0;
-		
 		for(int s=0; s<nbStates; s++) {
 			double sum = 0;
-			// a = (String action, Double proba)
 			HashMap<String,Double> a = action.get(s);
-			// compute the reward obtained from state s, by doing all potential action a
-			
+			// compute the reward obtained fomo state s, by doing all potential action a
 			for(String act : this.dir) {
-				// TODO 
-				//  tabDouble = p(s'|s,a)
-				// a.get(act) = p(a|s)
-				double[] tabDouble = pi.get(act).get(s).get(0);
-				newX =	StateToGrid ( (int) (tabDouble[0]) ) [0];
-				newY = StateToGrid ( (int) (tabDouble[0]) ) [1];
-				X = StateToGrid(s)[0];
-				Y = StateToGrid(s)[1];
-				if(newX!=-1) {
-					System.out.println("newX: "+newX+" newY: "+newY+" newS="+GridToState(newX,newY)+" Rew = "+this.reward[newX][newY]); 
-					sum+=(this.reward[X][Y] * this.reward[newX][newY]* a.get(act) );
-				}
-				
-				
+				int case_cible = pi.get(act).get(s);
+				double proba_action = a.get(act);
+				sum +=this.reward[StateToGrid(case_cible)[0]][StateToGrid(case_cible)[1]]*proba_action;
 			}
 			R[s] = sum;
-			System.out.println("R["+s+"] "+sum);
 		}
-		
 		return R;
 	}
 	
-	//tab : une HashMap < Integer, ArrayList<Double[]> > par direction possible
-	//Integer : State ArrayList<Double[]>
-	// on met à jour les probas pour chaque state en ignorant les déplacements imposssible  
 	private double[][] computeMatP() {
-		
 		double[][] P = new double[nbStates][nbStates];
-		int newS=0;
-		HashMap<Integer,ArrayList<double[]>> tab = new HashMap<Integer, ArrayList<double[]>>(this.dir.size());
+		
 		for(int s=0; s<nbStates; s++) {
 			// from state s, compute P^{\pi}(s,s')
 			for(String act : this.dir) {
-				//TODO
-				tab=this.pi.get(act);
-				newS=(int) (tab.get(s).get(0))[0];
-				if(newS!=-1) {
-					P[s][newS]=(tab.get(s).get(0))[1]*action.get(s).get(act);
-					
-				}
-				//FIN TODO
+				int s_prime = pi.get(act).get(s);
+				P[s][s_prime] += action.get(s).get(act);
 			}
-			
 		}
 		return P;
 	}
 	
 	// converting to matrix for the inverse
 	private Matrix BuildMatA() {
-		System.out.println("Print Mat A (I - (P/2)): \n");
-		String str="";
 		double[][] f_A = new double[nbStates][nbStates];
-		double[][] P = computeMatP();	
+		double[][] P = computeMatP();
 		for(int s=0; s<nbStates; s++) {
 			f_A[s][s] = 1;
 			for(int sp=0; sp<nbStates; sp++) {
 				f_A[s][sp] -= this.gamma*P[s][sp];
-				str+=f_A[s][sp]+" ";
-			}System.out.println(str+"\n");
-			str="";
-
+			}
 		}
 		
 		Matrix matP = new Matrix(f_A);
@@ -256,15 +208,11 @@ public class GridWorld_sql {
 
 	// converting to matrix for the inverse
 	private Matrix BuildMatb() {
-		
-		String str="";
 		double[] vec_b = computeVecR();
 		double[][] b = new double[vec_b.length][1];
-		System.out.println("Print Mat B : \n");
 		for(int i=0; i<vec_b.length; i++) {
 			b[i][0] = vec_b[i];
-			str+=b[i][0]+"\n";
-		}System.out.println(str);
+		}
 		return new Matrix(b);
 	}
 	
@@ -275,7 +223,6 @@ public class GridWorld_sql {
 	}
 	
 	private void showGrid() {
-		System.out.println("\n"+"showGrid()");
 		for(int i=0; i<size_x; i++) {
 			for(int j=0; j<size_y; j++)
 				System.out.print((this.grid[i][j]?1:0));
@@ -289,20 +236,20 @@ public class GridWorld_sql {
 				System.out.print(this.reward[i][j]+" ");
 			System.out.println();
 		}
-	} 
+	}
 	
 	// improve the policy by looking at the best_a Q(s,a)
 	private void ImprovePolicy(double[][] V) {
 		action = new HashMap<Integer,HashMap<String,Double>>();
 		for(int i=0; i<size_x; i++) {
 			for(int j=0; j<size_y; j++) {
-				// TODO
+				//TODO
 			}
 		}			
 	}
 	
 	public static void main(String[] args) {
-		GridWorld_sql gd = new GridWorld_sql(5,5,2);
+		Gridworld2 gd = new Gridworld2(5,5,2);
 		
 		gd.showRewGrid();
 		double[][] V = gd.SolvingP();
@@ -311,11 +258,10 @@ public class GridWorld_sql {
 			if(i%5==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
 		}
-		
 		System.out.println("\n");
 		// Improve the policy !
 		gd.ImprovePolicy(V);
 		
-		
 	}
 }
+
