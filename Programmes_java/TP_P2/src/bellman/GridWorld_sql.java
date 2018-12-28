@@ -179,7 +179,7 @@ public class GridWorld_sql {
 		int newY=0;
 		int X=0;
 		int Y=0;
-		int nbRew=0;
+		
 		for(int s=0; s<nbStates; s++) {
 			double sum = 0;
 			// a = (String action, Double proba)
