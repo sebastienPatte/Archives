@@ -42,7 +42,7 @@ public class Gridworld2 {
 				grid[i][j] = false;
 		}
 		
-		//this.ChooseRdmState();
+		this.ChooseRdmState();
 		// put n_rew reward randomly
 		this.PutRdmReward(n_rew);
 		// initialize the random policy
@@ -186,6 +186,7 @@ public class Gridworld2 {
 			for(String act : this.dir) {
 				int s_prime = pi.get(act).get(s);
 				P[s][s_prime] += action.get(s).get(act);
+				System.out.println(act+": P["+s+"]["+s_prime+"]= "+P[s][s_prime]);
 			}
 		}
 		return P;
@@ -193,13 +194,17 @@ public class Gridworld2 {
 	
 	// converting to matrix for the inverse
 	private Matrix BuildMatA() {
+		System.out.println("Print Mat A (I - (P/2)): \n");
+		String str="";
 		double[][] f_A = new double[nbStates][nbStates];
 		double[][] P = computeMatP();
 		for(int s=0; s<nbStates; s++) {
 			f_A[s][s] = 1;
 			for(int sp=0; sp<nbStates; sp++) {
 				f_A[s][sp] -= this.gamma*P[s][sp];
-			}
+				str+=P[s][sp]+" ";
+			}System.out.println(str+"\n");
+			str="";
 		}
 		
 		Matrix matP = new Matrix(f_A);

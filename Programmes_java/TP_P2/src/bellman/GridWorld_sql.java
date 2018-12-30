@@ -91,9 +91,9 @@ public class GridWorld_sql {
 		action = new HashMap<Integer,HashMap<String,Double>>();
 		//init mouv
 		HashMap<String,Double> mouv = new HashMap<String,Double>();
-		// on met chaque mouvement possible (avec sa probabilité 1/nbDirs) dans mouv
+		// on met chaque mouvement possible (avec sa probabilité 0.2) dans mouv
 		for(int i=0; i< this.dir.size(); i++) {
-			mouv.put(this.dir.get(i), (double) (1.0/this.dir.size()));
+			mouv.put(this.dir.get(i), (0.2));
 		}
 		// on remplit action avec la HashMap mouv et un Integer allant de 0 à (taille-1)
 		int taille = size_x*size_y;
@@ -147,13 +147,14 @@ public class GridWorld_sql {
 				dbl[0] =  (double) (GridToState (State[0], State[1]));
 				dbl[1] =  1.0; //proba
 			}else {
-				// else we put State= -1.0 and probability is 0.0
-				dbl[0] = -1.0; 
-				dbl[1] = 0.0;
+				// else we put State= s and probability is 1.0
+				// car si on depasse de la grille on ne fait pas le mouvement (on reste donc à l'état s)
+				dbl[0] = s; 
+				dbl[1] = 1.0; //proba
 			}
 			
 			// print of new State
-			System.out.println("	State : "+s+" to " +(int)dbl[0]+" Proba : "+(int)dbl[1]);
+			//System.out.println("	State : "+s+" to " +(int)dbl[0]+" Proba : "+(int)dbl[1]);
 			
 			// fill trans with (s, {s', p}) 
 			tabDouble.add(dbl);
@@ -191,19 +192,21 @@ public class GridWorld_sql {
 				//  tabDouble = p(s'|s,a)
 				// a.get(act) = p(a|s)
 				double[] tabDouble = pi.get(act).get(s).get(0);
+				// tabDouble[0] est l'état sur lequel on arrive
 				newX =	StateToGrid ( (int) (tabDouble[0]) ) [0];
 				newY = StateToGrid ( (int) (tabDouble[0]) ) [1];
+				// newX et newY sont les coordonnées de l'état sur lequel on arrive
 				X = StateToGrid(s)[0];
 				Y = StateToGrid(s)[1];
 				if(newX!=-1) {
-					System.out.println("newX: "+newX+" newY: "+newY+" newS="+GridToState(newX,newY)+" Rew = "+this.reward[newX][newY]); 
-					sum+=(this.reward[X][Y] * this.reward[newX][newY]* a.get(act) );
+					//System.out.println("newX: "+newX+" newY: "+newY+" newS="+GridToState(newX,newY)+" Rew = "+this.reward[newX][newY]); 
+					sum+=(this.reward[X][Y] * this.reward[newX][newY] * a.get(act) );
 				}
 				
 				
 			}
 			R[s] = sum;
-			System.out.println("R["+s+"] "+sum);
+			//System.out.println("R["+s+"] "+sum);
 		}
 		
 		return R;
@@ -216,6 +219,7 @@ public class GridWorld_sql {
 		
 		double[][] P = new double[nbStates][nbStates];
 		int newS=0;
+		int proba=0;
 		HashMap<Integer,ArrayList<double[]>> tab = new HashMap<Integer, ArrayList<double[]>>(this.dir.size());
 		for(int s=0; s<nbStates; s++) {
 			// from state s, compute P^{\pi}(s,s')
@@ -223,10 +227,8 @@ public class GridWorld_sql {
 				//TODO
 				tab=this.pi.get(act);
 				newS=(int) (tab.get(s).get(0))[0];
-				if(newS!=-1) {
-					P[s][newS]=(tab.get(s).get(0))[1]*action.get(s).get(act);
-					
-				}
+				
+				P[s][newS]+=(action.get(s).get(act));	
 				//FIN TODO
 			}
 			
@@ -236,7 +238,7 @@ public class GridWorld_sql {
 	
 	// converting to matrix for the inverse
 	private Matrix BuildMatA() {
-		System.out.println("Print Mat A (I - (P/2)): \n");
+//		System.out.println("Print Mat A (I - (P/2)): \n");
 		String str="";
 		double[][] f_A = new double[nbStates][nbStates];
 		double[][] P = computeMatP();	
@@ -244,8 +246,8 @@ public class GridWorld_sql {
 			f_A[s][s] = 1;
 			for(int sp=0; sp<nbStates; sp++) {
 				f_A[s][sp] -= this.gamma*P[s][sp];
-				str+=f_A[s][sp]+" ";
-			}System.out.println(str+"\n");
+				str+=P[s][sp]+" ";
+			}//System.out.println(str+"\n");
 			str="";
 
 		}
@@ -293,28 +295,98 @@ public class GridWorld_sql {
 	
 	// improve the policy by looking at the best_a Q(s,a)
 	private void ImprovePolicy(double[][] V) {
+		
+		int newS= 0;
+		int tempS=0;
+		String bestAct="";
+		HashMap<String,Double> mouv = new HashMap<String,Double>();
 		action = new HashMap<Integer,HashMap<String,Double>>();
 		for(int i=0; i<size_x; i++) {
 			for(int j=0; j<size_y; j++) {
 				// TODO
+				newS= 0;
+				int S= GridToState(i,j);
+				for (String act: this.dir) {
+					 tempS= (int) pi.get(act).get(S).get(0) [0];
+					 
+					 // newS = le tempS tel que p(a|s) est le plus grand
+					 // c-a-d le 'meilleur' newS
+					 if(V[newS][0] < V[tempS][0]) {
+						 newS=tempS;
+				
+						 bestAct=act;
+					 }
+					
+				}
+				// V(s) = r(s) + gamma * V(newS)
+				for (String act: this.dir) {
+					if(act==bestAct) {
+						mouv.put(act, 1.0);
+					}else {
+						mouv.put(act, 0.0);
+					}
+					action.put((Integer)S, mouv);
+					
+				}System.out.println("action["+S+"]= "+bestAct);
+				// FIN TODO
 			}
-		}			
+		}
+		
 	}
 	
 	public static void main(String[] args) {
+		
+		
+		System.out.println("-----");
+
 		GridWorld_sql gd = new GridWorld_sql(5,5,2);
+		
+		System.out.println("-----");
+		
 		
 		gd.showRewGrid();
 		double[][] V = gd.SolvingP();
 		// show V
+		System.out.println("Show V");
+		/*
 		for(int i=0; i<gd.nbStates; i++) {
 			if(i%5==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
+		}System.out.println();
+		*/
+		System.out.println("\nShow V dans le bon sens");
+		
+		for(int numLigne=0; numLigne<5;numLigne++) {
+			for(int cpt=0; cpt<=20; cpt+=5) {
+				System.out.print(V[numLigne+cpt][0]+" ");
+			}System.out.println();
 		}
+
+		
+		for(int cpt=0; cpt<1; cpt++) {
+			gd.ImprovePolicy(V);
+			
+		}V = gd.SolvingP();
+		
+		System.out.println("\nShow V dans le bon sens");
+		for(int numLigne=0; numLigne<5;numLigne++) {
+			for(int cpt=0; cpt<=20; cpt+=5) {
+				System.out.print(V[numLigne+cpt][0]+" ");
+			}System.out.println();
+		}
+		 
+		
+		// affichage de base de V
+		/*
+		for(int i=0; i<gd.nbStates; i++) {
+			if(i%5==0) System.out.println();
+			System.out.print(V[i][0]+" ");			
+		}System.out.println();
+		*/
 		
 		System.out.println("\n");
 		// Improve the policy !
-		gd.ImprovePolicy(V);
+		
 		
 		
 	}

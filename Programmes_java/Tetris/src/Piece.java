@@ -27,6 +27,7 @@ public class Piece {
 	public static final String S2_STR = "0 1 1 1 1 0 2 0";
 	public static final String SQUARE_STR = "0 0 0 1 1 0 1 1";
 	public static final String PYRAMID_STR = "0 0 1 0 1 1 2 0";
+	public static final String Test = "0 0 0 1 1 0 1 1";
 
 	// Attributes
 	private List<TPoint> body;
@@ -229,6 +230,7 @@ public class Piece {
 					new Piece(S2_STR),
 					new Piece(SQUARE_STR),
 					new Piece(PYRAMID_STR)};
+					new Piece(Test);
 		}
 
 		return Piece.pieces;
