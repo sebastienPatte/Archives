@@ -25,4 +25,12 @@ public class Qlearn {
 		this.gamma = gamma;
 		q = new Hashtable< Tuple<Integer,Integer>, Double>();
 	}
+	
+	public void learn(int State, int action) {
+		this.q.put(alpha);
+	}
+	
+	public void chooseAction() {
+		
+	}
 }

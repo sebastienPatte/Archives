@@ -20,7 +20,7 @@ public class GridWorld_sql
 	private HashMap<Integer,HashMap<String,Double>> action;
 	private HashMap<String,HashMap<Integer,ArrayList<double[]>>> pi;
 	private ArrayList<String> dir;
-/*	
+	
 	GridWorld_sql(int num_g) {
 		this.rdmnum = new Random(this.seed);
 		this.dir = new ArrayList<String>();
@@ -131,8 +131,8 @@ public class GridWorld_sql
 			}
 		}
 	}
-	*/
 	
+	/*
 	GridWorld_sql(int size_x, int size_y, int n_rew) 
 	{
 		this.rdmnum = new Random(this.seed);
@@ -167,7 +167,7 @@ public class GridWorld_sql
 		this.showGrid();
 	}
 	
-	
+	*/
 	// choose a random coordinate in the grid
 	private void ChooseRdmState() 
 	{
@@ -327,7 +327,7 @@ public class GridWorld_sql
 			states = StateToGrid(s);
 			X      = states[0];
 			Y      = states[1];
-//			sum=this.reward[X][Y];
+			sum=this.reward[X][Y];
 			for (String act : this.dir) {
 				// TODO 
 				//  tabDouble = p(s'|s,a)
@@ -341,7 +341,7 @@ public class GridWorld_sql
 				
 				if (newX != -1) {
 	//				System.out.println("newX: "+newX+" newY: "+newY+" newS="+GridToState(newX,newY)+" Rew = "+this.reward[newX][newY]); 
-					sum+=( this.reward[newX][newY] * a.get(act) );
+					sum+=( this.reward[newX][newY] *0.9* a.get(act) );
 	//				System.out.println(sum);
 				}	
 			}
@@ -464,7 +464,7 @@ public class GridWorld_sql
 					 // c-a-d le 'meilleur' newS
 					 tabNewS= StateToGrid(newS);
 					 tabTempS= StateToGrid(tempS);
-					 if (this.reward[tabNewS[0]][tabNewS[1]]+ (V[newS][0]* this.gamma)  <= this.reward[tabTempS[0]][tabTempS[1]] + (V[tempS][0]* this.gamma) ) {
+					 if (this.reward[tabNewS[0]][tabNewS[1]]+ (V[newS][0]* 0.5)  <= this.reward[tabTempS[0]][tabTempS[1]] + (V[tempS][0]* 0.5) ) {
 						 newS = tempS;
 						 bestAct = act;
 					 }
@@ -473,9 +473,16 @@ public class GridWorld_sql
 				// V(s) = r(s) + gamma * V(newS)
 				for (String act : this.dir) {
 					if (act == bestAct) {
-						mouv.put(act, 0.8);
+						mouv.put(act, 0.7);
 		 			} else {
-						mouv.put(act, 0.2);
+		 				// si act est l'action inverse de bestAct sa proba est de 0
+		 				if( (getDirNeighbor(act)[0]-getDirNeighbor(bestAct)[0]==0 &&
+		 				getDirNeighbor(act)[1]-getDirNeighbor(bestAct)[1]==0) ||
+				 		act=="stay" ) {
+		 					mouv.put(act, 0.0);
+		 				}else {
+		 					mouv.put(act, 0.1);
+		 				}
 					}
 					this.action.put((Integer)S, mouv);
 					
@@ -484,6 +491,7 @@ public class GridWorld_sql
 				// FIN TODO
 			}
 		}
+		WallCst();
 		
 	}
 	
@@ -492,7 +500,7 @@ public class GridWorld_sql
 		
 		System.out.println("-----");
 
-		GridWorld_sql gd = new GridWorld_sql(5,5,2);
+		GridWorld_sql gd = new GridWorld_sql(0);
 		
 		System.out.println("-----");
 		
@@ -502,21 +510,23 @@ public class GridWorld_sql
 		
 		System.out.println("\nShow V dans le bon sens");
 		
-		for (int numLigne = 0 ; numLigne < 5 ; numLigne++) {
-			for (int cpt = 0 ; cpt <= 20 ; cpt += 5) {
+		for (int numLigne = 0 ; numLigne < 8 ; numLigne++) {
+			for (int cpt = 0 ; cpt <= 25 ; cpt += 5) {
+				
 				System.out.print(V[numLigne+cpt][0]+" ");
+			
 			}
 			System.out.println();
 		}
 
 		
-		for (int cpt = 0 ; cpt < 1 ; cpt++) {
+		for (int cpt = 0 ; cpt < 20 ; cpt++) {
 			gd.ImprovePolicy(V);
 			V = gd.SolvingP();
 			
 			System.out.println("\nShow V dans le bon sens - "+cpt+" :");
-			for (int numLigne = 0; numLigne < 5 ; numLigne++) {
-				for (int cpt1 = 0; cpt1 <= 20; cpt1 += 5) {
+			for (int numLigne = 0; numLigne < 8 ; numLigne++) {
+				for (int cpt1 = 0; cpt1 <= 25; cpt1 += 5) {
 					System.out.print(V[numLigne+cpt1][0]+" ");
 				}
 				System.out.println();
@@ -530,12 +540,12 @@ public class GridWorld_sql
 		 
 		
 		// affichage de base de V
-		/*
+		
 		for(int i=0; i<gd.nbStates; i++) {
 			if(i%5==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
 		}System.out.println();
-		*/
+		
 		
 		System.out.println("\n");
 		// Improve the policy !
