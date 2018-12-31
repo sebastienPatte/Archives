@@ -20,7 +20,7 @@ public class GridWorld_sql
 	private HashMap<Integer,HashMap<String,Double>> action;
 	private HashMap<String,HashMap<Integer,ArrayList<double[]>>> pi;
 	private ArrayList<String> dir;
-	
+/*	Constructeur du projet
 	GridWorld_sql(int num_g) {
 		this.rdmnum = new Random(this.seed);
 		this.dir = new ArrayList<String>();
@@ -36,7 +36,41 @@ public class GridWorld_sql
 		InitTransitionMat();
 	 
 	}
-	 
+*/	 
+	GridWorld_sql(int size_x, int size_y, int n_rew) 
+	{
+		this.rdmnum = new Random(this.seed);
+		
+		this.grid   = new boolean[size_x][size_y];
+		this.reward = new double[size_x][size_y];
+		this.size_x = size_x;
+		this.size_y = size_y;
+		this.nbStates = size_x * size_y;
+		
+		// list of actions
+		this.dir = new ArrayList<String>();
+		this.dir.add("left");
+		this.dir.add("up");
+		this.dir.add("right");
+		this.dir.add("down");
+		this.dir.add("stay");
+		
+		for (int i = 0 ; i < this.size_x ; i++) {
+			for(int j = 0 ; j < this.size_y ; j++) {
+				this.grid[i][j] = false;
+			}
+		}
+		
+		this.ChooseRdmState();
+		// put n_rew reward randomly
+		this.PutRdmReward(n_rew);
+		// initialize the random policy
+		this.InitRdmPol();
+		// initialize the transition matrices
+		this.InitTransitionMat();
+		this.showGrid();
+	}
+	
 	private void CreateGrid(int g) {
 		switch(g) {
 			case 0:
@@ -132,42 +166,10 @@ public class GridWorld_sql
 		}
 	}
 	
-	/*
-	GridWorld_sql(int size_x, int size_y, int n_rew) 
-	{
-		this.rdmnum = new Random(this.seed);
-		
-		this.grid   = new boolean[size_x][size_y];
-		this.reward = new double[size_x][size_y];
-		this.size_x = size_x;
-		this.size_y = size_y;
-		this.nbStates = size_x * size_y;
-		
-		// list of actions
-		this.dir = new ArrayList<String>();
-		this.dir.add("left");
-		this.dir.add("up");
-		this.dir.add("right");
-		this.dir.add("down");
-		this.dir.add("stay");
-		
-		for (int i = 0 ; i < this.size_x ; i++) {
-			for(int j = 0 ; j < this.size_y ; j++) {
-				this.grid[i][j] = false;
-			}
-		}
-		
-		this.ChooseRdmState();
-		// put n_rew reward randomly
-		this.PutRdmReward(n_rew);
-		// initialize the random policy
-		this.InitRdmPol();
-		// initialize the transition matrices
-		this.InitTransitionMat();
-		this.showGrid();
-	}
 	
-	*/
+	
+	
+	
 	// choose a random coordinate in the grid
 	private void ChooseRdmState() 
 	{
@@ -327,7 +329,7 @@ public class GridWorld_sql
 			states = StateToGrid(s);
 			X      = states[0];
 			Y      = states[1];
-			sum=this.reward[X][Y];
+	//		sum=this.reward[X][Y];
 			for (String act : this.dir) {
 				// TODO 
 				//  tabDouble = p(s'|s,a)
@@ -442,56 +444,16 @@ public class GridWorld_sql
 	// improve the policy by looking at the best_a Q(s,a)
 	private void ImprovePolicy(double[][] V) 
 	{	
-		int[] tabNewS; 
-		int[] tabTempS;
-		int newS  = 0;
-		int tempS = 0;
-		String bestAct="";
-		HashMap<String,Double> mouv = new HashMap<String,Double>();
 		
 		this.action = new HashMap<Integer,HashMap<String,Double>>();
 		for (int i = 0 ; i < size_x ; i++) {
 			for (int j = 0 ; j < size_y ; j++) {
 				
 				// TODO
-				bestAct = "";				
-				tempS   = 0;
-				int S   = this.GridToState(i,j);
-				newS    = S;
-				for (String act: this.dir) {
-					 tempS = (int) pi.get(act).get(S).get(0) [0];
-					 // newS = le tempS tel que p(a|s) est le plus grand
-					 // c-a-d le 'meilleur' newS
-					 tabNewS= StateToGrid(newS);
-					 tabTempS= StateToGrid(tempS);
-					 if (this.reward[tabNewS[0]][tabNewS[1]]+ (V[newS][0]* 0.5)  <= this.reward[tabTempS[0]][tabTempS[1]] + (V[tempS][0]* 0.5) ) {
-						 newS = tempS;
-						 bestAct = act;
-					 }
-					
-				}
-				// V(s) = r(s) + gamma * V(newS)
-				for (String act : this.dir) {
-					if (act == bestAct) {
-						mouv.put(act, 0.7);
-		 			} else {
-		 				// si act est l'action inverse de bestAct sa proba est de 0
-		 				if( (getDirNeighbor(act)[0]-getDirNeighbor(bestAct)[0]==0 &&
-		 				getDirNeighbor(act)[1]-getDirNeighbor(bestAct)[1]==0) ||
-				 		act=="stay" ) {
-		 					mouv.put(act, 0.0);
-		 				}else {
-		 					mouv.put(act, 0.1);
-		 				}
-					}
-					this.action.put((Integer)S, mouv);
-					
-				}
-				System.out.println("action["+S+"]= "+bestAct);
-				// FIN TODO
+				
 			}
 		}
-		WallCst();
+//		WallCst();
 		
 	}
 	
@@ -500,8 +462,8 @@ public class GridWorld_sql
 		
 		System.out.println("-----");
 
-		GridWorld_sql gd = new GridWorld_sql(0);
-		
+//		GridWorld_sql gd = new GridWorld_sql(0);
+		GridWorld_sql gd = new GridWorld_sql(5,5,2);
 		System.out.println("-----");
 		
 		
@@ -509,24 +471,27 @@ public class GridWorld_sql
 		double[][] V = gd.SolvingP();
 		
 		System.out.println("\nShow V dans le bon sens");
-		
-		for (int numLigne = 0 ; numLigne < 8 ; numLigne++) {
-			for (int cpt = 0 ; cpt <= 25 ; cpt += 5) {
+		int nbLignes= 5;
+		int nbCol= 5;
+		int maxCpt=nbLignes*nbCol;
+		for (int numLigne = 0 ; numLigne < nbLignes ; numLigne++) {
+			for (int cpt = 0 ; cpt < maxCpt ; cpt += 5) {
 				
 				System.out.print(V[numLigne+cpt][0]+" ");
 			
 			}
 			System.out.println();
 		}
-
-		
-		for (int cpt = 0 ; cpt < 20 ; cpt++) {
+		// Improve the policy !
+		/*
+		int nbIt=20; // à définir
+		for (int cpt = 0 ; cpt < nbIt ; cpt++) {
 			gd.ImprovePolicy(V);
 			V = gd.SolvingP();
-			
+	
 			System.out.println("\nShow V dans le bon sens - "+cpt+" :");
-			for (int numLigne = 0; numLigne < 8 ; numLigne++) {
-				for (int cpt1 = 0; cpt1 <= 25; cpt1 += 5) {
+			for (int numLigne = 0; numLigne < nbLignes ; numLigne++) {
+				for (int cpt1 = 0; cpt1 <= maxCpt; cpt1 += 5) {
 					System.out.print(V[numLigne+cpt1][0]+" ");
 				}
 				System.out.println();
@@ -534,21 +499,21 @@ public class GridWorld_sql
 			
 		}
 		
-		
+		*/
 		
 		
 		 
 		
 		// affichage de base de V
-		
+		/*
 		for(int i=0; i<gd.nbStates; i++) {
 			if(i%5==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
 		}System.out.println();
-		
+		*/
 		
 		System.out.println("\n");
-		// Improve the policy !
+		
 		
 		
 		
