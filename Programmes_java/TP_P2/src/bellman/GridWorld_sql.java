@@ -20,7 +20,7 @@ public class GridWorld_sql
 	private HashMap<Integer,HashMap<String,Double>> action;
 	private HashMap<String,HashMap<Integer,ArrayList<double[]>>> pi;
 	private ArrayList<String> dir;
-/*	Constructeur du projet
+//	Constructeur du projet
 	GridWorld_sql(int num_g) {
 		this.rdmnum = new Random(this.seed);
 		this.dir = new ArrayList<String>();
@@ -36,7 +36,8 @@ public class GridWorld_sql
 		InitTransitionMat();
 	 
 	}
-*/	 
+ 
+/*
 	GridWorld_sql(int size_x, int size_y, int n_rew) 
 	{
 		this.rdmnum = new Random(this.seed);
@@ -70,7 +71,7 @@ public class GridWorld_sql
 		this.InitTransitionMat();
 		this.showGrid();
 	}
-	
+*/	
 	private void CreateGrid(int g) {
 		switch(g) {
 			case 0:
@@ -250,7 +251,7 @@ public class GridWorld_sql
 	// pi is the transition mat
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) 
 	{
-		System.out.println("ComputeTrans ("+act+") :");
+//		System.out.println("ComputeTrans ("+act+") :");
 		// init trans
 		HashMap<Integer,ArrayList<double[]>> trans = new HashMap<Integer,ArrayList<double[]>>();
 		// init tabDouble of size 2
@@ -343,12 +344,12 @@ public class GridWorld_sql
 				
 				if (newX != -1) {
 	//				System.out.println("newX: "+newX+" newY: "+newY+" newS="+GridToState(newX,newY)+" Rew = "+this.reward[newX][newY]); 
-					sum+=( this.reward[newX][newY] *0.9* a.get(act) );
+					sum+=( tabDouble[1]*this.reward[newX][newY] *0.9* a.get(act) );
 	//				System.out.println(sum);
 				}	
 			}
 			R[s] = sum;
-			System.out.println("R["+s+"] "+sum);
+//			System.out.println("R["+s+"] "+sum);
 		}
 		
 		return R;
@@ -370,7 +371,7 @@ public class GridWorld_sql
 				tab  = this.pi.get(act);
 				newS = (int) (tab.get(s).get(0))[0];
 				
-				P[s][newS] += (this.action.get(s).get(act));	
+				P[s][newS] += (this.action.get(s).get(act))*(tab.get(s).get(0))[1];	
 				//FIN TODO
 			}
 			
@@ -404,12 +405,12 @@ public class GridWorld_sql
 		String str     = "";
 		double[] vec_b = this.computeVecR();
 		double[][] b   = new double[vec_b.length][1];
-		System.out.println("Print Mat B : \n");
+//		System.out.println("Print Mat B : \n");
 		for (int i = 0 ; i < vec_b.length ; i++) {
 			b[i][0] = vec_b[i];
 			str += b[i][0] + "\n";
 		}
-		System.out.println(str);
+//		System.out.println(str);
 		return new Matrix(b);
 	}
 	
@@ -433,8 +434,9 @@ public class GridWorld_sql
 	
 	private void showRewGrid() 
 	{
-		for (int i = 0 ; i < size_x ; i++) {
-			for (int j = 0 ; j < size_y ; j++) {
+		System.out.println("Grille des récompenses :");
+		for (int j = 0 ; j < size_y ; j++) {
+			for (int i = 0 ; i < size_x ; i++) {
 				System.out.print(this.reward[i][j]+" ");
 			}
 			System.out.println();
@@ -450,11 +452,103 @@ public class GridWorld_sql
 			for (int j = 0 ; j < size_y ; j++) {
 				
 				// TODO
+				HashMap<String, Double> move = new HashMap<String, Double>();
+				String bestAct = "stay";
+				double Q       = 0.0;
+				double bestQ   = 0.0;
+				Integer s      = (Integer) GridToState(i,j);
+				int newS       = 0;
+				int [] tabNewS;
+				
+				for(String act : this.dir) {
+					Q=0.0;
+					for(double tabDouble[] : this.pi.get(act).get(s)) {
+						newS    = (int) tabDouble[0];
+						tabNewS = StateToGrid(newS);
+					 
+						Q += tabDouble[1] * this.reward[tabNewS[0]][tabNewS[1]] + (this.gamma * V[newS][0]);
+					}
+					
+					if(bestQ < Q) {
+						bestQ   = Q;
+						bestAct = act;
+					}
+				}
+				
+				for (String act : this.dir) {
+					
+					if (act == bestAct) {
+						move.put(act, 1.0);
+					}else{
+						move.put(act, 0.0);
+					}
+					
+					this.action.put(s, move);
+				}
+			
 				
 			}
 		}
-//		WallCst();
+		WallCst();
 		
+	}
+	
+	// calcul de V par itération
+	private double[][] iterateV(double teta) {
+		double delta = 1+teta;
+		double[][] V = new double[nbStates][1];
+		double tempV     = 0.0;
+		double newV     = 0.0;
+		int newS     = 0;
+		int[] tabNewS;
+		   
+		//reinit V
+		for(int i = 0; i < nbStates; i++) {
+			V[i][0] = 0;
+		}
+		
+		while(teta<delta) {
+			
+			delta=0;
+			for (int s=0; s<this.nbStates; s++) {
+				
+				tempV = V[s][0];
+				newV = 0.0;
+				
+				for (String act: this.dir) {
+					
+					
+					
+					for(double[] tabDouble : this.pi.get(act).get(s)) {
+						newS    = (int) tabDouble[0];
+						tabNewS = StateToGrid(newS); 
+						newV   += this.action.get(s).get(act) * tabDouble[1] * (this.reward[tabNewS[0]][tabNewS[1]] + (this.gamma * V[newS][0]));
+					}
+				}
+			
+				V[s][0] = newV;
+
+				//delta = Math.max(delta, Math.abs(oldV - newV);
+				
+				if(Math.abs(tempV - newV) > delta) {
+					delta = Math.abs(tempV - newV);
+				}
+				
+			}
+		}
+		return V;
+	}
+	
+	private void afficheV(double[][] V) {
+		
+		for (int i=0 ; i<this.nbStates ; i++) {
+			
+			if (i%this.size_x==0) {
+				System.out.println();
+			}
+			System.out.print( (double)(Math.round( V[i][0] * 10))/10+" ");			
+			
+		}System.out.println();	
 	}
 	
 	public static void main(String[] args) 
@@ -462,44 +556,52 @@ public class GridWorld_sql
 		
 		System.out.println("-----");
 
-//		GridWorld_sql gd = new GridWorld_sql(0);
-		GridWorld_sql gd = new GridWorld_sql(5,5,2);
+		GridWorld_sql gd = new GridWorld_sql(1);
+//		GridWorld_sql gd = new GridWorld_sql(5,5,2);
 		System.out.println("-----");
 		
+		HashMap<Integer,HashMap<String,Double>> backupAction = gd.action; 
 		
 		gd.showRewGrid();
 		double[][] V = gd.SolvingP();
 		
-		System.out.println("\nShow V dans le bon sens");
-		int nbLignes= 5;
-		int nbCol= 5;
-		int maxCpt=nbLignes*nbCol;
-		for (int numLigne = 0 ; numLigne < nbLignes ; numLigne++) {
-			for (int cpt = 0 ; cpt < maxCpt ; cpt += 5) {
-				
-				System.out.print(V[numLigne+cpt][0]+" ");
-			
-			}
-			System.out.println();
-		}
-		// Improve the policy !
-		/*
-		int nbIt=20; // à définir
+		
+		System.out.println("\nShow V ");
+		gd.afficheV(V);
+		int nbIt=10; // à définir
+		
+		// ------------------------------------------------------------------------------
+		//  Calcul par inversion
+		
+		System.out.println("\nCalcul par inversion :\n");
+		
+		
 		for (int cpt = 0 ; cpt < nbIt ; cpt++) {
 			gd.ImprovePolicy(V);
 			V = gd.SolvingP();
 	
-			System.out.println("\nShow V dans le bon sens - "+cpt+" :");
-			for (int numLigne = 0; numLigne < nbLignes ; numLigne++) {
-				for (int cpt1 = 0; cpt1 <= maxCpt; cpt1 += 5) {
-					System.out.print(V[numLigne+cpt1][0]+" ");
-				}
-				System.out.println();
-			}
+			System.out.println("\nShow V - It "+cpt+" :");
+			gd.afficheV(V);
+			
 			
 		}
 		
-		*/
+		// ------------------------------------------------------------------------------
+		// Iterate V
+		 
+		gd.action = backupAction;
+		
+		System.out.println("\nIterate V :\n");
+		for(int cpt = 0; cpt < nbIt; cpt++) {
+			gd.ImprovePolicy(V);
+			gd.afficheV(V);
+			V = gd.iterateV(0.1);
+			
+			System.out.println("\nShow V - It "+cpt+" :");
+			gd.afficheV(V);
+		}
+		
+		
 		
 		
 		 
@@ -507,13 +609,13 @@ public class GridWorld_sql
 		// affichage de base de V
 		/*
 		for(int i=0; i<gd.nbStates; i++) {
-			if(i%5==0) System.out.println();
+			if(i%8==0) System.out.println();
 			System.out.print(V[i][0]+" ");			
 		}System.out.println();
-		*/
+		
 		
 		System.out.println("\n");
-		
+		*/
 		
 		
 		
