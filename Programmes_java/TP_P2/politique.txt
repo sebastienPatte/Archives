@@ -1,0 +1,9 @@
+stay!  left   left   left   left   left   left   left   
+up     up     up     up     up     up     up     up     
+up     up     STAY   STAY   STAY   STAY   up     up     
+up     up     left   left   left   left   up     up     
+up     up     up     up     up     up     up     up     
+
+
+Les cases contenant des murs ont leur meilleure action en majuscules.
+Et les cases contenant une récompense ont leur meilleure action avec un '!'

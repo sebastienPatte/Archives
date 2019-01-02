@@ -1,5 +1,6 @@
 package bellman;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class GridWorld_sql
 	private int size_x;
 	private int size_y;
 	private int nbStates;
-	private double gamma = 0.5;
+	private double gamma = 0.74;
 	private Random rdmnum;
 	private long seed = 124;
 	private int MAX_REWARD = 20;
@@ -244,8 +245,10 @@ public class GridWorld_sql
 	// return the direction (on the grid) for a given action
 	private int[][] getDirNeighbor(String act) 
 	{
+		int nb = 1;
+		//if (this.activeSaut) nb = 2;
 		
-		int[][] d = new int[2][1];
+		int[][] d = new int[2][nb];
 		
 		
 		if (act.equals("left")) {
@@ -256,18 +259,19 @@ public class GridWorld_sql
 			d[0][0] = 1;
 		}
 		if (act.equals("up")) {
-			d[1][0] = 1;
+			d[1][0] = -1;
 		}
 		if (act.equals("down")) {
-			d[1][0] = -1;
+			d[1][0] = 1;
 		}
 		// ----- sauts (deplacement de 2 cases vers la gauche)
 		if (act.equals("saut")) {
 			//saut gauche
 			d[0][0] = -2;
 			d[1][0] = 0;
-			
-			
+			// haut
+			//d[1][1] = -1;
+			//d[0][1] = 0;
 		}
 		
 		
@@ -476,6 +480,7 @@ public class GridWorld_sql
 				
 				for(String act : this.dir) {
 					Q=0.0;
+					
 					//pour chaque mouvement possible avec act
 					for(double tabDouble[] : this.pi.get(act).get(s)) {
 						
@@ -485,7 +490,7 @@ public class GridWorld_sql
 						Q += tabDouble[1] * this.reward[tabNewS[0]][tabNewS[1]] + (this.gamma * V[newS][0]);
 					}
 					
-					if(bestQ < Q) {
+					if(bestQ <= Q) {
 						bestQ   = Q;
 						bestAct = act;
 					}
@@ -555,22 +560,38 @@ public class GridWorld_sql
 		return V;
 	}
 	
-	private void writePol() throws IOException {
-	
-		FileWriter txt = new FileWriter("politique.txt");
+	private String writePol() throws IOException {
+		String res="";
 		for (int s=0; s< this.nbStates; s++) {
+			int[] tabS = StateToGrid(s);
 			String bestAct="";
 			for (String act : this.dir){
 				
 				if(this.action.get(s).get(act)==1.0) {
 					bestAct = act;
+					
 				}
-				
 			}
-			txt.write("S = "+s+"("+StateToGrid(s)[0]+","+StateToGrid(s)[1]+") bestAct = "+bestAct+"\n");
+			
+			// si la case est un mur on met en majuscules
+			if ( !this.grid[tabS[0]][tabS[1]] ) bestAct = bestAct.toUpperCase();
+			
+			// si il y a une récompense on met un point d'exclamation
+			if (this.reward[tabS[0]][tabS[1]] > 0) bestAct+="!";
+			
+			if(bestAct.length() < 6)
+				while(bestAct.length() < 6) {
+					bestAct+=" ";
+				}
+			
+			
+			res+=bestAct+" ";
+			if((s+1)%this.size_x==0.0) res+= "\n";
 			
 		}
-		txt.close();
+		return res;
+		
+		
 	}
 	
 	private void afficheV(double[][] V) {
@@ -585,6 +606,24 @@ public class GridWorld_sql
 		}System.out.println();	
 	}
 	
+	//créé les répertoires 'Iteration' et 'Inversion'
+		public static void creationDossiers(){
+			File It=new File("Iteration");
+			if (!(It.exists() && It.isDirectory())){ 
+				It.mkdirs();
+				System.out.println("\ncreation dossier /Iteration");
+				
+			}
+			
+			File In=new File("Inversion");
+			if (!(In.exists() || In.isDirectory())){ 
+				In.mkdirs();
+				System.out.println("\ncreation dossier /Inversion");
+			}
+			
+			
+		}
+	
 	public static void main(String[] args) throws IOException 
 	{
 		
@@ -593,8 +632,7 @@ public class GridWorld_sql
 	 * 		true  -> utilise le mouvement 'saut'
 	 * 		false -> desactive le mouvement 'saut' 
 	 */
-		
-		GridWorld_sql gd = new GridWorld_sql(0,false);
+		GridWorld_sql gd = new GridWorld_sql(1,true);
 		
 		System.out.println("-----");
 		
@@ -606,10 +644,16 @@ public class GridWorld_sql
 		
 		System.out.println("\nShow V ");
 		gd.afficheV(V);
-		int nbIt=10; // à définir
+		int nbIt = 15; // à définir
+		creationDossiers();
+		String print = "";
 		
 		// ------------------------------------------------------------------------------
 		//  Calcul par inversion
+		//on ouvre le fichier
+		FileWriter txt1 = new FileWriter("Inversion/politique.txt");
+		txt1.write("\n\nLes cases contenant des murs ont leur meilleure action en majuscules."+
+				"\nEt les cases contenant une récompense ont leur meilleure action avec un '!'\n\n");
 		
 		System.out.println("\nCalcul par inversion :\n");
 		
@@ -620,27 +664,39 @@ public class GridWorld_sql
 	
 			System.out.println("\nShow V - It "+cpt+" :");
 			gd.afficheV(V);
-			
+			print = gd.writePol();
+			txt1.write("Iteration "+cpt+" :\n"+print+"\n\n");
 			
 		}
+		//on ferme le fichier
+		txt1.close();
 		
 		// ------------------------------------------------------------------------------
 		// Iterate V
 		 
 		gd.action = backupAction;
+		// on ouvre le fichier
+		FileWriter txt2 = new FileWriter("Iteration/politique.txt");
+		txt2.write("\n\nLes cases contenant des murs ont leur meilleure action en majuscules."+
+				"\nEt les cases contenant une récompense ont leur meilleure action avec un '!'\n\n");
 		
 		System.out.println("\nIterate V :\n");
+		print="";
 		V = gd.iterateV(0.1);
+		
 		for(int cpt = 0; cpt < nbIt; cpt++) {
-//			if (cpt != 0) {
-				gd.ImprovePolicy(V);
-	//			}
+			gd.ImprovePolicy(V);
 			V = gd.iterateV(0.1);
 			
 			System.out.println("\nShow V - It "+cpt+" :");
 			gd.afficheV(V);
+			print = gd.writePol();
+			txt2.write("Iteration "+cpt+" :\n"+print+"\n\n");
+			
 		}
+		// on ferme le fichier
+		txt2.close();
 		
-		gd.writePol();
+		
 	}
 }
