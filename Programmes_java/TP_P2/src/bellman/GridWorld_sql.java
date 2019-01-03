@@ -186,8 +186,9 @@ public class GridWorld_sql
 					a.put("up", 0.0);
 					a.put("right", 0.0);
 					a.put("down", 0.0);
-					a.put("stay", 1.0);
 					if(this.activeSaut) a.put("saut", 0.0);
+					a.put("stay", 1.0);
+					
 					action.put(GridToState(i,j),a);
 				}
 			}
@@ -244,7 +245,7 @@ public class GridWorld_sql
 	private int[][] getDirNeighbor(String act) 
 	{
 		int nb = 1;
-		//if (act=="gauche") nb = 2;
+		if (act=="saut") nb = 2;
 		
 		int[][] d = new int[2][nb];
 		
@@ -268,8 +269,8 @@ public class GridWorld_sql
 			d[0][0] = -2;
 			d[1][0] = 0;
 			// haut
-		//	d[1][1] = -1;
-		//	d[0][1] = 0;
+			d[1][1] = -1;
+			d[0][1] = 0;
 		}
 		return d;
 	}
@@ -280,7 +281,8 @@ public class GridWorld_sql
 	 */
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) 
 	{
-
+		int tailleTabDouble = 1;
+		if(act=="saut")tailleTabDouble=2;
 		HashMap<Integer,ArrayList<double[]>> trans = new HashMap<Integer,ArrayList<double[]>>();
 		ArrayList<double[]> tabDouble = new ArrayList<double[]>(2);
 		
@@ -294,14 +296,15 @@ public class GridWorld_sql
 		
 		for (int s = 0 ; s < (this.size_x * this.size_y) ; s++) {
 			
-			dbl       = new double[2];
-			tabDouble = new ArrayList<double[]>();
+			
+			tabDouble = new ArrayList<double[]>(tailleTabDouble);
 			
 			
 			// pour chaque mouvement possible avec act
 			for(int i=0; i<dir[0].length;i++){
+				dbl       = new double[2];
 				State     = this.StateToGrid(s);
-			
+			//	System.out.println(act+" ("+i+") "+dir[0][i]+" "+dir[1][i]);
 				// 	on ajoute les valeurs du déplacement
 				State[0]  += dir[0][i];
 				State[1]  += dir[1][i];
@@ -321,9 +324,12 @@ public class GridWorld_sql
 				}
 				
 				dbl[1] = 1.0 /dir[0].length; //proba
-				
+			//	if(s==11)System.out.println(act+" "+dbl[0]+" "+dbl[1]);
+			//	System.out.println("newS ="+dbl[0]+" proba = "+dbl[1]);
 				tabDouble.add(dbl);
+			//	if(s==11)System.out.println(act+" ("+i+") "+tabDouble.get(i)[0]+" "+tabDouble.get(i)[1]);
 			}
+			for(int cptTest=0; cptTest< tabDouble.size();cptTest++)if(s==11)System.out.println("verif "+act+" "+tabDouble.get(cptTest)[0]+" "+tabDouble.get(cptTest)[1]);
 			trans.put(s,tabDouble);
 			
 		
@@ -500,10 +506,10 @@ public class GridWorld_sql
 				
 				for(String act : this.dir) {
 					Q=0.0;
-					
+					newS=-1;
 					//pour chaque mouvement possible avec act
 					for(double tabDouble[] : this.pi.get(act).get(s)) {
-						
+						if(s==11)System.out.println(act+" "+tabDouble[0]+" "+tabDouble[1]);
 						newS    = (int) tabDouble[0];
 						tabNewS = StateToGrid(newS);
 					 
@@ -524,8 +530,9 @@ public class GridWorld_sql
 					}else{
 						move.put(act, 0.0);
 					}
-					this.action.put(s, move);
-				}				
+					
+				}	
+				this.action.put(s, move);
 			}
 		}
 		WallCst();
@@ -563,9 +570,14 @@ public class GridWorld_sql
 						newS    = (int) tabDouble[0];
 						tabNewS = StateToGrid(newS); 
 						newV   += this.action.get(s).get(act) * tabDouble[1] * (this.reward[tabNewS[0]][tabNewS[1]] + (this.gamma * V[newS][0]));
+						if(s==11) {
+							System.out.println("+= "+this.action.get(s).get(act)+" * "+tabDouble[1]+" * ("+this.reward[tabNewS[0]][tabNewS[1]]+" + ("+this.gamma+" * "+V[newS][0]+"))");
+							System.out.println("newS = "+ newS+" proba = "+tabDouble[1]+" * ("+this.reward[tabNewS[0]][tabNewS[1]]+"\n");
+							
+						}
 					}
 				}
-			
+				if(s==3)System.out.println("newV : "+newV);
 				V[s][0] = newV;
 
 				if(Math.abs(tempV - newV) > delta) {
@@ -573,6 +585,7 @@ public class GridWorld_sql
 				}
 			}
 		}
+	//	System.out.println("rew 9 ="+this.reward[1][1]);
 		return V;
 	}
 	
