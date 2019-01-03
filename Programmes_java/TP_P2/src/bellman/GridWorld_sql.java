@@ -12,12 +12,17 @@ public class GridWorld_sql
 {
 	// activeSaut controle l'acivation du mouvment 'saut'
 	private boolean activeSaut;
+	
 	private boolean[][] grid;
 	private double[][] reward;
 	private int size_x;
 	private int size_y;
 	private int nbStates;
-	private double gamma = 0.74;
+	/* gamma = 0.74, cette valeur semble bonne pour les grilles qu'on utilise
+	 * gamma représente l'importance des cases futures dans la recherche de la politique
+	 * il faudrait donc l'augmenter si on utilisait une grille beaucoup plus grande
+	 */
+	private double gamma = 0.74;  
 	private Random rdmnum;
 	private long seed = 124;
 	private int MAX_REWARD = 20;
@@ -25,12 +30,15 @@ public class GridWorld_sql
 	private HashMap<String,HashMap<Integer,ArrayList<double[]>>> pi;
 	private ArrayList<String> dir;
 
+	
 	/*	Constructeur du projet
-	 * 	construit la grille 0 ou 1 avec ou sans 'saut'
+	 * 	construit la grille 0, 1 ou 2 avec ou sans 'saut'
 	 */
 	GridWorld_sql(int num_g, boolean activeSaut) {
+		
 		// on initialise activeSaut avec le parametre
 		this.activeSaut = activeSaut;
+		
 		if(activeSaut) {
 			System.out.println("Saut : activé ");
 		}else{
@@ -53,9 +61,12 @@ public class GridWorld_sql
 	 
 	}
 
-// Créé la grille 0 ou 1
+	/* CreateGrid : 
+	 * 	Créé la grille 0, 1 ou 2
+	 */	
 	private void CreateGrid(int g) {
 		switch(g) {
+			// grille 0
 			case 0:
 				this.size_x = 8;
 				this.size_y = 5;
@@ -82,6 +93,7 @@ public class GridWorld_sql
 				// put a strong reward somewhere
 				reward[0][0] = 20;
 				break;
+			// grille 1	
 			case 1:
 				this.size_x = 6;
 				this.size_y = 6;
@@ -126,16 +138,17 @@ public class GridWorld_sql
 				grid[4][5] = false;
 				grid[5][5] = false;
 				break;				
+			
+			// grille 2 (rajoutée)
 			case 2:
-				this.size_x = 8;
-				this.size_y = 5;
-				this.grid = new boolean[size_x][size_y];
-				this.reward = new double[size_x][size_y];
+				this.size_x   = 8;
+				this.size_y   = 5;
+				this.grid     = new boolean[size_x][size_y];
+				this.reward   = new double[size_x][size_y];
 				this.nbStates = size_x*size_y;
-				for(int i=0; i<size_x; i++) {
-					for(int j=0; j<size_y; j++)
-					{
-						grid[i][j] = true;
+				for (int i=0; i<size_x; i++){
+					for (int j=0; j<size_y; j++) {
+						grid[i][j]   = true;
 						reward[i][j] = -1;
 					}
 				}
@@ -145,12 +158,11 @@ public class GridWorld_sql
 				reward[2][2] = -1000;
 				reward[2][3] = -1000;
 				reward[2][4] = -1000;
-				
-				grid[2][0] = false;
-				grid[2][1] = false;
-				grid[2][2] = false;
-				grid[2][3] = false;
-				grid[2][4] = false;
+				grid[2][0]   = false;
+				grid[2][1]   = false;
+				grid[2][2]   = false;
+				grid[2][3]   = false;
+				grid[2][4]   = false;
 				
 				// put a strong reward somewhere
 				reward[0][0] = 20;
@@ -162,7 +174,9 @@ public class GridWorld_sql
 		}
 	}
 	
-	// force l'agent a rester dans un mur quand il en rencontre un
+	/* WallCst :
+	 *  force l'agent a rester dans un mur quand il en rencontre un
+	 */
 	private void WallCst() {
 		for(int i=0; i<size_x; i++) {
 			for(int j=0; j<size_y; j++) {				
@@ -181,38 +195,18 @@ public class GridWorld_sql
 	}
 	
 	
-	
-	
-	
-	// choose a random coordinate in the grid
-	private void ChooseRdmState() 
-	{
-		int i = rdmnum.nextInt(this.size_x);
-		int j = rdmnum.nextInt(this.size_y);
-		this.grid[i][j] = true;
-	}
-	
-	// add a reward randomly on the grid
-	private void PutRdmReward(int n_rew) 
-	{
-		int n = 0;
-		while (n < n_rew) {
-			int i = this.rdmnum.nextInt(this.size_x);
-			int j = this.rdmnum.nextInt(this.size_y);
-			if (reward[i][j] == 0) {
-				reward[i][j] = this.rdmnum.nextInt(MAX_REWARD);
-				n++;
-			}
-		}
-	}
-	
-	// return a state given a coordinate on the grid
+
+	/* GridToState :
+	 * return a state given a coordinate on the grid
+	 */
 	private int GridToState(int i, int j) 
 	{
 		return i + this.size_x * j;
 	}
 	
-	// return the coordinate on the grid given the state
+	/* StateToGrid :
+	 *  return the coordinate on the grid given the state
+	 */
 	private int[] StateToGrid(int s)
 	{
 		int[] index = new int[2];
@@ -220,9 +214,11 @@ public class GridWorld_sql
 		index[0] = s-index[1] * this.size_x;
 		return index;
 	}
-
-	// add the possible actions for all states
-	// initialise this.action
+	
+	/* InitRdmPol :
+	 * add the possible actions for all states.
+	 * initialise la politique 'this.action'
+	 */
 	private void InitRdmPol() 
 	{
 		action = new HashMap<Integer,HashMap<String,Double>>();
@@ -242,7 +238,9 @@ public class GridWorld_sql
 		}
 	}
 	
-	// return the direction (on the grid) for a given action
+	/* getDirNeighbor :
+	 *  return the direction (on the grid) for a given action
+	 */
 	private int[][] getDirNeighbor(String act) 
 	{
 		int nb = 1;
@@ -273,13 +271,13 @@ public class GridWorld_sql
 			//d[1][1] = -1;
 			//d[0][1] = 0;
 		}
-		
-		
 		return d;
 	}
 	
-	// To each state, give the reachable states given an action
-	// pi is the transition mat
+	/*	compueTrans
+	 *  To each state, give the reachable states given an action
+	 *  remplit le tableau de transition 'this.pi' pour l'action 'act'
+	 */
 	private HashMap<Integer,ArrayList<double[]>> computeTrans(String act) 
 	{
 
@@ -333,7 +331,10 @@ public class GridWorld_sql
 		return trans;
 	}
 	
-	// initiate values of P
+	/*	InitTransitionMat :
+	 *  initiate values of P
+	 *  P est la matrice de transition
+	 */
 	private void InitTransitionMat() 
 	{
 		this.pi = new HashMap<String,HashMap<Integer,ArrayList<double[]>>>();
@@ -342,7 +343,11 @@ public class GridWorld_sql
 		}
 	}
 	
-	// compute the vector r
+	/*	computeVecR :
+	 *  compute the vector r
+	 *  R est le vecteur contenant la recompense moyenne de chaque 
+	 *  état pondérée par pi(s'|a,s) et action(a|s) 
+	 */
 	private double[] computeVecR() 
 	{
 		double[] R = new double[this.nbStates];
@@ -374,9 +379,12 @@ public class GridWorld_sql
 		return R;
 	}
 	
-	//tab : une HashMap < Integer, ArrayList<Double[]> > par direction possible
-	//Integer : State ArrayList<Double[]>
-	// on met à jour les probas pour chaque state en ignorant les déplacements imposssible  
+	
+	/*	computeMatP :
+	 * 	on créé un matrice P^{\pi}(s,s')
+	 * 	que l'on construit a partir du tableau de transition 'this.pi'
+	 * 	et la politique 'this.action' 
+	 */
 	private double[][] computeMatP() 
 	{	
 		double[][] P = new double[this.nbStates][this.nbStates];
@@ -390,17 +398,16 @@ public class GridWorld_sql
 				for (double[] tabDouble : tab.get(s)) {
 					
 					newS = (int) tabDouble[0];
-					
 					P[s][newS] += (this.action.get(s).get(act))*tabDouble[1];
-			
 				}
-			}
-			
+			}			
 		}
 		return P;
 	}
 	
-	// converting to matrix for the inverse
+	/*	BuildMatA :
+	 *  converting to matrix for the inverse
+	 */
 	private Matrix BuildMatA()
 	{
 		double[][] f_A = new double[this.nbStates][this.nbStates];
@@ -418,7 +425,9 @@ public class GridWorld_sql
 		return new Matrix(f_A);
 	}
 
-	// converting to matrix for the inverse
+	/*	BuildMatb :
+	 *  converting to matrix for the inverse
+	 */
 	private Matrix BuildMatb() 
 	{
 		String str     = "";
@@ -431,13 +440,19 @@ public class GridWorld_sql
 		return new Matrix(b);
 	}
 	
-	// solving the linear system
+	/*	SolvingP :
+	 *  solving the linear system
+	 */
 	private double[][] SolvingP() 
 	{
 		Matrix x = this.BuildMatA().solve(this.BuildMatb());
 		return x.getArray();
 	}
 	
+	/*	showGrid :
+	 * 	affiche les positions des murs par des 1
+	 * 	et les autres cases par des 0
+	 */
 	private void showGrid() 
 	{
 		System.out.println("\n"+"showGrid()");
@@ -449,6 +464,9 @@ public class GridWorld_sql
 		}
 	}
 	
+	/*	showRewGrid :
+	 * 	affiche la grille des récompenses
+	 */
 	private void showRewGrid() 
 	{
 		System.out.println("Grille des récompenses :");
@@ -460,7 +478,9 @@ public class GridWorld_sql
 		}
 	} 
 	
-	// improve the policy by looking at the best_a Q(s,a)
+	/*	ImprovePolicy :
+	 *  improve the policy by looking at the best_a Q(s,a)
+	 */
 	private void ImprovePolicy(double[][] V) 
 	{	
 		
@@ -490,6 +510,8 @@ public class GridWorld_sql
 						Q += tabDouble[1] * this.reward[tabNewS[0]][tabNewS[1]] + (this.gamma * V[newS][0]);
 					}
 					
+					// stay étant la dernière action dans this.dir on tombe toujours
+					// sur stay si aucune action n'est meilleure   
 					if(bestQ <= Q) {
 						bestQ   = Q;
 						bestAct = act;
@@ -502,23 +524,22 @@ public class GridWorld_sql
 					}else{
 						move.put(act, 0.0);
 					}
-					
 					this.action.put(s, move);
-				}
-			
-				
+				}				
 			}
 		}
 		WallCst();
-		
 	}
 	
-	// calcul de V par itération
+	/*	iterateV :
+	 *  calcul de V par itération
+	 *  V(S) = action(a|s) * pi(s'|a,s) * R(S') + (gamma * V(S'))
+	 */
 	private double[][] iterateV(double teta) {
 		double delta = 1+teta;
 		double[][] V = new double[nbStates][1];
-		double tempV     = 0.0;
-		double newV     = 0.0;
+		double tempV = 0.0;
+		double newV  = 0.0;
 		int newS     = 0;
 		int[] tabNewS;
 		   
@@ -537,8 +558,6 @@ public class GridWorld_sql
 				
 				for (String act: this.dir) {
 					
-					
-					
 					for(double[] tabDouble : this.pi.get(act).get(s)) {
 						
 						newS    = (int) tabDouble[0];
@@ -549,18 +568,19 @@ public class GridWorld_sql
 			
 				V[s][0] = newV;
 
-				
-				
 				if(Math.abs(tempV - newV) > delta) {
 					delta = Math.abs(tempV - newV);
 				}
-				
 			}
 		}
 		return V;
 	}
 	
-	private String writePol() throws IOException {
+	/* writePol :
+	 * renvoie la chaine de caractère a écrire dans Politique
+	 * le nom du fichier est 'Inversion.txt' ou 'Iteration.txt'
+	 */
+	private String writePol(){
 		String res="";
 		for (int s=0; s< this.nbStates; s++) {
 			int[] tabS = StateToGrid(s);
@@ -583,17 +603,57 @@ public class GridWorld_sql
 				while(bestAct.length() < 6) {
 					bestAct+=" ";
 				}
-			
-			
 			res+=bestAct+" ";
 			if((s+1)%this.size_x==0.0) res+= "\n";
-			
 		}
 		return res;
-		
-		
 	}
 	
+	/*	writeV :
+	 * 	écrit V à l'itération 'cpt' dans le fichier V[cpt].txt
+	 * 	contenu dans le dossier :
+	 * 		Inversion si mode = 0
+	 * 		Iteration sinon
+	 */
+	private void writeV(double[][] V, int cpt, int mode) throws IOException {
+		
+		String path = "";
+		
+		if (mode ==0) {
+			path = "V/Inversion/V"+cpt+".txt";
+		}else {
+			path = "V/Iteration/V"+cpt+".txt";
+		}
+		
+		FileWriter txtV = new FileWriter(path); 
+		
+		
+		for (int i=0 ; i<this.nbStates ; i++) {
+			
+			if (i%this.size_x==0) {
+				txtV.write("\n");
+			}
+			
+			/* on met a -300 les murs pour regler l'affichage
+			 * Attetion ce n'est pas la vraie valeur de V (on la modifie pour l'affichage)
+			 * La véritable valeur de V pour chaque itération est affichée dans la console 
+			 */
+			if ( V[i][0] < -3000) {
+				txtV.write("-300	 ");
+			}else {
+			
+				txtV.write( (double)(Math.round( V[i][0] * 10))/10+" ");
+			}
+			
+		}txtV.write("\n");
+		
+		txtV.close();
+	}
+	
+	/*	afficheV :
+	 * 	on affiche la grille avec les valeurs de V
+	 * 	dans la console
+	 */
 	private void afficheV(double[][] V) {
 		
 		for (int i=0 ; i<this.nbStates ; i++) {
@@ -606,67 +666,89 @@ public class GridWorld_sql
 		}System.out.println();	
 	}
 	
-	//créé les répertoires 'Iteration' et 'Inversion'
+	/* Fonction : creationDossiers :
+	 * créé les répertoires 'Politique', 'V', 'V/Iteration' et 'V/Inversion'
+	 * si ils n'existe pas (affiche les dossiers créés dans la console)
+	 */
 		public static void creationDossiers(){
-			File It=new File("Iteration");
+			File It=new File("Politique");
 			if (!(It.exists() && It.isDirectory())){ 
 				It.mkdirs();
-				System.out.println("\ncreation dossier /Iteration");
+				System.out.println("\ncreation dossier 'Iteration'");
 				
 			}
 			
-			File In=new File("Inversion");
-			if (!(In.exists() || In.isDirectory())){ 
-				In.mkdirs();
-				System.out.println("\ncreation dossier /Inversion");
+			File V=new File("V");
+			if (!(V.exists() || V.isDirectory())){ 
+				V.mkdirs();
+				System.out.println("\ncreation dossier 'V'");
 			}
 			
+			File VIt=new File("V/Iteration");
+			if (!(VIt.exists() && VIt.isDirectory())){ 
+				VIt.mkdirs();
+				System.out.println("\ncreation dossier 'V/Iteration'");
+				
+			}
 			
+			File VIn=new File("V/Inversion");
+			if (!(VIn.exists() || VIn.isDirectory())){ 
+				VIn.mkdirs();
+				System.out.println("\ncreation dossier 'V/Inversion'");
+			}
 		}
 	
 	public static void main(String[] args) throws IOException 
 	{
+		// on créé les dossiers manquants 
+				creationDossiers();
 		
-		System.out.println("-----");
-	/* deuxième paramètre du constructeur :
-	 * 		true  -> utilise le mouvement 'saut'
-	 * 		false -> desactive le mouvement 'saut' 
-	 */
-		GridWorld_sql gd = new GridWorld_sql(1,true);
+		/* deuxième paramètre du constructeur :
+	 	* 		true  -> utilise le mouvement 'saut'
+	 	* 		false -> desactive le mouvement 'saut'
+	 	* 		le mouvement 'saut' déplace de 2 cases vers la gauche  
+	 	*/
+		GridWorld_sql gd = new GridWorld_sql(0,false);
 		
-		System.out.println("-----");
-		
+		// on fait un backup de la politique initiale
 		HashMap<Integer,HashMap<String,Double>> backupAction = gd.action; 
 		
+		// on affiche la grille des résultats
 		gd.showRewGrid();
+		// on initialise V avec la ploitique initiale 
 		double[][] V = gd.SolvingP();
 		
-		
+		// on affiche le V initial
 		System.out.println("\nShow V ");
 		gd.afficheV(V);
-		int nbIt = 15; // à définir
-		creationDossiers();
-		String print = "";
+		
+		int nbIt = 15; // nombre d'itération à définir (jusqu'à ce que la politique ne change plus
 		
 		// ------------------------------------------------------------------------------
 		//  Calcul par inversion
-		//on ouvre le fichier
-		FileWriter txt1 = new FileWriter("Inversion/politique.txt");
+		//on ouvre le fichier Inversion.txt
+		FileWriter txt1 = new FileWriter("Politique/Inversion.txt");
+		
 		txt1.write("\n\nLes cases contenant des murs ont leur meilleure action en majuscules."+
 				"\nEt les cases contenant une récompense ont leur meilleure action avec un '!'\n\n");
 		
 		System.out.println("\nCalcul par inversion :\n");
-		
-		
+		String print = "";
 		for (int cpt = 0 ; cpt < nbIt ; cpt++) {
+			
+			// amélioration de la politique
 			gd.ImprovePolicy(V);
+			// calcul de V par inversion
 			V = gd.SolvingP();
-	
+			
+			// on affiche V dans la console
 			System.out.println("\nShow V - It "+cpt+" :");
 			gd.afficheV(V);
+			// on ecrit la politique dans un fichier texte 
 			print = gd.writePol();
 			txt1.write("Iteration "+cpt+" :\n"+print+"\n\n");
-			
+			// on ecrit V dans un fichier texte
+			gd.writeV(V,cpt,0);
 		}
 		//on ferme le fichier
 		txt1.close();
@@ -674,9 +756,18 @@ public class GridWorld_sql
 		// ------------------------------------------------------------------------------
 		// Iterate V
 		 
+		// on revient à la politique initiale
 		gd.action = backupAction;
-		// on ouvre le fichier
-		FileWriter txt2 = new FileWriter("Iteration/politique.txt");
+		
+		// on initialise V avec la ploitique initiale 
+		V = gd.iterateV(0.1);
+				
+		// on affiche le V initial
+		System.out.println("\nShow V ");
+		gd.afficheV(V);
+		
+		// on ouvre le fichier Iteration.txt
+		FileWriter txt2 = new FileWriter("Politique/Iteration.txt");
 		txt2.write("\n\nLes cases contenant des murs ont leur meilleure action en majuscules."+
 				"\nEt les cases contenant une récompense ont leur meilleure action avec un '!'\n\n");
 		
@@ -685,18 +776,28 @@ public class GridWorld_sql
 		V = gd.iterateV(0.1);
 		
 		for(int cpt = 0; cpt < nbIt; cpt++) {
+			// amélioration de la poolitique
 			gd.ImprovePolicy(V);
+			// calcul de V par itération
 			V = gd.iterateV(0.1);
 			
+			// on affiche V dans la console
 			System.out.println("\nShow V - It "+cpt+" :");
 			gd.afficheV(V);
+
+			// on ecrit la politique dans un fichier texte 
 			print = gd.writePol();
 			txt2.write("Iteration "+cpt+" :\n"+print+"\n\n");
-			
+			// on ecrit V dans un fichier texte
+			gd.writeV(V,cpt,1);
 		}
 		// on ferme le fichier
 		txt2.close();
 		
+		/* On execute le script shell qui convertit les fichier textes de V en images
+		 * Images stockées dans 'V/Inversion' et 'V/Iteration' 
+		 */
+	    Runtime.getRuntime().exec("sh VToImg.sh\n" );
 		
 	}
 }
