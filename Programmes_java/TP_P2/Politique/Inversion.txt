@@ -20,106 +20,106 @@ stay   stay   STAY   stay   stay   stay   stay   stay
 
 
 Iteration 2 :
-saut!  left   STAY   saut   stay   stay   stay   stay   
-up     up     STAY   stay   stay   stay   stay   stay   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   up     STAY   stay   stay   stay   stay   stay   
 up     stay   STAY   stay   stay   stay   stay   stay   
 stay   stay   STAY   stay   stay   stay   stay   stay   
 stay   stay   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 3 :
-saut!  left   STAY   saut   left   saut   stay   stay   
-up     up     STAY   saut   stay   stay   stay   stay   
-up     up     STAY   stay   stay   stay   stay   stay   
+saut!  left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
 up     stay   STAY   stay   stay   stay   stay   stay   
 stay   stay   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 4 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   stay   stay   
-up     up     STAY   saut   stay   stay   stay   stay   
-up     up     STAY   stay   stay   stay   stay   stay   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   up     STAY   stay   stay   stay   stay   stay   
 up     stay   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 5 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   stay   stay   
-up     up     STAY   saut   stay   stay   stay   stay   
-up     up     STAY   stay   stay   stay   stay   stay   
+saut!  left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 6 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   stay   stay   
-up     up     STAY   saut   stay   stay   stay   stay   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
 
 
 Iteration 7 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   stay   stay   
+saut!  left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 8 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
 
 
 Iteration 9 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 10 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
 
 
 Iteration 11 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 12 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
 
 
 Iteration 13 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
+saut   left   STAY   stay   stay   stay   stay   stay   
 
 
 Iteration 14 :
-saut!  left   STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   left   saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
-up     up     STAY   saut   up     saut   saut   saut   
+saut!  saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
+saut   saut   STAY   saut   stay   stay   stay   stay   
 
 
