@@ -244,7 +244,7 @@ public class GridWorld_sql
 	private int[][] getDirNeighbor(String act) 
 	{
 		int nb = 1;
-		//if (this.activeSaut) nb = 2;
+		//if (act=="gauche") nb = 2;
 		
 		int[][] d = new int[2][nb];
 		
@@ -268,8 +268,8 @@ public class GridWorld_sql
 			d[0][0] = -2;
 			d[1][0] = 0;
 			// haut
-			//d[1][1] = -1;
-			//d[0][1] = 0;
+		//	d[1][1] = -1;
+		//	d[0][1] = 0;
 		}
 		return d;
 	}
@@ -301,7 +301,7 @@ public class GridWorld_sql
 			// pour chaque mouvement possible avec act
 			for(int i=0; i<dir[0].length;i++){
 				State     = this.StateToGrid(s);
-				
+			
 				// 	on ajoute les valeurs du déplacement
 				State[0]  += dir[0][i];
 				State[1]  += dir[1][i];
@@ -710,7 +710,7 @@ public class GridWorld_sql
 	 	* 		false -> desactive le mouvement 'saut'
 	 	* 		le mouvement 'saut' déplace de 2 cases vers la gauche  
 	 	*/
-		GridWorld_sql gd = new GridWorld_sql(1,false);
+		GridWorld_sql gd = new GridWorld_sql(2,true);
 		gd.showGrid();
 		// on fait un backup de la politique initiale
 		HashMap<Integer,HashMap<String,Double>> backupAction = gd.action; 
@@ -806,7 +806,7 @@ public class GridWorld_sql
 		// on ferme le fichier
 		txt2.close();
 		timeIt = System.currentTimeMillis()-timeIt;
-		System.out.println("temps exécution Inversion = "+timeIn+" ms");
+		System.out.println("\ntemps exécution Inversion = "+timeIn+" ms");
 		System.out.println("temps exécution Itération = "+timeIt+" ms");
 		timeIt = 0;
 		/* On execute le script shell qui convertit les fichier textes de V en images
