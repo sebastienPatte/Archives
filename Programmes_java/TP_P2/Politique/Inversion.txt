@@ -1,0 +1,125 @@
+
+
+Les cases contenant des murs ont leur meilleure action en majuscules.
+Et les cases contenant une récompense ont leur meilleure action avec un '!'
+
+Iteration 0 :
+stay!  stay   stay   stay   stay   stay   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+stay   stay   STAY   STAY   STAY   STAY   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+
+
+Iteration 1 :
+stay!  left   stay   stay   stay   stay   stay   stay   
+up     stay   stay   stay   stay   stay   stay   stay   
+stay   stay   STAY   STAY   STAY   STAY   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+
+
+Iteration 2 :
+stay!  left   left   stay   stay   stay   stay   stay   
+up     up     stay   stay   stay   stay   stay   stay   
+up     stay   STAY   STAY   STAY   STAY   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+
+
+Iteration 3 :
+stay!  left   left   left   stay   stay   stay   stay   
+up     up     up     stay   stay   stay   stay   stay   
+up     up     STAY   STAY   STAY   STAY   stay   stay   
+up     stay   stay   stay   stay   stay   stay   stay   
+stay   stay   stay   stay   stay   stay   stay   stay   
+
+
+Iteration 4 :
+stay!  left   left   left   left   stay   stay   stay   
+up     up     up     left   stay   stay   stay   stay   
+up     up     STAY   STAY   STAY   STAY   stay   stay   
+up     up     stay   stay   stay   stay   stay   stay   
+up     stay   stay   stay   stay   stay   stay   stay   
+
+
+Iteration 5 :
+stay!  left   left   left   left   left   stay   stay   
+up     up     up     left   left   stay   stay   stay   
+up     up     STAY   STAY   STAY   STAY   stay   stay   
+up     up     left   stay   stay   stay   stay   stay   
+up     up     stay   stay   stay   stay   stay   stay   
+
+
+Iteration 6 :
+stay!  left   left   left   left   left   left   stay   
+up     up     up     left   left   up     stay   stay   
+up     up     STAY   STAY   STAY   STAY   stay   stay   
+up     up     left   left   stay   stay   stay   stay   
+up     up     up     stay   stay   stay   stay   stay   
+
+
+Iteration 7 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   stay   
+up     up     STAY   STAY   STAY   STAY   stay   stay   
+up     up     left   left   left   stay   stay   stay   
+up     up     up     up     stay   stay   stay   stay   
+
+
+Iteration 8 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     stay   
+up     up     left   left   left   left   stay   stay   
+up     up     up     up     up     stay   stay   stay   
+
+
+Iteration 9 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     left   
+up     up     left   left   left   left   up     stay   
+up     up     up     up     up     up     stay   stay   
+
+
+Iteration 10 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     left   
+up     up     left   left   left   left   up     left   
+up     up     up     up     up     up     up     stay   
+
+
+Iteration 11 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     left   
+up     up     left   left   left   left   up     left   
+up     up     up     up     up     up     up     up     
+
+
+Iteration 12 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     left   
+up     up     left   left   left   left   up     left   
+up     up     up     up     up     up     up     up     
+
+
+Iteration 13 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     left   
+up     up     left   left   left   left   up     left   
+up     up     up     up     up     up     up     up     
+
+
+Iteration 14 :
+stay!  left   left   left   left   left   left   left   
+up     up     up     left   left   up     left   up     
+up     up     STAY   STAY   STAY   STAY   up     left   
+up     up     left   left   left   left   up     left   
+up     up     up     up     up     up     up     up     
+
+

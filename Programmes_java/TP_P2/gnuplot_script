@@ -1,0 +1,63 @@
+set terminal png size 700,500 enhanced background rgb 'white'
+set palette negative
+set palette gray
+set output 'V/Inversion/V0.png'
+plot 'V/Inversion/V0.txt' matrix with image
+set output 'V/Inversion/V1.png'
+plot 'V/Inversion/V1.txt' matrix with image
+set output 'V/Inversion/V2.png'
+plot 'V/Inversion/V2.txt' matrix with image
+set output 'V/Inversion/V3.png'
+plot 'V/Inversion/V3.txt' matrix with image
+set output 'V/Inversion/V4.png'
+plot 'V/Inversion/V4.txt' matrix with image
+set output 'V/Inversion/V5.png'
+plot 'V/Inversion/V5.txt' matrix with image
+set output 'V/Inversion/V6.png'
+plot 'V/Inversion/V6.txt' matrix with image
+set output 'V/Inversion/V7.png'
+plot 'V/Inversion/V7.txt' matrix with image
+set output 'V/Inversion/V8.png'
+plot 'V/Inversion/V8.txt' matrix with image
+set output 'V/Inversion/V9.png'
+plot 'V/Inversion/V9.txt' matrix with image
+set output 'V/Inversion/V10.png'
+plot 'V/Inversion/V10.txt' matrix with image
+set output 'V/Inversion/V11.png'
+plot 'V/Inversion/V11.txt' matrix with image
+set output 'V/Inversion/V12.png'
+plot 'V/Inversion/V12.txt' matrix with image
+set output 'V/Inversion/V13.png'
+plot 'V/Inversion/V13.txt' matrix with image
+set output 'V/Inversion/V14.png'
+plot 'V/Inversion/V14.txt' matrix with image
+set output 'V/Iteration/V0.png'
+plot 'V/Iteration/V0.txt' matrix with image
+set output 'V/Iteration/V1.png'
+plot 'V/Iteration/V1.txt' matrix with image
+set output 'V/Iteration/V2.png'
+plot 'V/Iteration/V2.txt' matrix with image
+set output 'V/Iteration/V3.png'
+plot 'V/Iteration/V3.txt' matrix with image
+set output 'V/Iteration/V4.png'
+plot 'V/Iteration/V4.txt' matrix with image
+set output 'V/Iteration/V5.png'
+plot 'V/Iteration/V5.txt' matrix with image
+set output 'V/Iteration/V6.png'
+plot 'V/Iteration/V6.txt' matrix with image
+set output 'V/Iteration/V7.png'
+plot 'V/Iteration/V7.txt' matrix with image
+set output 'V/Iteration/V8.png'
+plot 'V/Iteration/V8.txt' matrix with image
+set output 'V/Iteration/V9.png'
+plot 'V/Iteration/V9.txt' matrix with image
+set output 'V/Iteration/V10.png'
+plot 'V/Iteration/V10.txt' matrix with image
+set output 'V/Iteration/V11.png'
+plot 'V/Iteration/V11.txt' matrix with image
+set output 'V/Iteration/V12.png'
+plot 'V/Iteration/V12.txt' matrix with image
+set output 'V/Iteration/V13.png'
+plot 'V/Iteration/V13.txt' matrix with image
+set output 'V/Iteration/V14.png'
+plot 'V/Iteration/V14.txt' matrix with image
