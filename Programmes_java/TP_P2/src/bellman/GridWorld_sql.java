@@ -456,8 +456,8 @@ public class GridWorld_sql
 	private void showGrid() 
 	{
 		System.out.println("\n"+"showGrid()");
-		for (int i = 0 ; i < size_x ; i++) {
-			for (int j = 0 ; j < size_y ; j++) {
+		for (int j = 0 ; j < size_y ; j++) {
+			for (int i = 0 ; i < size_x ; i++) {
 				System.out.print((this.grid[i][j]?1:0));
 			}
 			System.out.println();
@@ -700,6 +700,8 @@ public class GridWorld_sql
 	
 	public static void main(String[] args) throws IOException 
 	{
+		long  timeIn= 0;
+		long  timeIt= 0;
 		// on créé les dossiers manquants 
 				creationDossiers();
 		
@@ -708,8 +710,8 @@ public class GridWorld_sql
 	 	* 		false -> desactive le mouvement 'saut'
 	 	* 		le mouvement 'saut' déplace de 2 cases vers la gauche  
 	 	*/
-		GridWorld_sql gd = new GridWorld_sql(0,false);
-		
+		GridWorld_sql gd = new GridWorld_sql(1,false);
+		gd.showGrid();
 		// on fait un backup de la politique initiale
 		HashMap<Integer,HashMap<String,Double>> backupAction = gd.action; 
 		
@@ -718,14 +720,14 @@ public class GridWorld_sql
 		// on initialise V avec la ploitique initiale 
 		double[][] V = gd.SolvingP();
 		
-		// on affiche le V initial
-		System.out.println("\nShow V ");
-		gd.afficheV(V);
 		
-		int nbIt = 15; // nombre d'itération à définir (jusqu'à ce que la politique ne change plus
+		
+		int nbIt = 15; // nombre d'itération à définir (jusqu'à ce que la politique ne change plus)
 		
 		// ------------------------------------------------------------------------------
 		//  Calcul par inversion
+		timeIn = System.currentTimeMillis();
+		
 		//on ouvre le fichier Inversion.txt
 		FileWriter txt1 = new FileWriter("Politique/Inversion.txt");
 		
@@ -733,6 +735,10 @@ public class GridWorld_sql
 				"\nEt les cases contenant une récompense ont leur meilleure action avec un '!'\n\n");
 		
 		System.out.println("\nCalcul par inversion :\n");
+		// on affiche le V initial
+				System.out.println("\nShow V ");
+				gd.afficheV(V);
+		
 		String print = "";
 		for (int cpt = 0 ; cpt < nbIt ; cpt++) {
 			
@@ -752,26 +758,32 @@ public class GridWorld_sql
 		}
 		//on ferme le fichier
 		txt1.close();
-		
+		timeIn=(System.currentTimeMillis()-timeIn);
+		System.out.println("temps exécution inversion = "+timeIn+" ms");
+
 		// ------------------------------------------------------------------------------
 		// Iterate V
 		 
+		timeIt =System.currentTimeMillis();
 		// on revient à la politique initiale
 		gd.action = backupAction;
 		
 		// on initialise V avec la ploitique initiale 
 		V = gd.iterateV(0.1);
 				
-		// on affiche le V initial
-		System.out.println("\nShow V ");
-		gd.afficheV(V);
 		
+		
+
 		// on ouvre le fichier Iteration.txt
 		FileWriter txt2 = new FileWriter("Politique/Iteration.txt");
 		txt2.write("\n\nLes cases contenant des murs ont leur meilleure action en majuscules."+
 				"\nEt les cases contenant une récompense ont leur meilleure action avec un '!'\n\n");
 		
 		System.out.println("\nIterate V :\n");
+		// on affiche le V initial
+				System.out.println("\nShow V ");
+				gd.afficheV(V);
+		
 		print="";
 		V = gd.iterateV(0.1);
 		
@@ -793,7 +805,10 @@ public class GridWorld_sql
 		}
 		// on ferme le fichier
 		txt2.close();
-		
+		timeIt = System.currentTimeMillis()-timeIt;
+		System.out.println("temps exécution Inversion = "+timeIn+" ms");
+		System.out.println("temps exécution Itération = "+timeIt+" ms");
+		timeIt = 0;
 		/* On execute le script shell qui convertit les fichier textes de V en images
 		 * Images stockées dans 'V/Inversion' et 'V/Iteration' 
 		 */

@@ -4,122 +4,137 @@ Les cases contenant des murs ont leur meilleure action en majuscules.
 Et les cases contenant une récompense ont leur meilleure action avec un '!'
 
 Iteration 0 :
-stay!  stay   stay   stay   stay   stay   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
-stay   stay   STAY   STAY   STAY   STAY   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   
+stay!  stay   STAY   stay   STAY   stay   
+STAY   stay   stay   stay   STAY   stay   
+STAY   stay   STAY   stay   STAY   stay   
+STAY   stay   STAY   STAY   stay   stay   
+stay   stay   stay   STAY   STAY   STAY   
 
 
 Iteration 1 :
-stay!  left   stay   stay   stay   stay   stay   stay   
-up     stay   stay   stay   stay   stay   stay   stay   
-stay   stay   STAY   STAY   STAY   STAY   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
+down   stay   STAY   stay   stay   stay   
+stay!  left   STAY   stay   STAY   stay   
+STAY   stay   stay   stay   STAY   stay   
+STAY   stay   STAY   stay   STAY   stay   
+STAY   stay   STAY   STAY   stay   stay   
+stay   stay   stay   STAY   STAY   STAY   
 
 
 Iteration 2 :
-stay!  left   left   stay   stay   stay   stay   stay   
-up     up     stay   stay   stay   stay   stay   stay   
-up     stay   STAY   STAY   STAY   STAY   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
+down   down   STAY   stay   stay   stay   
+stay!  left   STAY   stay   STAY   stay   
+STAY   up     stay   stay   STAY   stay   
+STAY   stay   STAY   stay   STAY   stay   
+STAY   stay   STAY   STAY   stay   stay   
+stay   stay   stay   STAY   STAY   STAY   
 
 
 Iteration 3 :
-stay!  left   left   left   stay   stay   stay   stay   
-up     up     up     stay   stay   stay   stay   stay   
-up     up     STAY   STAY   STAY   STAY   stay   stay   
-up     stay   stay   stay   stay   stay   stay   stay   
-stay   stay   stay   stay   stay   stay   stay   stay   
+down   down   STAY   stay   stay   stay   
+stay!  left   STAY   stay   STAY   stay   
+STAY   up     left   stay   STAY   stay   
+STAY   up     STAY   stay   STAY   stay   
+STAY   stay   STAY   STAY   stay   stay   
+stay   stay   stay   STAY   STAY   STAY   
 
 
 Iteration 4 :
-stay!  left   left   left   left   stay   stay   stay   
-up     up     up     up     stay   stay   stay   stay   
-up     up     STAY   STAY   STAY   STAY   stay   stay   
-up     up     stay   stay   stay   stay   stay   stay   
-up     stay   stay   stay   stay   stay   stay   stay   
+down   down   STAY   stay   stay   stay   
+stay!  left   STAY   stay   STAY   stay   
+STAY   up     left   left   STAY   stay   
+STAY   up     STAY   stay   STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+stay   stay   stay   STAY   STAY   STAY   
 
 
 Iteration 5 :
-stay!  left   left   left   left   left   stay   stay   
-up     up     up     up     up     stay   stay   stay   
-up     up     STAY   STAY   STAY   STAY   stay   stay   
-up     up     left   stay   stay   stay   stay   stay   
-up     up     stay   stay   stay   stay   stay   stay   
+down   down   STAY   stay   stay   stay   
+stay!  left   STAY   down   STAY   stay   
+STAY   up     left   left   STAY   stay   
+STAY   up     STAY   up     STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+stay   up     stay   STAY   STAY   STAY   
 
 
 Iteration 6 :
-stay!  left   left   left   left   left   left   stay   
-up     up     up     up     up     up     stay   stay   
-up     up     STAY   STAY   STAY   STAY   stay   stay   
-up     up     left   left   stay   stay   stay   stay   
-up     up     up     stay   stay   stay   stay   stay   
+down   down   STAY   down   stay   stay   
+stay!  left   STAY   down   STAY   stay   
+STAY   up     left   left   STAY   stay   
+STAY   up     STAY   up     STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 7 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     stay   
-up     up     STAY   STAY   STAY   STAY   stay   stay   
-up     up     left   left   left   stay   stay   stay   
-up     up     up     up     stay   stay   stay   stay   
+down   down   STAY   down   left   stay   
+stay!  left   STAY   down   STAY   stay   
+STAY   up     left   left   STAY   stay   
+STAY   up     STAY   up     STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 8 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     stay   
-up     up     left   left   left   left   stay   stay   
-up     up     up     up     up     stay   stay   stay   
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   stay   
+STAY   up     left   left   STAY   stay   
+STAY   up     STAY   up     STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 9 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     up     
-up     up     left   left   left   left   up     stay   
-up     up     up     up     up     up     stay   stay   
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   up     
+STAY   up     left   left   STAY   stay   
+STAY   up     STAY   up     STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 10 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     up     
-up     up     left   left   left   left   up     up     
-up     up     up     up     up     up     up     stay   
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   up     
+STAY   up     left   left   STAY   up     
+STAY   up     STAY   up     STAY   stay   
+STAY   up     STAY   STAY   stay   stay   
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 11 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     up     
-up     up     left   left   left   left   up     up     
-up     up     up     up     up     up     up     up     
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   up     
+STAY   up     left   left   STAY   up     
+STAY   up     STAY   up     STAY   up     
+STAY   up     STAY   STAY   stay   stay   
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 12 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     up     
-up     up     left   left   left   left   up     up     
-up     up     up     up     up     up     up     up     
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   up     
+STAY   up     left   left   STAY   up     
+STAY   up     STAY   up     STAY   up     
+STAY   up     STAY   STAY   stay   up     
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 13 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     up     
-up     up     left   left   left   left   up     up     
-up     up     up     up     up     up     up     up     
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   up     
+STAY   up     left   left   STAY   up     
+STAY   up     STAY   up     STAY   up     
+STAY   up     STAY   STAY   right  up     
+right  up     left   STAY   STAY   STAY   
 
 
 Iteration 14 :
-stay!  left   left   left   left   left   left   left   
-up     up     up     up     up     up     up     up     
-up     up     STAY   STAY   STAY   STAY   up     up     
-up     up     left   left   left   left   up     up     
-up     up     up     up     up     up     up     up     
+down   down   STAY   down   left   left   
+stay!  left   STAY   down   STAY   up     
+STAY   up     left   left   STAY   up     
+STAY   up     STAY   up     STAY   up     
+STAY   up     STAY   STAY   right  up     
+right  up     left   STAY   STAY   STAY   
 
 
