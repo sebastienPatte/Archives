@@ -51,8 +51,9 @@ public class GridWorld_sql
 		this.dir.add("up");
 		this.dir.add("right");
 		this.dir.add("down");
-		this.dir.add("stay");
 		if(this.activeSaut) this.dir.add("saut");
+		this.dir.add("stay");
+		
 	 
 		CreateGrid(num_g);
 		InitRdmPol();
