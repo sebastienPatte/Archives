@@ -2,6 +2,8 @@ package rl;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -13,9 +15,10 @@ public class Pacman extends Agent {
 	private int lastAction = -1; // action précédente
 	private boolean use_ia = false;  // utiliser le qlearning ? 
 	private final int base = 5;
-
+	
 	// IA
     private Qlearn ia;
+    private int LearnMethod = 1; 	// 0 : Sarsa 1 : QLearning
     
     // Scores
 	public int good = 0;
@@ -53,14 +56,15 @@ public class Pacman extends Agent {
     	int[] actions = new int[8];
     	for(int a=0; a<actions.length; a++) actions[a]=a;
     	ia = new Qlearn(actions);
-    	this.lastState = -1;
-    	this.lastAction = -1;
-    	this.good = 0;
-    	this.eaten = 0;
-    	this.idle = 0;
-    	this.stuck = 0;
+    	lastState = -1;
+    	lastAction = -1;
+    	good = 0;
+    	eaten = 0;
+    	idle = 0;
+    	stuck = 0;
+
     	
-    	// InitStiate
+    	// InitState
     	InitLookCells(2);
     }
     
@@ -81,7 +85,7 @@ public class Pacman extends Agent {
 	        
 	        dx=0; dy=0;
         	if(!update()) 
-        		this.restart=true;        	
+        		restart=true;        	
 	        
 	        // against a wall
 	        if(b.screendata[pos] != 0) {
@@ -116,7 +120,7 @@ public class Pacman extends Agent {
 	        	else if(b.levelstate[diag[3]] == b.STATE_WALL) { dx=0; dy=0; } 
 	        }
 	        
-	        if((dx==0)&&(dy==0)) this.idle = 1;
+	        if((dx==0)&&(dy==0)) idle = 1;
             viewdx = dx;
             viewdy = dy;
 	        
@@ -203,7 +207,7 @@ public class Pacman extends Agent {
 	private int getStateNb(int[] state) {
 		int id_s = 0;
 		for(int i=0; i<state.length; i++)
-			id_s += state[i]*Math.pow(this.base,i);	
+			id_s += state[i]*Math.pow(base,i);	
 		
 		return id_s;
 	}	
@@ -211,7 +215,7 @@ public class Pacman extends Agent {
 	private int calcState() {
 		int[] state = new int[12];
 		int id=0;
-		for(Tuple<Integer,Integer> coord : this.lookcells) {
+		for(Tuple<Integer,Integer> coord : lookcells) {
 			int level_st = b.getIndexFromCoord(posx+coord.x, posy+coord.y);
 			
 			if((level_st < 0) || (level_st >= b.levelstate.length)) 
@@ -223,64 +227,75 @@ public class Pacman extends Agent {
 	}
 
 	
-	private boolean update() {
+	private boolean update(){
+		
+		
 		int id_state = calcState();
 		int id_action = 0;
-		double reward = this.r_nothing;
+		double reward = r_nothing;
+		
+		/*
+		 * écriture de State, nbMorts, nbFood et nbBloque
+		 */
+		
+		
+		
 		
 		int cell_state = b.levelstate[b.getIndexFromCoord(x/b.blocksize, y/b.blocksize)];
 		
 		if((cell_state&b.STATE_BADGUY)!=0) { // trouver un fantome
-			this.eaten++;
-			reward = this.r_ghost;
+			eaten++;
+			reward = r_ghost;
 			// MAJ IA
-			this.ia.learn(id_state, id_action);
-			//---------------------
+			ia.learn(lastState,lastAction,id_state,reward,LearnMethod);
 			return false;
 			
 		} else if ((cell_state&b.STATE_GOODSTUFF)!=0) { // trouver de la nourriture
-			this.good++;
-			reward = this.r_food;
+			b.score++;
+			good++;
+			reward = r_food;
 			b.random_cheese();	
 		}
 		
-		if(this.idle==1) { // to not move is bad !
-			this.idle = 0;
-			this.stuck++;
-			reward = this.r_stuck;
+		if(idle==1) { // to not move is bad !
+			idle = 0;
+			stuck++;
+			reward = r_stuck;
 		}	
 		
-		if (this.lastState != -1) {
+		if (lastState != -1) {
 			// MAJ IA	
-			this.ia.learn(id_state, id_action);
+			ia.learn(lastState,lastAction,id_state,reward,LearnMethod);
 		}
 		
 		
 		
 		
-		if(this.use_ia)
+		if(use_ia) {
 			// choose an action here using qlearn
 			// ...
+			id_action = ia.chooseAction(id_state);
 			
 			goInDirection(id_action);
-		else { // random direction
+			
+		} else { // random direction
 			random_move();
 		}
 		
-		this.lastState = id_state;
-		this.lastAction = id_action;
+		lastState = id_state;
+		lastAction = id_action;
 		return true;
 	}
 	
 	
 	public void set_epsilon(double epsilon){
-		this.ia.epsilon = epsilon;
+		ia.epsilon = epsilon;
 	}
 	
 	public void reset_state() {
-		this.eaten=0;
-		this.stuck=0;
-		this.good=0;
+		eaten=0;
+		stuck=0;
+		good=0;
 	}
 	
 	private void printState(int[] state) {
@@ -295,8 +310,8 @@ public class Pacman extends Agent {
 		int id_state = state;
 		int[] get_state = new int[12];
 		for(int i=11; i>=0; i--) {
-			get_state[i] = (int) Math.floor(id_state/Math.pow(this.base,i));
-			id_state = (int) (id_state%Math.pow(this.base,i));
+			get_state[i] = (int) Math.floor(id_state/Math.pow(base,i));
+			id_state = (int) (id_state%Math.pow(base,i));
 		}
 		printState(get_state);
 	}
@@ -398,72 +413,72 @@ public class Pacman extends Agent {
 
     private void drawPacmanUp(Graphics2D g2d) {
 
-        switch (this.animpos) {
+        switch (animpos) {
             case 1:
-                g2d.drawImage(this.pacman2up, x + 1, y + 1, b);
+                g2d.drawImage(pacman2up, x + 1, y + 1, b);
                 break;
             case 2:
-                g2d.drawImage(this.pacman3up, x + 1, y + 1, b);
+                g2d.drawImage(pacman3up, x + 1, y + 1, b);
                 break;
             case 3:
-                g2d.drawImage(this.pacman4up, x + 1, y + 1, b);
+                g2d.drawImage(pacman4up, x + 1, y + 1, b);
                 break;
             default:
-                g2d.drawImage(this.pacman1, x + 1, y + 1, b);
+                g2d.drawImage(pacman1, x + 1, y + 1, b);
                 break;
         }
     }
     
     private void drawPacmanDown(Graphics2D g2d) {
 
-        switch (this.animpos) {
+        switch (animpos) {
             case 1:
-                g2d.drawImage(this.pacman2down, x + 1, y + 1, b);
+                g2d.drawImage(pacman2down, x + 1, y + 1, b);
                 break;
             case 2:
-                g2d.drawImage(this.pacman3down, x + 1, y + 1, b);
+                g2d.drawImage(pacman3down, x + 1, y + 1, b);
                 break;
             case 3:
-                g2d.drawImage(this.pacman4down, x + 1, y + 1, b);
+                g2d.drawImage(pacman4down, x + 1, y + 1, b);
                 break;
             default:
-                g2d.drawImage(this.pacman1, x + 1, y + 1, b);
+                g2d.drawImage(pacman1, x + 1, y + 1, b);
                 break;
         }
     }
     
     private void drawPacnamLeft(Graphics2D g2d) {
 
-        switch (this.animpos) {
+        switch (animpos) {
             case 1:
-                g2d.drawImage(this.pacman2left, x + 1, y + 1, b);
+                g2d.drawImage(pacman2left, x + 1, y + 1, b);
                 break;
             case 2:
-                g2d.drawImage(this.pacman3left, x + 1, y + 1, b);
+                g2d.drawImage(pacman3left, x + 1, y + 1, b);
                 break;
             case 3:
-                g2d.drawImage(this.pacman4left, x + 1, y + 1, b);
+                g2d.drawImage(pacman4left, x + 1, y + 1, b);
                 break;
             default:
-                g2d.drawImage(this.pacman1, x + 1, y + 1, b);
+                g2d.drawImage(pacman1, x + 1, y + 1, b);
                 break;
         }
     }
     
     private void drawPacmanRight(Graphics2D g2d) {
 
-        switch (this.animpos) {
+        switch (animpos) {
             case 1:
-                g2d.drawImage(this.pacman2right, x + 1, y + 1, b);
+                g2d.drawImage(pacman2right, x + 1, y + 1, b);
                 break;
             case 2:
-                g2d.drawImage(this.pacman3right, x + 1, y + 1, b);
+                g2d.drawImage(pacman3right, x + 1, y + 1, b);
                 break;
             case 3:
-                g2d.drawImage(this.pacman4right, x + 1, y + 1, b);
+                g2d.drawImage(pacman4right, x + 1, y + 1, b);
                 break;
             default:
-                g2d.drawImage(this.pacman1, x + 1, y + 1, b);
+                g2d.drawImage(pacman1, x + 1, y + 1, b);
                 break;
         }
     }
@@ -471,46 +486,56 @@ public class Pacman extends Agent {
     @Override
     void loadimages() {
 
-    	this.pacman1 = new ImageIcon("pacpix/PacMan1.png").getImage();
-    	this.pacman2up = new ImageIcon("pacpix/PacMan2up.png").getImage();
-    	this.pacman3up = new ImageIcon("pacpix/PacMan3up.png").getImage();
-    	this.pacman4up = new ImageIcon("pacpix/PacMan4up.png").getImage();
-    	this.pacman2down = new ImageIcon("pacpix/PacMan2down.png").getImage();
-    	this.pacman3down = new ImageIcon("pacpix/PacMan3down.png").getImage();
-    	this.pacman4down = new ImageIcon("pacpix/PacMan4down.png").getImage();
-    	this.pacman2left = new ImageIcon("pacpix/PacMan2left.png").getImage();
-    	this.pacman3left = new ImageIcon("pacpix/PacMan3left.png").getImage();
-    	this.pacman4left = new ImageIcon("pacpix/PacMan4left.png").getImage();
-    	this.pacman2right = new ImageIcon("pacpix/PacMan2right.png").getImage();
-    	this.pacman3right = new ImageIcon("pacpix/PacMan3right.png").getImage();
-    	this.pacman4right = new ImageIcon("pacpix/PacMan4right.png").getImage();
-        
+        pacman1 = new ImageIcon("pacpix/PacMan1.png").getImage();
+        pacman2up = new ImageIcon("pacpix/PacMan2up.png").getImage();
+        pacman3up = new ImageIcon("pacpix/PacMan3up.png").getImage();
+        pacman4up = new ImageIcon("pacpix/PacMan4up.png").getImage();
+        pacman2down = new ImageIcon("pacpix/PacMan2down.png").getImage();
+        pacman3down = new ImageIcon("pacpix/PacMan3down.png").getImage();
+        pacman4down = new ImageIcon("pacpix/PacMan4down.png").getImage();
+        pacman2left = new ImageIcon("pacpix/PacMan2left.png").getImage();
+        pacman3left = new ImageIcon("pacpix/PacMan3left.png").getImage();
+        pacman4left = new ImageIcon("pacpix/PacMan4left.png").getImage();
+        pacman2right = new ImageIcon("pacpix/PacMan2right.png").getImage();
+        pacman3right = new ImageIcon("pacpix/PacMan3right.png").getImage();
+        pacman4right = new ImageIcon("pacpix/PacMan4right.png").getImage();
+
     }
 
 	
 	@Override
 	void doAnim() {
-		this.animcount--;
+		animcount--;
 
-        if (this.animcount <= 0) {
-        	this.animcount = this.animdelay;
-        	this.animpos = this.animpos + this.animdir;
+        if (animcount <= 0) {
+            animcount = animdelay;
+            animpos = animpos + animdir;
 
             // When I arrive at beginning/end of anim : change direction of anim
-            if (this.animpos == (this.Ag_animcount - 1) || this.animpos == 0) {
-            	this.animdir = -this.animdir;
+            if (animpos == (Ag_animcount - 1) || animpos == 0) {
+                animdir = -animdir;
             }
         }
 	}
 	
 	void InitLookCells(int lookdist) {
-		this.lookcells = new ArrayList< Tuple<Integer,Integer>>();
+		lookcells = new ArrayList< Tuple<Integer,Integer>>();
 		for(int i=-lookdist; i<lookdist+1; i++) {
 			for(int j=-lookdist; j<lookdist+1; j++) {
-				if((Math.abs(i)+Math.abs(j) <= 2) && (i!=0 || j!=0)) {
-					this.lookcells.add(new Tuple<Integer,Integer>(i,j,b.blocksize,b.blocksize));
+				if((Math.abs(i)+Math.abs(j) <= lookdist) && (i!=0 || j!=0)) {  // au lieu de 2 **********
+					lookcells.add(new Tuple<Integer,Integer>(i,j,b.blocksize,b.blocksize));
 				}
 			}
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
