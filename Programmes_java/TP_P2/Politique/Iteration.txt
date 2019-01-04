@@ -12,7 +12,7 @@ stay   stay   STAY   stay   stay   stay   stay   stay
 
 
 Iteration 1 :
-saut!  left   STAY   stay   stay   stay   stay   stay   
+stay!  left   STAY   stay   stay   stay   stay   stay   
 up     stay   STAY   stay   stay   stay   stay   stay   
 stay   stay   STAY   stay   stay   stay   stay   stay   
 stay   stay   STAY   stay   stay   stay   stay   stay   
@@ -20,7 +20,7 @@ stay   stay   STAY   stay   stay   stay   stay   stay
 
 
 Iteration 2 :
-saut!  left   STAY   saut   stay   stay   stay   stay   
+stay!  left   STAY   saut   stay   stay   stay   stay   
 up     up     STAY   stay   stay   stay   stay   stay   
 up     stay   STAY   stay   stay   stay   stay   stay   
 stay   stay   STAY   stay   stay   stay   stay   stay   
@@ -28,7 +28,7 @@ stay   stay   STAY   stay   stay   stay   stay   stay
 
 
 Iteration 3 :
-saut!  left   STAY   saut   left   saut   stay   stay   
+stay!  left   STAY   saut   left   saut   stay   stay   
 up     up     STAY   saut   stay   stay   stay   stay   
 up     up     STAY   stay   stay   stay   stay   stay   
 up     stay   STAY   stay   stay   stay   stay   stay   
@@ -36,7 +36,7 @@ stay   stay   STAY   stay   stay   stay   stay   stay
 
 
 Iteration 4 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   stay   stay   
 up     up     STAY   saut   stay   stay   stay   stay   
 up     up     STAY   stay   stay   stay   stay   stay   
@@ -44,7 +44,7 @@ up     stay   STAY   stay   stay   stay   stay   stay
 
 
 Iteration 5 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   stay   stay   
 up     up     STAY   saut   stay   stay   stay   stay   
@@ -52,7 +52,7 @@ up     up     STAY   stay   stay   stay   stay   stay
 
 
 Iteration 6 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   stay   stay   
@@ -60,7 +60,7 @@ up     up     STAY   saut   stay   stay   stay   stay
 
 
 Iteration 7 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -68,7 +68,7 @@ up     up     STAY   saut   up     saut   stay   stay
 
 
 Iteration 8 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -76,7 +76,7 @@ up     up     STAY   saut   up     saut   saut   saut
 
 
 Iteration 9 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -84,7 +84,7 @@ up     up     STAY   saut   up     saut   saut   saut
 
 
 Iteration 10 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -92,7 +92,7 @@ up     up     STAY   saut   up     saut   saut   saut
 
 
 Iteration 11 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -100,7 +100,7 @@ up     up     STAY   saut   up     saut   saut   saut
 
 
 Iteration 12 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -108,7 +108,7 @@ up     up     STAY   saut   up     saut   saut   saut
 
 
 Iteration 13 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
@@ -116,7 +116,7 @@ up     up     STAY   saut   up     saut   saut   saut
 
 
 Iteration 14 :
-saut!  left   STAY   saut   left   saut   saut   saut   
+stay!  left   STAY   saut   left   saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
 up     up     STAY   saut   up     saut   saut   saut   
