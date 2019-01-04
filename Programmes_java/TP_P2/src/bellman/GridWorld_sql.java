@@ -244,7 +244,7 @@ public class GridWorld_sql
 	private int[][] getDirNeighbor(String act) 
 	{
 		int nb = 1;
-		//if (act=="gauche") nb = 2;
+		
 		
 		int[][] d = new int[2][nb];
 		
@@ -268,8 +268,6 @@ public class GridWorld_sql
 			d[0][0] = -2;
 			d[1][0] = 0;
 			// haut
-		//	d[1][1] = -1;
-		//	d[0][1] = 0;
 		}
 		return d;
 	}
