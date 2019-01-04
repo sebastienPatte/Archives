@@ -3,6 +3,7 @@
 echo "set terminal png size 700,500 enhanced background rgb 'white'" > gnuplot_script
 
 echo "set palette negative" >> gnuplot_script
+echo "set yrange [] reverse" >> gnuplot_script
 echo "set palette gray" >> gnuplot_script
 for i in $(seq 0 1)
 do
