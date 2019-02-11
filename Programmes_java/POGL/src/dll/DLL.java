@@ -7,13 +7,30 @@ import java.util.function.Predicate;
 public class DLL {
     public static void main(String[] args) {
          DoublyLinkedList<Integer> list = new DoublyLinkedList<>();
-//         list.add(1);
-//         list.add(2);
+         DoublyLinkedList<Integer> list2 = new DoublyLinkedList<>();
+         //list1
+         System.out.println("list");
+         list.add(1);
+         list.add(2);
+         list.add(3);
+         list.add(2);
+         list.print();
+         //list2
+         System.out.println("list2");
+         list2.add(5);
+         list2.add(2);
+         list2.add(2);
+         list.print();
+         System.out.println("list.extend(list2)");
+         list.extend(list2);
          list.print();
 //         list.swap();
-//         list.print();
-//         list.add(3);
-//         list.print();
+         list.removeAll(2);
+         list.print();
+         list.add(3);
+         list.print();
+         list.removeAll(3);
+         list.print();
     }
 }
 
@@ -34,6 +51,7 @@ class DoublyLinkedList<T> implements Iterable<T> {
     	newBlock.prevBlock = newBlock;
     	this.anchor        = newBlock;
     	this.size          = 0;
+    	assert checkInvariants() : "Err Init";
     }
 
     /**
@@ -57,7 +75,7 @@ class DoublyLinkedList<T> implements Iterable<T> {
         	this.elt = e;
         }
     }
-
+    
     public static void main(String[] args) {
         // À compléter : tests internes
     }
@@ -67,7 +85,7 @@ class DoublyLinkedList<T> implements Iterable<T> {
     public void print() {
     	for(T elt : this) {
     		System.out.println(elt);
-    	}
+    	}System.out.println();
     }
     
     private int countElements() {
@@ -77,7 +95,21 @@ class DoublyLinkedList<T> implements Iterable<T> {
     }
     
     private boolean checkInvariants() {
-    	return (this.size == this.countElements()); 
+    	return this.size == this.countElements()
+    			// verification (anchor -> null, autres val !null)
+    			&& forAllBlocks(b -> {
+    				if(b==anchor){
+    					return b.elt==null;
+    				}else {
+    					return b.elt!=null;
+    				}
+    			})
+    			// verification des nextBlock, prevBlock 
+    			&& forAllBlocks(b->{
+    				return b == b.nextBlock.prevBlock;
+    			});
+    			
+    	
     }
     // verifie si tous les blocks verifient le predicat p
     private boolean forAllBlocks(Predicate<Block> p) {
@@ -90,13 +122,62 @@ class DoublyLinkedList<T> implements Iterable<T> {
     	return true;
     }
     
-    // public void swap() {
-    //  Block pivot = this.anchor.nextBlock.nextBlock.nextBlock;
-    //  this.anchor.nextBlock = this.anchor.nextBlock.nextBlock;
-    //  this.anchor.nextBlock.nextBlock = this.anchor.nextBlock.prevBlock;
-    //  this.anchor.nextBlock.nextBlock.nextBlock = pivot;
-    // }
+    //ajoute un élément en fin de liste
+    public void add(T elt) {
+    	Block temp            = this.anchor.prevBlock;
+    	Block newBlock        = new Block(elt);
+    	temp.nextBlock        = newBlock;
+    	newBlock.nextBlock    = this.anchor;
+    	newBlock.prevBlock    = temp;
+    	temp.nextBlock        = newBlock;
+    	this.anchor.prevBlock = newBlock;
+    	this.size++;
+    	assert checkInvariants() : "Err add";
+    }
+    
 
+    
+    
+    // exemple de permutation qui ne marche pas
+     public void swap() {
+      Block pivot = this.anchor.nextBlock.nextBlock.nextBlock;
+      this.anchor.nextBlock = this.anchor.nextBlock.nextBlock;
+      this.anchor.nextBlock.nextBlock = this.anchor.nextBlock.prevBlock;
+      this.anchor.nextBlock.nextBlock.nextBlock = pivot;
+      assert checkInvariants() : "Err swap";
+     }
+     
+     // supprime toutes les instances de elt     
+     public void removeAll(T elt) {
+    	 Block current = this.anchor;
+    	 do {
+    		 if (elt== current.elt)removeBlock(current);
+    		 current = current.nextBlock;
+    		 
+    	 }while(current!=this.anchor);
+     }
+     
+     // supprime le block b
+     private void removeBlock (Block b) {
+    	 b.prevBlock.nextBlock = b.nextBlock;
+    	 b.nextBlock.prevBlock = b.prevBlock;
+    	 this.size--;
+    	 assert checkInvariants() : "Err removeBlock";
+     }
+     
+     // ajoute la liste 'l' à la suite de la liste 'this'
+     public void extend(DoublyLinkedList<T> l) {
+    	 if (l.size!=0) {
+    	 this.anchor.prevBlock = l.anchor.nextBlock;
+    	 this.anchor.nextBlock = l.anchor.prevBlock;
+    	 l.anchor.prevBlock.nextBlock = this.anchor;
+    	 l.anchor.nextBlock.prevBlock = this.anchor;
+    	 this.size+=l.size;
+    	 assert checkInvariants() : "Err extend";
+    	 }
+    	 
+     }
+     
     // Cadeau : un itérateur sur les éléments de la liste
     /**
      * Méthode de création d'un itérateur
