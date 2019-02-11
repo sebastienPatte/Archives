@@ -20,15 +20,21 @@ public class DLL {
          list2.add(5);
          list2.add(2);
          list2.add(2);
-         list.print();
+         list2.print();
          System.out.println("list.extend(list2)");
          list.extend(list2);
          list.print();
+         System.out.println("reverse");
+         list.rev();
+         list.print();
 //         list.swap();
          list.removeAll(2);
+         System.out.println("remove all 2");
          list.print();
+         System.out.println("add 3");
          list.add(3);
          list.print();
+         System.out.println("remove all 3");
          list.removeAll(3);
          list.print();
     }
@@ -167,15 +173,38 @@ class DoublyLinkedList<T> implements Iterable<T> {
      
      // ajoute la liste 'l' à la suite de la liste 'this'
      public void extend(DoublyLinkedList<T> l) {
-    	 if (l.size!=0) {
-    	 this.anchor.prevBlock = l.anchor.nextBlock;
-    	 this.anchor.nextBlock = l.anchor.prevBlock;
-    	 l.anchor.prevBlock.nextBlock = this.anchor;
-    	 l.anchor.nextBlock.prevBlock = this.anchor;
-    	 this.size+=l.size;
-    	 assert checkInvariants() : "Err extend";
-    	 }
+    	if (l.size!=0) {
+    		// l'element avant le premier de l est le dernier de this
+        	l.anchor.nextBlock.prevBlock = this.anchor.prevBlock;
+        	// l'element apres le dernier de l est l'ancre de this
+        	l.anchor.prevBlock.nextBlock = this.anchor;
+        	// l'element apres le dernier de this est le premier de l
+        	this.anchor.prevBlock.nextBlock = l.anchor.nextBlock;
+        	// le dernier de this est le dernier de l
+        	this.anchor.prevBlock = l.anchor.prevBlock;
+        	
     	 
+        	this.size+=l.size;
+    	 
+        	assert checkInvariants() : "Err extend";
+    	}
+    	 
+     }
+     
+     public void rev() {
+    	 Block current = this.anchor;
+    	 //parcours dans le sens de l'indice croissant
+    	 do {
+    		 current.prevBlock=current.nextBlock;
+    		 current = current.nextBlock;
+    	 }while(current!=this.anchor);
+    	 //parcours dans le sens de l'indice décroissant
+    	 do {
+    		 current.prevBlock.nextBlock=current;
+    		 current = current.prevBlock;
+    	 }while(current!=this.anchor);
+    	 
+    	 assert checkInvariants() : "Err rev";
      }
      
     // Cadeau : un itérateur sur les éléments de la liste
