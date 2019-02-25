@@ -10,26 +10,26 @@ public class Vect {
     // Constructeur
     Vect(int x, int y) {
     	// A modifier
-        this.x = 0;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
     }
     
     // Addition
     Vect add(Vect v) {
     	// A completer
-        return null;
+        return (new Vect (this.x + v.x, this.y + v.y));
     }
     
     // Soustraction
     Vect sub(Vect v) {
     	// A completer
-        return null;
+        return (new Vect (this.x - v.x, this.y - v.y));
     }
     
     // Test d'egalite
     boolean egale(Vect other) {
     	// A completer
-        return false;
+        return (this.x == other.x && this.y == other.y);
     }
 
     // Renvoie le vecteur a coordonnees entieres de norme 1 dont la direction
