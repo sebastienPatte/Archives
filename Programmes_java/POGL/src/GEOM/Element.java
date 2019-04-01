@@ -21,8 +21,10 @@ public abstract class Element implements Visitable{
         this.colour = c;
     }
     
-    abstract public void zoom(int z);
-    abstract public String print();
     
+    abstract public void visit(Visitor v);
     
+    public void accept(Visitor v){
+    	v.visit(this);
+    }
 }

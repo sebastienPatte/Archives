@@ -18,16 +18,6 @@ public class Circle extends Element {
         this.r = r;
     }
     
-    @Override
-    public void zoom(int z){
-    	this.x *= z;
-        this.y *= z;
-        this.r *= z;
-    }
-    
-    @Override
-    public String print(){
-    	return "Circle";
-    }
+
     
 }

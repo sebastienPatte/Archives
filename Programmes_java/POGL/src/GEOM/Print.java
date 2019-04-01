@@ -14,4 +14,14 @@ public class Print extends Operation {
         System.out.println(typeReel+ e.id + " " + e.colour);
     }
 
+	@Override
+	public void visitLine(Line l) {
+		System.out.println("Line" + l.id + " " + l.colour );
+	}
+
+	@Override
+	public void visitCircle(Circle c) {
+		System.out.println("Circle" + c.id + " " + c.colour);
+	}
+
 }

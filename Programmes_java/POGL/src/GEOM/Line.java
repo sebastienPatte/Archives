@@ -18,16 +18,5 @@ public class Line extends Element {
         this.y2 = y2;
     }
     
-    @Override
-    public void zoom(int z){
-    	this.x1 *= z;
-        this.y1 *= z;
-        this.x2 *= z;
-        this.y2 *= z;
-    }
     
-    @Override
-    public String print(){
-    	return "Line";
-    }
 }

@@ -15,7 +15,7 @@ public abstract class Operation implements Visitor{
     public void operate(Line l) {}
     public void operate(Circle c) {}
     
-    public void visitLine(Line l) {}
-    public void visitCircle(Circle c){}
+    abstract public void visitLine(Line l);
+    abstract public void visitCircle(Circle c);
 	
 }
