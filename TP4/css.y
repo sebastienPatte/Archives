@@ -1,13 +1,25 @@
 %{#include <stdio.h>%}
-%token BALISE
-%token CLASS
+%token TAG
 %token ID
-%token DECLARATION
+%token CLASS
+%token ACCO
+%token ACCF
+%token PTV
+%token DPT
+%token PPT
+%token VAL
 
 %%
 
-ligne : BALISE;
+fichier : ID ACCO instr ACCF fichier 
+		| TAG ACCO instr ACCF fichier 
+		| CLASS ACCO instr ACCF fichier 
+	    |
+		;
 
+instr : PPT DPT VAL PTV instr 
+	  |
+	  ; 
 %%
 
 #include "lex.yy.c"

@@ -97,17 +97,27 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    BALISE = 258,
-    CLASS = 259,
-    ID = 260,
-    DECLARATION = 261
+    TAG = 258,
+    ID = 259,
+    CLASS = 260,
+    ACCO = 261,
+    ACCF = 262,
+    PTV = 263,
+    DPT = 264,
+    PPT = 265,
+    VAL = 266
   };
 #endif
 /* Tokens.  */
-#define BALISE 258
-#define CLASS 259
-#define ID 260
-#define DECLARATION 261
+#define TAG 258
+#define ID 259
+#define CLASS 260
+#define ACCO 261
+#define ACCF 262
+#define PTV 263
+#define DPT 264
+#define PPT 265
+#define VAL 266
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -125,7 +135,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 129 "y.tab.c" /* yacc.c:358  */
+#line 139 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -365,23 +375,23 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  3
+#define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   1
+#define YYLAST   22
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  7
+#define YYNTOKENS  12
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  2
+#define YYNNTS  3
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  2
+#define YYNRULES  7
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  4
+#define YYNSTATES  23
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   261
+#define YYMAXUTOK   266
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -416,14 +426,14 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6
+       5,     6,     7,     8,     9,    10,    11
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,     7,     7
+       0,    14,    14,    15,    16,    17,    20,    21
 };
 #endif
 
@@ -432,8 +442,8 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "BALISE", "CLASS", "ID", "DECLARATION",
-  "$accept", "ligne", YY_NULLPTR
+  "$end", "error", "$undefined", "TAG", "ID", "CLASS", "ACCO", "ACCF",
+  "PTV", "DPT", "PPT", "VAL", "$accept", "fichier", "instr", YY_NULLPTR
 };
 #endif
 
@@ -442,14 +452,15 @@ static const char *const yytname[] =
    (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   261
+       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266
 };
 # endif
 
-#define YYPACT_NINF -4
+#define YYPACT_NINF -10
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-4)))
+  (!!((Yystate) == (-10)))
 
 #define YYTABLE_NINF -1
 
@@ -460,7 +471,9 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -4,     1,    -4
+      -1,     2,     3,     4,    11,     6,     6,     6,   -10,     5,
+      10,    12,    13,     1,    -1,    -1,    -1,    14,   -10,   -10,
+     -10,     6,   -10
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -468,19 +481,21 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     2,     0,     1
+       5,     0,     0,     0,     0,     7,     7,     7,     1,     0,
+       0,     0,     0,     0,     5,     5,     5,     0,     3,     2,
+       4,     7,     6
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -4,    -4
+     -10,    -9,    -6
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2
+      -1,     4,    10
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -488,31 +503,37 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       1,     3
+      11,    12,     1,     2,     3,    18,    19,    20,     5,     6,
+       7,     8,    17,     0,    13,    22,     9,    14,     0,    15,
+      16,     0,    21
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-       3,     0
+       6,     7,     3,     4,     5,    14,    15,    16,     6,     6,
+       6,     0,    11,    -1,     9,    21,    10,     7,    -1,     7,
+       7,    -1,     8
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     8,     0
+       0,     3,     4,     5,    13,     6,     6,     6,     0,    10,
+      14,    14,    14,     9,     7,     7,     7,    11,    13,    13,
+      13,     8,    14
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,     7,     8
+       0,    12,    13,    13,    13,    13,    14,    14
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1
+       0,     2,     5,     5,     5,     0,     5,     0
 };
 
 
@@ -1189,7 +1210,7 @@ yyreduce:
   switch (yyn)
     {
       
-#line 1193 "y.tab.c" /* yacc.c:1646  */
+#line 1214 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1417,7 +1438,8 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 8 "css.y" /* yacc.c:1906  */
+#line 23 "css.y" /* yacc.c:1906  */
+
 
 #include "lex.yy.c"
 

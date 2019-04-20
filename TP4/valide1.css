@@ -1,0 +1,25 @@
+/* Fichier d'exemple valide : valide1.css */
+p
+{
+text-align:center; /* On centre le texte */
+/* On change la couleur 
+et la police */
+color:black;
+font-family:arial;
+}
+
+h1 {
+   font-size : 200%;
+   color     : red;
+}
+
+h2 {
+ font-size: 150%;
+ color: blue;
+}
+
+.italic{font-style:italic;}
+
+#link {
+ color: #0088FF;
+}
