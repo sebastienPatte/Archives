@@ -5,8 +5,6 @@
 
 %%
 
-[//] ;
-
 [0-9]+ {
     yylval = atoi(yytext);
     return NOMBRE;
@@ -16,8 +14,8 @@
 
 . return yytext[0];
 
-[ \n] return LIGNE;
+"//".* ;
 
-<<EOF>> return yytext[0];
+\n return '\n';
 
 %%
