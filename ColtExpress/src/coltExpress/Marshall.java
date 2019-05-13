@@ -8,11 +8,11 @@ public class Marshall extends Personne{
 		this.tabWagons = tabWagons;
 	}
 	
-	public boolean seDeplace() {
+	protected boolean seDeplace() {
 		return Math.random()<=Train.NERVOSITE_MARSHALL;
 	}
 	
-	public Direction rdmDir () {
+	protected Direction rdmDir () {
 		//si le marshall est sur le premier wagon il va vers l'arriere
 		if(this.POS <= 0) {
 			return Direction.ARRIERE;
@@ -32,7 +32,7 @@ public class Marshall extends Personne{
 		}	
 	}
 	
-	public String deplacement() {
+	protected String deplacement() {
 		if(this.seDeplace()) {
 			switch(this.rdmDir()) {
 				case AVANT: 

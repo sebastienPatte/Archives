@@ -10,12 +10,7 @@ import coltExpress.Train;
 
 public class VuePrint extends JPanel implements Observer{
 
-	
-	
-private Train train;
-	
-	
-	
+	private Train train;
 	
 	protected VuePrint(Train train){
 		this.train=train;

@@ -6,9 +6,9 @@ public class Bandit extends Personne{
 	public static int NB_BALLES = 8;
 	
 	private Wagon[] tabWagons ;
-	String nom;
-	int id;
-	boolean etage; //true : sur le toit, false : dans le wagon
+	private String nom;
+	private int id;
+	private boolean etage; //true : sur le toit, false : dans le wagon
 	private ArrayList<PaireButin> recompenses;
 	private ArrayList<Actions> actions;
 	private ArrayList<Direction> tabDirTir;
@@ -26,24 +26,24 @@ public class Bandit extends Personne{
 		this.nbBalles=Bandit.NB_BALLES;
 	}
 
-	public void braquage() {
+	protected void braquage() {
 		if(this.tabWagons[this.POS].getRecompenses(this.etage).size()>0) {
-			this.addRecompense(this.tabWagons[this.POS].getRdmRecompense(this.etage));
+			this.recompenses.add(this.tabWagons[this.POS].getRdmRecompense(this.etage));
 		}
 	}
 	
-	public void lacheRecompense() {
+	protected void lacheRecompense() {
 		if(this.getRecompenses().size()>0) {
 			int rdmIndex = this.tabWagons[this.POS].randint(0,this.getRecompenses().size()-1);
 			int POS = this.getPOS();
 			//ajout de la recompense sur le wagon
 			this.tabWagons[POS].addRecompense(this.getRecompenses().get(rdmIndex), this.etage);
 			//suppression de la recompense dans l'inventaire du bandit
-			this.removeRecompense(rdmIndex);
+			this.recompenses.remove(rdmIndex);
 		}	
 	}
 	
-	public ArrayList<String> tire() {
+	protected ArrayList<String> tire() {
 		ArrayList<String> res = new ArrayList<String>();
 		int POS=0;
 		boolean etage=false;
@@ -85,7 +85,7 @@ public class Bandit extends Personne{
 			
 				if(etage) {
 					for(int cpt=0; cpt < Train.NB_JOUEURS;cpt++) {
-						if(cpt!=this.getId()) {
+						if(cpt!=this.id) {
 							if(this.tabWagons[POS].getBanditsToit()[cpt]) {
 								res.add(this.getNom()+" est touché\n");
 								this.lacheRecompense();
@@ -94,7 +94,7 @@ public class Bandit extends Personne{
 					}
 				}else {
 					for(int cpt=0; cpt < Train.NB_JOUEURS;cpt++) {
-						if(cpt!=this.getId()) {
+						if(cpt!=this.id) {
 							if(this.tabWagons[POS].getBanditsInterieur()[cpt]) {
 								res.add(this.getNom()+" est touché\n");
 								this.lacheRecompense();
@@ -106,7 +106,7 @@ public class Bandit extends Personne{
 				res.add(this.getNom()+" tire dans le Mur\n");
 			}
 			
-			this.removeBalle();
+			this.nbBalles--;
 		}else{
 			res.add( this.getNom()+" essaye de tirer mais n'a plus de balles\n");
 		}
@@ -125,11 +125,11 @@ public class Bandit extends Personne{
             if(this.getPOS()>0) {
             	//maj Wagons
             	if (!this.getEtage()){
-                	this.tabWagons[this.getPOS()].setBanditsInterieur(this.getId(),false);
-                	this.tabWagons[this.getPOS()-1].setBanditsInterieur(this.getId(),true);
+                	this.tabWagons[this.getPOS()].setBanditsInterieur(this.id,false);
+                	this.tabWagons[this.getPOS()-1].setBanditsInterieur(this.id,true);
                 }else{
-                	this.tabWagons[this.getPOS()].setBanditsToit(this.getId(),false);
-                	this.tabWagons[this.getPOS()-1].setBanditsToit(this.getId(),true);
+                	this.tabWagons[this.getPOS()].setBanditsToit(this.id,false);
+                	this.tabWagons[this.getPOS()-1].setBanditsToit(this.id,true);
                 }
             	//maj POS bandit
             	this.setPOS(this.getPOS()-1);
@@ -142,11 +142,11 @@ public class Bandit extends Personne{
             if(this.getPOS() < Train.NB_WAGONS-1) {            	
             	//maj Wagons
             	if (!this.getEtage()){
-                	this.tabWagons[this.getPOS()].setBanditsInterieur(this.getId(),false);
-                	this.tabWagons[this.getPOS()+1].setBanditsInterieur(this.getId(),true);
+                	this.tabWagons[this.getPOS()].setBanditsInterieur(this.id,false);
+                	this.tabWagons[this.getPOS()+1].setBanditsInterieur(this.id,true);
                 }else{
-                	this.tabWagons[this.getPOS()].setBanditsToit(this.getId(),false);
-                	this.tabWagons[this.getPOS()+1].setBanditsToit(this.getId(),true);
+                	this.tabWagons[this.getPOS()].setBanditsToit(this.id,false);
+                	this.tabWagons[this.getPOS()+1].setBanditsToit(this.id,true);
                 }
             	
             	//maj POS bandit
@@ -158,8 +158,8 @@ public class Bandit extends Personne{
         case HAUT:
             if(!this.getEtage()) {
             	//maj Wagons
-            	this.tabWagons[this.getPOS()].setBanditsInterieur(this.getId(),false);
-            	this.tabWagons[this.getPOS()].setBanditsToit(this.getId(),true);
+            	this.tabWagons[this.getPOS()].setBanditsInterieur(this.id,false);
+            	this.tabWagons[this.getPOS()].setBanditsToit(this.id,true);
             	//maj POS bandit
             	this.setEtage(true);
             	return this.getNom()+" monte";
@@ -169,8 +169,8 @@ public class Bandit extends Personne{
         case BAS:
             if(this.getEtage()) {
             	//maj Wagons
-            	this.tabWagons[this.getPOS()].setBanditsInterieur(this.getId(),true);
-            	this.tabWagons[this.getPOS()].setBanditsToit(this.getId(),false);
+            	this.tabWagons[this.getPOS()].setBanditsInterieur(this.id,true);
+            	this.tabWagons[this.getPOS()].setBanditsToit(this.id,false);
             	//maj POS bandit
             	this.setEtage(false);
                 return this.getNom()+" descend";
@@ -186,7 +186,7 @@ public class Bandit extends Personne{
 		return this.etage;
 	}
 	
-	public void setEtage(boolean etage) {
+	protected void setEtage(boolean etage) {
 		this.etage=etage;
 	}
 			
@@ -194,17 +194,13 @@ public class Bandit extends Personne{
 		return this.nom;
 	}
 	
-	public void addRecompense(PaireButin rew) {
-		this.recompenses.add(rew);
-	}
+	
 	
 	public ArrayList<PaireButin> getRecompenses(){
 		return this.recompenses;
 	}
 	
-	public void removeRecompense(int i) {
-		this.recompenses.remove(i);
-	}
+	
 	
 	public ArrayList<Actions> getActions() {
 		return this.actions;
@@ -219,10 +215,11 @@ public class Bandit extends Personne{
 	public void removeAction(int i) {
 		this.actions.remove(i);
 	}
-	
+	/*
 	public int getId() {
 		return this.id;
 	}
+	*/
 	public void addTabDirTir(Direction dir) {
 		this.tabDirTir.add(dir);
 	}
@@ -239,7 +236,5 @@ public class Bandit extends Personne{
 		return this.nbBalles;
 	}
 	
-	public void removeBalle() {
-		this.nbBalles--;
-	}
+	
 }

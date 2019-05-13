@@ -1,7 +1,7 @@
 package coltExpress;
 
 public class Personne {
-	int POS;
+	protected int POS;
 	
 	
 	public int getPOS() {

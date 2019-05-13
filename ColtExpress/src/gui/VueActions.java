@@ -32,27 +32,27 @@ public class VueActions  extends JPanel implements Observer{
 			g.drawString("Preparation Phase : choisir 5 actions ", 20,20);
 			g.drawString("Actions:", 10, 40);
 		}else {
-			g.drawString("Action Phase : Il reste "+this.train.tabBandits[0].getActions().size()+" actions.", 20,20);
+			g.drawString("Action Phase : Il reste "+this.train.getTabBandits()[0].getActions().size()+" actions.", 20,20);
 		}
 		
 		//affichage actions
-		for(int i=0; i < train.tabBandits.length; i++) {
+		for(int i=0; i < train.getTabBandits().length; i++) {
 			g.drawString("P"+(i+1)+":",(i*70)+10,60);
-			for(int j=0; j<train.tabBandits[i].getActions().size();j++) {
+			for(int j=0; j<train.getTabBandits()[i].getActions().size();j++) {
 				g.drawString(train.getActions().get(i).get(j).name(), (i*70)+10, 80+(j*20));
 			}
 		}
 		
 		//affichage butin courant
 		g.drawString("Butin:", 170, 40);
-		for(int i=0; i < train.tabBandits.length; i++) {
+		for(int i=0; i < train.getTabBandits().length; i++) {
 			g.drawString("P"+(i+1)+":",(i*100)+180,60);
-			for(int j=0; j < train.tabBandits[i].getRecompenses().size(); j++) {
-				g.drawString(this.train.tabBandits[i].getRecompenses().get(j).toString(), (i*100)+180, 80+(j*20));
+			for(int j=0; j < train.getTabBandits()[i].getRecompenses().size(); j++) {
+				g.drawString(this.train.getTabBandits()[i].getRecompenses().get(j).toString(), (i*100)+180, 80+(j*20));
 			}
 		}
-		for(int cpt=0; cpt < train.tabBandits.length;cpt++) {
-			g.drawString("P"+(cpt+1)+" a "+train.tabBandits[cpt].getNbBalle()+" balles", 10, 280+(15*cpt));
+		for(int cpt=0; cpt < train.getTabBandits().length;cpt++) {
+			g.drawString("P"+(cpt+1)+" a "+train.getTabBandits()[cpt].getNbBalle()+" balles", 10, 280+(15*cpt));
 		}
 		
 	}

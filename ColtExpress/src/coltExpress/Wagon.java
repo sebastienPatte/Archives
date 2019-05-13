@@ -31,23 +31,19 @@ public class Wagon {
     	this.recompensesInterieur = new ArrayList<PaireButin>(); 
     	this.recompensesToit = new ArrayList<PaireButin>(); 
     	// si le wagon est la locomotive on met le Magot
-    	
     	if(this.id==0){
     		this.recompensesInterieur.add(new PaireButin(Butin.MAGOT, 1000));
     	//sinon on met de 1 a 4 recompenses
     	}else {
     		this.NB_RECOMPENSE = this.randint(1, 4);
-    		
     		for(int i=0; i< this.NB_RECOMPENSE;i++) {
     			// une chance sur deux qu'il y ait une bourse ou un bijou
     			if(randint(0,1)==0) {
     				// une bourse a une valeur de 0 à 500$
     				this.recompensesInterieur.add(new PaireButin(Butin.BOURSE, this.randint(0, 500)));
-    				
     			}else {
     				// un Bijou a toujours une valeur de 500$
-    				this.recompensesInterieur.add(new PaireButin(Butin.BIJOU, 500));
-    				
+    				this.recompensesInterieur.add(new PaireButin(Butin.BIJOU, 500));	
     			}
     		}
     	}
@@ -94,15 +90,12 @@ public class Wagon {
 	}
 	
 	
-	
 	public void addRecompense(PaireButin rew, boolean etage) {
 		if(etage) {
 			this.recompensesToit.add(rew);
 		}else {
 			this.recompensesInterieur.add(rew);
-		}
-		
-		
+		}	
 	}
 	
 	public boolean getContientMarshall() {

@@ -10,6 +10,8 @@ import coltExpress.Direction;
 import coltExpress.Train;
 
 public class VueCommandes extends JPanel {
+	private static final long serialVersionUID = 1L;
+	
 	private Train train;
 	JButton boutonAction;
 	JButton boutonHaut;
@@ -53,10 +55,21 @@ public class VueCommandes extends JPanel {
 		this.boutonCorriger.setEnabled(false);
 		this.add(boutonCorriger);
 		
-		 
+		if(!Train.SHOW_BUTTONS) {
+			this.boutonHaut.setVisible(false);
+			this.boutonArriere.setVisible(false);
+			this.boutonBas.setVisible(false);
+			this.boutonAvant.setVisible(false);
+			this.boutonBraquage.setVisible(false);
+			this.boutonTire.setVisible(false);
+			this.boutonValider.setVisible(false);
+			this.boutonAction.setVisible(false);
+			this.boutonCorriger.setVisible(false);
+			this.setVisible(false);
+		} 
 
 		if(train.PreparationPhase()) {
-			this.bandit = train.tabBandits[train.getPhase()];
+			this.bandit = train.getTabBandits()[train.getPhase()];
 			
 			boutonHaut.addActionListener(e -> { bandit.addAction(Actions.HAUT); updateAllButtons();});
 			boutonArriere.addActionListener(e -> { bandit.addAction(Actions.ARRIERE); updateAllButtons();});
@@ -102,9 +115,6 @@ public class VueCommandes extends JPanel {
 				case AVANT: bouton = this.boutonAvant;break;
 				default : System.out.println("Erreur dans la direction du tir");break;
 			}
-			
-	
-		
 			if(enable) {
 				//on remplace l'actionListener actuel par celui pour selectionner la direction du tir
 				bouton.removeActionListener(bouton.getActionListeners()[0]);
@@ -113,7 +123,7 @@ public class VueCommandes extends JPanel {
 			}else {
 				//si la fonction a été apelée avec false on remplace l'ActionListener avec celui de base pour arreter la selection de la direction du tir
 				bouton.removeActionListener(bouton.getActionListeners()[0]);
-				bouton.addActionListener(e -> { train.tabBandits[train.getPhase()].addAction(dirToAction(dir)); updateAllButtons();});
+				bouton.addActionListener(e -> { train.getTabBandits()[train.getPhase()].addAction(dirToAction(dir)); updateAllButtons();});
 			}
 		}
 		
@@ -122,7 +132,7 @@ public class VueCommandes extends JPanel {
 	private void updateAllButtons() {
 		if(train.PreparationPhase()) {
 		//Phase de preparation	
-			this.bandit = train.tabBandits[train.getPhase()];
+			this.bandit = train.getTabBandits()[train.getPhase()];
 			if(bandit.getActions().size() >=1) this.boutonCorriger.setEnabled(true);
 			
 			if(bandit.getActions().size() >= 5) {
