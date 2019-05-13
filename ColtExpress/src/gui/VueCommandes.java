@@ -11,16 +11,16 @@ import coltExpress.Train;
 
 public class VueCommandes extends JPanel {
 	private Train train;
-	private JButton boutonAction;
-	private JButton boutonHaut;
-	private JButton boutonBas;
-	private JButton boutonArriere;
-	private JButton boutonAvant;
-	private JButton boutonValider;
-	private JButton boutonCorriger;
-	private JButton boutonBraquage;
-	private JButton boutonTire;
-	private Bandit bandit;
+	JButton boutonAction;
+	JButton boutonHaut;
+	JButton boutonBas;
+	JButton boutonArriere;
+	JButton boutonAvant;
+	JButton boutonValider;
+	JButton boutonCorriger;
+	JButton boutonBraquage;
+	JButton boutonTire;
+	Bandit bandit;
 	private boolean actionTir;
 	
 	
@@ -53,7 +53,7 @@ public class VueCommandes extends JPanel {
 		this.boutonCorriger.setEnabled(false);
 		this.add(boutonCorriger);
 		
-		
+		 
 
 		if(train.PreparationPhase()) {
 			this.bandit = train.tabBandits[train.getPhase()];

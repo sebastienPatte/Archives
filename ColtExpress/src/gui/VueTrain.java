@@ -58,7 +58,8 @@ public class VueTrain extends JPanel implements Observer{
 	
 	public void paintComponent(Graphics g) {
 		super.repaint();
-		
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0, 0, this.getWidth(),this.getHeight());
 		ArrayList<Butin> butins;
 		for(int i=0; i<train.getTabWagons().length; i++) {
 			butins = new ArrayList<Butin>();
@@ -83,8 +84,8 @@ public class VueTrain extends JPanel implements Observer{
 				for(int cpt=0;cpt<Train.NB_JOUEURS;cpt++) {
 					if(bandits[cpt]) {
 						switch (cpt) {
-							case 0 : g.drawImage(this.imageThief1,x+60,y+25,null);break;
-							case 1 : g.drawImage(this.imageThief2,x+60,y,null);break;
+							case 0 : g.drawImage(this.imageThief1,x+60,y+25,this);break;
+							case 1 : g.drawImage(this.imageThief2,x+60,y,this);break;
 							
 							default : System.out.println("erreur variable bool Bandits cpt="+cpt);break;
 						}
@@ -98,13 +99,13 @@ public class VueTrain extends JPanel implements Observer{
 			for (int cpt=0; cpt<butins.size();cpt++) {
 				switch(butins.get(cpt)) {
 				
-					case BIJOU : g.drawImage(this.imageJewel,x+(cpt*35),y+100,null);
+					case BIJOU : g.drawImage(this.imageJewel,x+(cpt*35%(Train.LARGEUR-this.imageJewel.getWidth(null))),y+100,this);
 								 break;
 				
-					case BOURSE : g.drawImage(this.imageBourse,x+(cpt*35),y+100,null);
+					case BOURSE : g.drawImage(this.imageBourse,x+(cpt*35%(Train.LARGEUR-this.imageJewel.getWidth(null))),y+100,this);
 								  break;
 					
-					case MAGOT : g.drawImage(this.imageChest,x+50,y+100,null);
+					case MAGOT : g.drawImage(this.imageChest,x+50,y+100,this);
 								 break;
 					
 					default : 	System.err.println("Error printing recompenses in VueTrain.Java/paint");
@@ -114,7 +115,7 @@ public class VueTrain extends JPanel implements Observer{
 			}
 			
 			if (contientMarshall && !etage) {
-				g.drawImage(this.imageMarshall,x,y,null);
+				g.drawImage(this.imageMarshall,x,y,this);
 			}
 			
 				
