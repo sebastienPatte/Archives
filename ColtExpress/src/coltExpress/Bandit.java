@@ -3,7 +3,7 @@ package coltExpress;
 import java.util.ArrayList;
 
 public class Bandit extends Personne{
-	public static int NB_BALLES = 8;
+	
 	
 	private Wagon[] tabWagons ;
 	private String nom;
@@ -23,7 +23,7 @@ public class Bandit extends Personne{
 		this.recompenses = new ArrayList<PaireButin>();
 		this.actions = new ArrayList<Actions>();
 		this.tabDirTir = new ArrayList<Direction>();
-		this.nbBalles=Bandit.NB_BALLES;
+		this.nbBalles=Train.NB_BALLES;
 	}
 
 	protected void braquage() {

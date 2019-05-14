@@ -11,6 +11,7 @@ public class Train extends Observable{
 	public static int NB_JOUEURS=2;
 	public static  int HAUTEUR=160;
 	public static  int LARGEUR=160;
+	public static int NB_BALLES = 8;
 	public static double NERVOSITE_MARSHALL=0.3;
 	public static int NB_WAGONS = 4;
 	public static boolean SHOW_BUTTONS = true;
@@ -175,14 +176,23 @@ public class Train extends Observable{
 				}else {
 					err_syntax =true;
 				}
-			}	
+			}
+			if(args[cpt].equals("-b")) {
+				if(Float.parseFloat(args[cpt+1])>=0 && Float.parseFloat(args[cpt+1]) <=1){
+					Train.NB_BALLES = Integer.parseInt(args[cpt+1]);
+					System.out.println("Nombre balles = "+Train.NERVOSITE_MARSHALL);
+				}else {
+					err_syntax =true;
+				}
+			}
 			if(args[cpt].equals("--noButtons")) {
 				Train.SHOW_BUTTONS = false;
 			}
 		}
 		if(err_syntax) {
-			System.out.println("\nSyntaxe :\n\n\"-w <Nombre wagons>\"\n\"-j <Nombre joueurs>\"\n\"-n <Nervosité Marshall>\"");
-			System.out.println("\nNombre Wagons > 0\nNombre Joueurs : entre 0 et 3\nNervosité Marshall : entre 0.0 et 1.0\n");
+			System.out.println("\nSyntaxe :\n\n\"-w <Nombre wagons>\"\n\"-j <Nombre joueurs>\"\n\"-n <Nervosité Marshall>\"\n\"-b <Nombre balles>\"");
+			System.out.println("--noButtons : démarre le jeu sans les boutons");
+			System.out.println("\nNombre Wagons > 0\nNombre Joueurs : entre 0 et 3\nNervosité Marshall : entre 0.0 et 1.0\nNombre balles : 0 ou plus\n");
 		}else {
 			EventQueue.invokeLater(() -> {
 				Train train = new Train();

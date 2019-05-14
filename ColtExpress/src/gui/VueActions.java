@@ -29,7 +29,7 @@ public class VueActions  extends JPanel implements Observer{
 		g.fillRect(0, 0, 400,300);
 		g.setColor(Color.BLACK);
 		if(this.train.PreparationPhase()) {	
-			g.drawString("Preparation Phase : choisir 5 actions ", 20,20);
+			g.drawString("Preparation Phase (P"+(this.train.getPhase()+1)+"): choisir 5 actions ", 20,20);
 			g.drawString("Actions:", 10, 40);
 		}else {
 			g.drawString("Action Phase : Il reste "+this.train.getTabBandits()[0].getActions().size()+" actions.", 20,20);
