@@ -192,7 +192,7 @@ public class Train extends Observable{
 		if(err_syntax) {
 			System.out.println("\nSyntaxe :\n\n\"-w <Nombre wagons>\"\n\"-j <Nombre joueurs>\"\n\"-n <Nervosité Marshall>\"\n\"-b <Nombre balles>\"");
 			System.out.println("--noButtons : démarre le jeu sans les boutons");
-			System.out.println("\nNombre Wagons > 0\nNombre Joueurs : entre 0 et 3\nNervosité Marshall : entre 0.0 et 1.0\nNombre balles : 0 ou plus\n");
+			System.out.println("\nNombre Wagons entre 0 et 10\nNombre Joueurs : entre 0 et 3\nNervosité Marshall : entre 0.0 et 1.0\nNombre balles : 0 ou plus\n");
 		}else {
 			EventQueue.invokeLater(() -> {
 				Train train = new Train();

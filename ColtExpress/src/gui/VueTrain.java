@@ -21,6 +21,8 @@ public class VueTrain extends JPanel implements Observer{
 	private Image imageJewel;
 	private Image imageBourse;
 	private Image imageChest;
+	private Image imageWagon;
+	private Image background;
 	
 	public VueTrain(Train train) {
 		this.train=train;
@@ -42,6 +44,14 @@ public class VueTrain extends JPanel implements Observer{
 		//image coffre
 		ImageIcon iconChest = new ImageIcon("chest.png");
 		this.imageChest = iconChest.getImage();		
+		//image Wagon
+		ImageIcon iconWagon = new ImageIcon("wagon.png");
+		this.imageWagon = iconWagon.getImage();
+		//background
+		ImageIcon iconBackground = new ImageIcon("background.jpg");
+		this.background = iconBackground.getImage();
+		
+		
 		
 		train.addObserver(this);
 		
@@ -58,8 +68,9 @@ public class VueTrain extends JPanel implements Observer{
 	
 	public void paintComponent(Graphics g) {
 		super.repaint();
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, this.getWidth(),this.getHeight());
+//		g.setColor(Color.DARK_GRAY);
+//		g.fillRect(0, 0, this.getWidth(),this.getHeight());
+		g.drawImage(this.background, 0, 0, this);
 		ArrayList<Butin> butins;
 		for(int i=0; i<train.getTabWagons().length; i++) {
 			butins = new ArrayList<Butin>();
@@ -77,21 +88,36 @@ public class VueTrain extends JPanel implements Observer{
 		}
 	}
 	public void paint(int x, int y, boolean etage, boolean contientMarshall,boolean[] bandits,ArrayList<Butin> butins,Graphics g) {
-			g.setColor(Color.WHITE);
-			g.fillRect(x, y, TAILLE, TAILLE);
-			//affichage bandits interieur
+			if(!etage){
+				g.drawImage(this.imageWagon,x, y, this);
+			}
 			
-				for(int cpt=0;cpt<Train.NB_JOUEURS;cpt++) {
+			
+			for(int cpt=0;cpt<Train.NB_JOUEURS;cpt++) {
 					if(bandits[cpt]) {
 						switch (cpt) {
-							case 0 : g.drawImage(this.imageThief1,x+60,y+25,this);break;
-							case 1 : g.drawImage(this.imageThief2,x+60,y,this);break;
+							case 0 : {
+								if(etage){
+									g.drawImage(this.imageThief1,x+40,y+85,this);break;
+								}else{
+									g.drawImage(this.imageThief1,x+40,y+50,this);break;
+								}
+							}
+							case 1 : {
+								if(etage){
+									g.drawImage(this.imageThief2,x+30,y+85,this);break;
+								}else{
+									g.drawImage(this.imageThief2,x+30,y+50,this);break;
+								}
+							}
+								
 							
 							default : System.out.println("erreur variable bool Bandits cpt="+cpt);break;
+							
 						}
 					}
 				}
-					
+			
 			
 		
 		//affichage des recompsenses 
@@ -99,13 +125,13 @@ public class VueTrain extends JPanel implements Observer{
 			for (int cpt=0; cpt<butins.size();cpt++) {
 				switch(butins.get(cpt)) {
 				
-					case BIJOU : g.drawImage(this.imageJewel,x+(cpt*35%(Train.LARGEUR-this.imageJewel.getWidth(null))),y+100,this);
+					case BIJOU : g.drawImage(this.imageJewel,x+(cpt*35%(Train.LARGEUR-this.imageJewel.getWidth(null))),y+80,this);
 								 break;
 				
-					case BOURSE : g.drawImage(this.imageBourse,x+(cpt*35%(Train.LARGEUR-this.imageJewel.getWidth(null))),y+100,this);
+					case BOURSE : g.drawImage(this.imageBourse,x+(cpt*35%(Train.LARGEUR-this.imageJewel.getWidth(null))),y+80,this);
 								  break;
 					
-					case MAGOT : g.drawImage(this.imageChest,x+50,y+100,this);
+					case MAGOT : g.drawImage(this.imageChest,x+50,y+80,this);
 								 break;
 					
 					default : 	System.err.println("Error printing recompenses in VueTrain.Java/paint");
@@ -115,7 +141,7 @@ public class VueTrain extends JPanel implements Observer{
 			}
 			
 			if (contientMarshall && !etage) {
-				g.drawImage(this.imageMarshall,x,y,this);
+				g.drawImage(this.imageMarshall,x+5,y+30,this);
 			}
 			
 				

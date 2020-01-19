@@ -19,7 +19,14 @@ public class Vue {
 		this.frame = new JFrame();
 		this.frame.setTitle("ColtExpress");
 		this.frame.setLayout(new FlowLayout());
-		this.frame.setSize(1000,700);
+
+		//si la longueur du train est plus grande que celle de VueCommandes (780) 
+		if(train.getTabWagons().length*Train.LARGEUR+20>780) {
+			this.frame.setSize(train.getTabWagons().length*Train.LARGEUR+20,2*Train.HAUTEUR+700);
+		}else {
+			this.frame.setSize(780,2*Train.HAUTEUR+700);
+		}
+		
 		this.frame.getContentPane().setBackground(Color.DARK_GRAY);
 		/** Définition de la vue et ajout à la fenêtre. */
 		this.vueTrain = new VueTrain(train);
