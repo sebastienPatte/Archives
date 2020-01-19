@@ -4,7 +4,7 @@ import mnisttools.MnistReader;
 public class LectureImage {
  
     public static void main(String[] args) {
-        String path="/home/tp-home006/spatte/workspace/ReseauDeNeurones/db/"; // TODO : indiquer le path correct
+        String path="../../IA/"; // TODO : indiquer le path correct
         String labelDB=path+"train-labels-idx1-ubyte";
         String imageDB=path+"train-images-idx3-ubyte";
         // Creation de la base de donnees

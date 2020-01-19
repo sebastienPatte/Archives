@@ -6,7 +6,7 @@ import mnisttools.MnistReader;
 public class ImageOnlinePerceptron {
  
 	/* Les donnees */
-	public static String path="/home/tp-home006/spatte/Bureau/IA/";
+	public static String path="../../IA/";
 	public static String labelDB=path+"train-labels-idx1-ubyte";
 	public static String imageDB=path+"train-images-idx3-ubyte";
  
