@@ -1,0 +1,8 @@
+%%
+
+#.* 	{
+		printf("comment : %s",yytext);
+	}
+.	{}
+
+%%
