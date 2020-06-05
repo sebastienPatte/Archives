@@ -1,0 +1,125 @@
+
+
+Les cases contenant des murs ont leur meilleure action en majuscules.
+Et les cases contenant une récompense ont leur meilleure action avec un '!'
+
+Iteration 0 :
+stay!  stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+
+
+Iteration 1 :
+stay!  left   STAY   stay   stay   stay   stay   stay   
+up     stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+
+
+Iteration 2 :
+stay!  left   STAY   saut   stay   stay   stay   stay   
+up     up     STAY   stay   stay   stay   stay   stay   
+up     stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+
+
+Iteration 3 :
+stay!  left   STAY   saut   left   saut   stay   stay   
+up     up     STAY   saut   stay   stay   stay   stay   
+up     up     STAY   stay   stay   stay   stay   stay   
+up     stay   STAY   stay   stay   stay   stay   stay   
+stay   stay   STAY   stay   stay   stay   stay   stay   
+
+
+Iteration 4 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   stay   stay   
+up     up     STAY   saut   stay   stay   stay   stay   
+up     up     STAY   stay   stay   stay   stay   stay   
+up     stay   STAY   stay   stay   stay   stay   stay   
+
+
+Iteration 5 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   stay   stay   
+up     up     STAY   saut   stay   stay   stay   stay   
+up     up     STAY   stay   stay   stay   stay   stay   
+
+
+Iteration 6 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   stay   stay   
+up     up     STAY   saut   stay   stay   stay   stay   
+
+
+Iteration 7 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   stay   stay   
+
+
+Iteration 8 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
+Iteration 9 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
+Iteration 10 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
+Iteration 11 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
+Iteration 12 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
+Iteration 13 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
+Iteration 14 :
+stay!  left   STAY   saut   left   saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+up     up     STAY   saut   up     saut   saut   saut   
+
+
