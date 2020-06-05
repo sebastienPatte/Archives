@@ -1,0 +1,73 @@
+table {
+    font-family: sans;
+}
+
+h1 {
+    text-align: center;
+    color: red;
+    text-decoration: underline;
+    
+}
+
+h2 {
+    color:red;
+}
+
+#p1 {
+    font-size: 200%;
+    float:left;
+}
+
+p {
+    width: 40em;
+}
+
+table {
+    width: 10em;
+    height: 3em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+tr.pair {
+    background:rgb(100,100,100);
+}
+
+tr.impair {
+    background:rgb(180,180,180);
+}
+
+tr > td:hover {
+    background:red;
+    color:blue;
+    
+}
+
+a:link {
+    border: 1pt solid blue;
+}
+a:visited {
+    border: 1pt solid red;
+}
+
+ul {
+    width: 200pt;
+    background:rgb(180,180,180);
+}
+
+img {
+    position:fixed;
+    right:5pt;
+    bottom:5pt;
+
+}
+
+img:hover {
+    left:5pt;
+    top:5pt;
+}
+
+ol li:hover {
+    font-style:italic;
+}
+
